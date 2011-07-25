@@ -163,7 +163,7 @@ $sql{portdata_select} =
 	ORDER BY random());
 
 $sql{portdata_count} = $sql{portdata_select};
-$sql{portdata_count} =~ s/^SELECT \*/SELECT COUNT (*)/i;
+$sql{portdata_count} =~ s/^SELECT \*/SELECT COUNT(*)/i;
 $sql{portdata_count} =~ s/ORDER BY.*$/LIMIT 1/i;
 
 $sql{portdata_setchecked} =
