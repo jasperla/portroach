@@ -243,7 +243,7 @@ sub BuildDB
 			my (@fields, $maintainer, $port);
 
 			@fields = split /\|/;
-			$maintainer = $fields[5];
+			$maintainer = lc($fields[5]);
 			$port = $fields[1];
 			$port =~ s/^(?:.*\/)?([^\/]+)\/([^\/]+)$/$1\/$2/;
 
