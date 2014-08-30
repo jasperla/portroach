@@ -34,6 +34,8 @@ use File::stat;
 
 use URI;
 
+use Try::Tiny;
+
 use Portscout::Const;
 use Portscout::Config;
 use Portscout::API;
@@ -443,13 +445,17 @@ sub BuildPort
 
 	foreach my $site (split /\s+/, $mv->{MASTER_SITES}) {
 		$site =~ s/\%SUBDIR\%/$subdir/g;
+		$site =~ s/^\s+//;
 		$site =~ s/\/+$/\//;
 		$site =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g; # site group spec.
+		try {
+			$site = URI->new($site)->canonical;
+			next if (length $site->host == 0);
 
-		$site = URI->new($site)->canonical;
-		next if (length $site->host == 0);
-
-		push @sites, $site;
+			push @sites, $site;
+		} catch {
+			warn "caught error: $_";
+		};
 	}
 
 	foreach my $file (split /\s+/, $mv->{DISTFILES}) {
