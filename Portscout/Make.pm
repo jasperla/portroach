@@ -40,7 +40,7 @@ require 5.006;
 my $root_dir;
 my $make_cache;
 
-my $maketype = 'freebsd';
+my $maketype = 'openbsd';
 
 my $debug = 0;
 
@@ -132,7 +132,7 @@ sub Make
 
 	my ($dir, @vars) = @_;
 
-	my (%results, @outp, $list, $cache, $lb);
+	my (%results, @outp, $list, $cache, $lb, $doshow);
 
 	$cache = $make_cache ? $make_cache : '';
 
@@ -140,8 +140,19 @@ sub Make
 
 	@vars = keys %wanted if (scalar @vars == 0);
 
+	# For a single variable, just -V, but use 'show=' otherwise
+	if ($#vars > 1) {
+		$doshow = 1;
+	}
+
 	if ($maketype eq 'freebsd') {
 		$list = join(' -V ', @vars);
+	} elsif ($maketype eq 'openbsd') {
+		if ($doshow) {
+			$list = join('\\ ', @vars);
+		} else {
+			$list = join(' ', @vars);
+		}
 	} else {
 		$list = join(' -V ',
 			map {
@@ -155,7 +166,13 @@ sub Make
 	# Ensure we aren't affected by locally installed stuff
 	$lb = 'LOCALBASE=/nonexistent';
 
-	@outp = split /\n/, qx(make -C $dir -V $list $cache $lb 2>/dev/null);
+	# Undo list of variable annotation
+	$list =~ s,\'\$\{,,g; $list =~ s,\}\',,g;
+	if ($doshow) {
+		@outp = split /\n/, qx(cd $dir && make show=$list);
+	} else {
+		@outp = split /\n/, qx(cd $dir && make -V $list);
+	}
 
 	if ($?) {
 		warn "make failed for $dir";
