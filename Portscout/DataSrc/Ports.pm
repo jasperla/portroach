@@ -218,9 +218,11 @@ sub BuildDB
 	@cats = split /\s+/, Portscout::Make->Make($settings{ports_dir}, 'SUBDIR');
 
 	$mfi = stat $settings{ports_dir} . '/MOVED'
-		or die "Couldn't stat MOVED file";
+		or warn "Couldn't stat MOVED file";
 
-	$move_ports = 1 if ($mfi->mtime > $lastbuild);
+	if ($mfi) {
+	    $move_ports = 1 if ($mfi->mtime > $lastbuild);
+	}
 
 	# If the user has specified a maintainer restriction
 	# list, try to get to get the list of desired ports
