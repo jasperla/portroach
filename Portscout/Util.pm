@@ -106,7 +106,7 @@ $date_regex  = '(?<!\d)\d{4}([\-\.]?)(?:\d{2}|'.$month_regex.')\1\d{2}(?!\d)';
 
 $beta_regex = join '|', map +($beta_types{$_}->{re}), keys %beta_types;
 
-$ext_regex   = '\.tar\.gz|\.tar\.bz2|\.tgz\|\.zip';
+$ext_regex   = '\.tar\.gz|\.tar\.bz2|\.tgz\|\.zip|\.xz|\.txz';
 
 
 #------------------------------------------------------------------------------
