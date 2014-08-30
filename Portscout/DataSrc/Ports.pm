@@ -474,7 +474,7 @@ sub BuildPort
 		$ver = $distname;
 		$name_q = quotemeta $name;
 
-		$name_q =~ s/^(p5|mod|py|ruby|hs)(?:[\-\_])/($1\[\\-\\_\])?/;
+		$name_q =~ s/^(node|p5|mod|py|ruby|hs)(?:[\-\_])/($1\[\\-\\_\])?/;
 
 		# XXX: fix me
 
