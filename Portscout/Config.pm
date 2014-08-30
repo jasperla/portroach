@@ -76,6 +76,7 @@ my (@paths, %settings_types, $bool_opts);
 	http_timeout    	=> 120,		# HTTP timeout, in seconds
 
 	mastersite_limit	=> 4,
+	mastersite_ignore	=> '',
 	oldfound_enable 	=> 1,
 
 	restrict_maintainer => '',

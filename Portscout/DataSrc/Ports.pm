@@ -444,6 +444,8 @@ sub BuildPort
 	# Get rid of unexpanded placeholders
 
 	foreach my $site (split /\s+/, $mv->{MASTER_SITES}) {
+		my $ignored = 0;
+
 		$site =~ s/\%SUBDIR\%/$subdir/g;
 		$site =~ s/^\s+//;
 		$site =~ s/\/+$/\//;
@@ -452,7 +454,11 @@ sub BuildPort
 			$site = URI->new($site)->canonical;
 			next if (length $site->host == 0);
 
-			push @sites, $site;
+			foreach my $ignore (split(/,/, $settings{mastersite_ignore})) {
+			    $ignored = 1 if ($site eq $ignore);
+			}
+
+			push(@sites, $site) unless $ignored;
 		} catch {
 			warn "caught error: $_";
 		};
