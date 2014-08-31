@@ -220,7 +220,7 @@ sub BuildDB
 	@cats = split /\s+/, Portscout::Make->Make($settings{ports_dir}, 'SUBDIR');
 
 	$mfi = stat $settings{ports_dir} . '/MOVED'
-		or warn "Couldn't stat MOVED file";
+		or print "Couldn't stat MOVED file";
 
 	if ($mfi) {
 	    $move_ports = 1 if ($mfi->mtime > $lastbuild);
