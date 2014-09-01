@@ -207,6 +207,7 @@ sub ScanCat
 		next if ($name =~ /^\./);
 		next if ($name =~ /^CVS$/);
 		next if (! -d $settings{ports_dir}."/$cat/$name");
+		next if (! -f $settings{ports_dir}."/$cat/$name/Makefile");
 
 		# If the "port" directory contains a Makefile.inc, descend into it.
 		if (-f $settings{ports_dir} . "/" . $cat . "/" . $name . "/Makefile.inc") {
