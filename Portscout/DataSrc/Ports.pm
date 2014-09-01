@@ -491,8 +491,9 @@ sub BuildPort
 			$site = URI->new($site)->canonical;
 			next if (length $site->host == 0);
 
-			foreach my $ignore (split(/,/, $settings{mastersite_ignore})) {
-			    $ignored = 1 if ($site eq $ignore);
+			my $mastersite_regex = Portscout::Util::restrict2regex($settings{mastersite_ignore});
+			if ($mastersite_regex) {
+				$ignored = 1 if ($site =~ /$mastersite_regex/);
 			}
 
 			push(@sites, $site) unless $ignored;
