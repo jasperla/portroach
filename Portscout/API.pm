@@ -135,7 +135,7 @@ sub AddPort
 
 	# Sanity checks
 
-	if ($port->{name} =~ /[\s\/]/ || $port->{category} =~ /[\s\/]/) {
+	if ($port->{name} =~ /[\s\/]/) {
 		print STDERR "Bad port name or category provided.\n";
 		return 0;
 	}

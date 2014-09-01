@@ -178,6 +178,49 @@ sub Count
 	return $num_ports;
 }
 
+#------------------------------------------------------------------------------
+# Func: ScanCat()
+# Desc: Scan a given category for directories.
+#
+# Args: $maincat - Category to descend into.
+#       $subcat  - Subcategory to descend into.
+#
+# Retn: @results     - Scanned (sub)category results
+#------------------------------------------------------------------------------
+
+sub ScanCat
+{
+	my $self = shift;
+	my ($maincat, $subcat) = @_;
+
+	my (@results);
+
+	my $cat = "$maincat/$subcat";
+
+	opendir my $catdir, $settings{ports_dir}."/$cat";
+
+	print "Scanning $cat...\n"
+		unless ($settings{quiet});
+
+	# Build a shortlist, taking into account subcategories.
+	while (my $name = readdir $catdir) {
+		next if ($name =~ /^\./);
+		next if ($name =~ /^CVS$/);
+		next if (! -d $settings{ports_dir}."/$cat/$name");
+
+		# If the "port" directory contains a Makefile.inc, descend into it.
+		if (-f $settings{ports_dir} . "/" . $cat . "/" . $name . "/Makefile.inc") {
+		    # Now go through this dir and it's subdirs.
+		    @results = (@results, $self->ScanCat($cat, $name));
+		} else {
+			# Prevent recording a stray slash
+			$name = "$subcat/$name" if ($subcat);
+			push @results, $name;
+		}
+	}
+
+	return @results;
+}
 
 #------------------------------------------------------------------------------
 # Func: BuildDB()
@@ -220,7 +263,7 @@ sub BuildDB
 	@cats = split /\s+/, Portscout::Make->Make($settings{ports_dir}, 'SUBDIR');
 
 	$mfi = stat $settings{ports_dir} . '/MOVED'
-		or print "Couldn't stat MOVED file";
+		or print "Couldn't stat MOVED file\n";
 
 	if ($mfi) {
 	    $move_ports = 1 if ($mfi->mtime > $lastbuild);
@@ -266,16 +309,9 @@ sub BuildDB
 		# Skip category if user doesn't want it.
 		wantport(undef, $cat) or next;
 
-		opendir my $catdir, $settings{ports_dir}."/$cat";
+		my @results = $self->ScanCat($cat);
 
-		print "Scanning $cat...\n"
-			unless ($settings{quiet});
-
-		while (my $name = readdir $catdir) {
-			next if ($name =~ /^\./);
-			next if ($name =~ /^CVS$/);
-			next if (! -d $settings{ports_dir}."/$cat/$name");
-
+		foreach my $name (@results) {
 			# If we're doing an incremental build, check the
 			# port directory's mtime; skip if not updated.
 			if ($incremental) {
