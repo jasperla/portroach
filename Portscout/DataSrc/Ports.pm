@@ -309,9 +309,7 @@ sub BuildDB
 		# Skip category if user doesn't want it.
 		wantport(undef, $cat) or next;
 
-		my @results = $self->ScanCat($cat);
-
-		foreach my $name (@results) {
+		foreach my $name ($self->ScanCat($cat)) {
 			# If we're doing an incremental build, check the
 			# port directory's mtime; skip if not updated.
 			if ($incremental) {
