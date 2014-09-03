@@ -487,6 +487,10 @@ sub BuildPort
 		$site =~ s/^\s+//;
 		$site =~ s/\/+$/\//;
 		$site =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g; # site group spec.
+		if (length($site) == 0) {
+			print "Empty or no master sites for $cat/$name\n" unless ($settings{quiet});
+			next;
+		}
 		try {
 			$site = URI->new($site)->canonical;
 			next if (length $site->host == 0);
