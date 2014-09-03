@@ -511,6 +511,10 @@ sub BuildPort
 		push @distfiles, $file;
 	}
 
+	# A port without distfiles has no files we can check for upstream
+	# so drop it early.
+	return 0 if (@distfiles < 1);
+
 	# Remove ports-system "site group" specifiers
 
 	$distname =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g;
