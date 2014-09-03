@@ -558,14 +558,24 @@ sub BuildPort
 			}
 		}
 
-		# If the $name is digits-only, try harder to make something
-		# sensible from it.
-		if ($name =~ /^\d*$/) {
-		    if ($distname =~ /^(.*)-(\d[^-]*)[-]?(\w*)(.*)$/) {
+		# Sanity check, if $ver doesn't match what matched the common
+		# case, fix it up. Prevents recording '-core-2.1' as version.
+		if ($distname =~ /^(.*)-(\d[^-]*)$/) {
+		    if ($ver ne $2) {
 			$name = $1;
 			$ver = $2;
 		    }
 		}
+
+		# If the $name is digits-only, try harder to make something
+		# sensible from it.
+		if ($name =~ /^\d*$/) {
+			if ($distname =~ /^(.*)-(\d[^-]*)[-]?(\w*)(.*)$/) {
+				$name = $1;
+				$ver = $2;
+			}
+		}
+
 		$ver = '' if ($ver eq $name);
 	}
 
