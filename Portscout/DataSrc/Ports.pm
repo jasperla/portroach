@@ -558,6 +558,14 @@ sub BuildPort
 			}
 		}
 
+		# If the $name is digits-only, try harder to make something
+		# sensible from it.
+		if ($name =~ /^\d*$/) {
+		    if ($distname =~ /^(.*)-(\d[^-]*)[-]?(\w*)(.*)$/) {
+			$name = $1;
+			$ver = $2;
+		    }
+		}
 		$ver = '' if ($ver eq $name);
 	}
 
