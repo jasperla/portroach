@@ -121,7 +121,7 @@ sub GetFiles
 		my $feed = XML::Feed->parse(\$response->content);
 
 		foreach my $item ($feed->entries) {
-		    my ($release, $url, $file);
+		    my ($release, $url);
 
 		    $release = $item->title;
 		    $url = $item->link;
