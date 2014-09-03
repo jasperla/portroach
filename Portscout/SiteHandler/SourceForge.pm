@@ -85,7 +85,7 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /^http:\/\/[^\/]*?\.sourceforge\.net\/project\//);
+	return ($url =~ /^http:\/\/downloads\.sourceforge\.net/);
 }
 
 
@@ -108,14 +108,13 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	if ($url =~ /[^\/]*\/project\/([^\/]*)\//) {
+	if ($url =~ /downloads\.sourceforge\.net\/sourceforge\/([^\/]*)\//) {
 		my ($rsspage, $projname, $ua, $response, $xpath, $items);
 
 		$projname = $1;
 
 		# Find the RSS feed for this project.
-		$rsspage = 'http://sourceforge.net/api/file/index/project-name/'
-			. $projname . '/mtime/desc/rss';
+		$rsspage = 'http://sourceforge.net/projects/' . $projname . '/rss';
 
 		_debug("Trying RSS @ $rsspage");
 
