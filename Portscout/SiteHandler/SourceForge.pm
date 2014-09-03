@@ -28,8 +28,7 @@
 
 package Portscout::SiteHandler::SourceForge;
 
-use XML::XPath;
-use XML::XPath::XMLParser;
+use XML::Feed;
 use LWP::UserAgent;
 
 use Portscout::Const;
@@ -130,30 +129,16 @@ sub GetFiles
 			return 0;
 		}
 
-		$xpath = XML::XPath->new(xml => $response->content);
+		my $feed = XML::Feed->parse(\$response->content);
+		foreach my $item ($feed->entries) {
+			my ($file, $url);
 
-		$items = $xpath->findnodes('/rss/channel/item');
-
-		foreach my $item ($items->get_nodelist) {
-			my ($data, $tnode, $file, $lnode, $url);
-
-			$data = $xpath->findnodes('./title', $item);
-			$tnode = ($data->get_nodelist)[0];
-			$file = "/project/$projname" . $tnode->string_value();
-
-			# There doesn't seem to be a canonical way of
-			# determining which entries are directories;
-			# but directories seem to (rightly) have
-			# trailing slashes in the full URL, in <link />.
-
-			$data = $xpath->findnodes('./link', $item);
-			$lnode = ($data->get_nodelist)[0];
-			$url = $lnode->string_value();
+			$file = "/project/$projname" . $item->title;
+			$url = $item->link;
 
 			next if ($url =~ /\/$/);
 
 			# Note this file.
-
 			push @$files, $file;
 		}
 
