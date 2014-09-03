@@ -867,7 +867,7 @@ sub FindNewestFile
 
 	foreach my $file (@$files)
 	{
-		my $poss_path;
+		my ($poss_path, $github);
 
 		if ($file =~ /^(.*)\/(.*?)$/) {
 			# Files from SiteHandlers can come with paths
@@ -912,6 +912,8 @@ sub FindNewestFile
 				}
 			}
 
+			$github = 1 if ($site->clone =~ /https:\/\/github.com\//);
+
 			# Skip beta versions if requested
 
 			if ($port->{skipbeta}) {
@@ -940,34 +942,41 @@ sub FindNewestFile
 
 			# Possible candidate - extract version
 
-			if ($file =~ /^($distfile)$/ && $2)
+			#warn "distfile = $distfile 2 = $2";
+			if (($file =~ /^($distfile)$/ && $2) or $github)
 			{
-				my $version = $2;
-				my $new_v = lc $version;
+				my ($version, $new_v);
 
-				# Catch a few missed cases
+				unless ($github) {
+					$version = $2;
+					$new_v = lc $version;
 
-				$new_v =~ s/(?:$ext_regex)$//;
+					# Catch a few missed cases
+					$new_v =~ s/(?:$ext_regex)$//;
 
-				# Version is much longer than original - skip it
+					# Version is much longer than original - skip it
+					next if (length $new_v > (12 + length $old_v));
 
-				next if (length $new_v > (12 + length $old_v));
+					# New version is in date format (or contains a date-like
+					# string) - old one is not. Probably best to ignore.
 
-				# New version is in date format (or contains a date-like
-				# string) - old one is not. Probably best to ignore.
+					next if (
+						$new_v =~ /$date_regex/i &&
+						$old_v !~ /$date_regex/i
+					);
 
-				next if (
-					$new_v =~ /$date_regex/i &&
-					$old_v !~ /$date_regex/i
-				);
-
-				# Skip a few strange version format change cases
-				# (formatted -> "just a number")
-
-				next if ($new_v !~ /\./ && $old_v =~ /\./);
+					# Skip a few strange version format change cases
+					# (formatted -> "just a number")
+					next if ($new_v !~ /\./ && $old_v =~ /\./);
+				} else {
+				    # Github is "special" since the actual URI we get back from the
+				    # handler isn't the same as what is actually being retrieved.
+				    # So fall back on comparing tags instead.
+				    $new_v = $file;
+				    $version = lc $new_v;
+				}
 
 				# Skip any specific versions if requested
-
 				if ($port->{skipversions}) {
 					my $skip = 0;
 
@@ -981,7 +990,7 @@ sub FindNewestFile
 					next if ($skip);
 				}
 
-				unless ($settings{sillystrings_enable}) {
+				unless ($settings{sillystrings_enable} or $github) {
 					if ($new_v =~ /[-_.]([A-Za-z]+[A-Za-z_-]{2,})$/) {
 						my $str = $1;
 						next if (
@@ -1017,11 +1026,8 @@ sub FindNewestFile
 				}
 
 				if (defined $port->{limiteven} and $port->{limitwhich} >= 0) {
-					next unless checkevenodd(
-						$new_v,
-						$port->{limiteven},
-						$port->{limitwhich}
-					);
+					next unless checkevenodd($new_v, $port->{limiteven},
+								 $port->{limitwhich});
 				}
 
 				# Test our new version string
@@ -1071,7 +1077,6 @@ sub FindNewestFile
 		'url'      => $poss_url
 	};
 }
-
 
 #------------------------------------------------------------------------------
 # Func: robotsallowed()

@@ -43,6 +43,7 @@ Plus we need a few Perl modules:
     - Proc::Queue
     - LWP::UserAgent
     - MIME::Lite
+    - XML::Feed
     - XML::XPath
     - XML::XPath::XMLParser
     - Try::Tiny

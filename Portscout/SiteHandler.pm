@@ -31,6 +31,7 @@ package Portscout::SiteHandler;
 use XML::XPath;
 use XML::XPath::XMLParser;
 
+use Portscout::SiteHandler::GitHub;
 use Portscout::SiteHandler::SourceForge;
 
 use strict;
