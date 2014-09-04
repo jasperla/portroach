@@ -79,9 +79,9 @@ sub CanHandle
 
 #------------------------------------------------------------------------------
 # Func: GetFiles()
-# Desc: Extract a list of files from the given URL. In the case of SourceForge,
-#       we are actually pulling the files from an RSS feed helpfully provided
-#       for each "project".
+# Desc: Extract a list of files from the given URL. In the case of GitHub,
+#       we are actually pulling the files from the project's Atom feed and
+#       extract the release url, containing the tag it was based on.
 #
 # Args: $url     - URL we would normally fetch from.
 #       \%port   - Port hash fetched from database.

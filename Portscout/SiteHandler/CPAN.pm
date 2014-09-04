@@ -79,9 +79,8 @@ sub CanHandle
 
 #------------------------------------------------------------------------------
 # Func: GetFiles()
-# Desc: Extract a list of files from the given URL. In the case of SourceForge,
-#       we are actually pulling the files from an RSS feed helpfully provided
-#       for each "project".
+# Desc: Extract a list of files from the given URL. Query the MetaCPAN API
+#       for the latest available version of a given module.
 #
 # Args: $url     - URL we would normally fetch from.
 #       \%port   - Port hash fetched from database.
@@ -104,7 +103,7 @@ sub GetFiles
 	    $module = $1;
 	}
 
-	my $query = $metacpan . 'distribution:' . $module . '%20AND%20status:latest&fields=name,status,download_url';
+	my $query = $metacpan . 'distribution:' . $module . '%20AND%20status:latest&fields=name,download_url';
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;

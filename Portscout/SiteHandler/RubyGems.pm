@@ -79,9 +79,8 @@ sub CanHandle
 
 #------------------------------------------------------------------------------
 # Func: GetFiles()
-# Desc: Extract a list of files from the given URL. In the case of SourceForge,
-#       we are actually pulling the files from an RSS feed helpfully provided
-#       for each "project".
+# Desc: Extract a list of files from the given URL. For RubyGems.org we query
+#        the API for all available versions and iteratively store them.
 #
 # Args: $url     - URL we would normally fetch from.
 #       \%port   - Port hash fetched from database.
