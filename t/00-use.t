@@ -2,7 +2,7 @@
 
 use Test;
 
-BEGIN { plan tests => 15; }
+BEGIN { plan tests => 18; }
 
 use strict;
 use warnings;
@@ -13,6 +13,9 @@ eval 'use Portscout::Util ();';                     ok(!$@);
 eval 'use Portscout::Config ();';                   ok(!$@);
 
 eval 'use Portscout::SiteHandler ();';              ok(!$@);
+eval 'use Portscout::SiteHandler::CPAN ();';        ok(!$@);
+eval 'use Portscout::SiteHandler::GitHub ();';      ok(!$@);
+eval 'use Portscout::SiteHandler::RubyGems ();';    ok(!$@);
 eval 'use Portscout::SiteHandler::SourceForge ();'; ok(!$@);
 
 eval 'use Portscout::SQL ();';                      ok(!$@);
