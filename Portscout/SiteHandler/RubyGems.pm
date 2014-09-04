@@ -51,7 +51,7 @@ sub new
 	my $self      = {};
 	my $class     = shift;
 
-	$self->{name} = 'GitHub';
+	$self->{name} = 'RubyGems';
 
 	bless ($self, $class);
 	return $self;
