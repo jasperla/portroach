@@ -33,6 +33,7 @@ use XML::XPath::XMLParser;
 
 use Portscout::SiteHandler::CPAN;
 use Portscout::SiteHandler::GitHub;
+use Portscout::SiteHandler::Hackage;
 use Portscout::SiteHandler::RubyGems;
 use Portscout::SiteHandler::SourceForge;
 
