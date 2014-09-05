@@ -19,6 +19,13 @@ Usage
 
 Please see 'perldoc portroach' for usage instructions.
 
+Results
+---
+
+The results are available over at
+[ftp.fr.openbsd.org/portscout](http://ftp.fr.openbsd.org/portscout/), kindly
+hosted by ajacoutot@.
+
 Copyright
 ---
 
