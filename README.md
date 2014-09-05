@@ -23,7 +23,7 @@ Results
 ---
 
 The results are available over at
-[ftp.fr.openbsd.org/portscout](http://ftp.fr.openbsd.org/portscout/), kindly
+[ftp.fr.openbsd.org/portroach/](http://ftp.fr.openbsd.org/portroach/), kindly
 hosted by ajacoutot@.
 
 Copyright

@@ -74,7 +74,7 @@ indexfile enable    = true   				# Use INDEX if needed
 # The sender address will have the local hostname attached if it
 # is a bare username.
 
-mail enable      = false
+mail enable      = true
 
 mail from        = portroach 				# Sender address
 mail subject     = OpenBSD ports you maintain which are out of date
