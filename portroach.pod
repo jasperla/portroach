@@ -22,7 +22,7 @@ by FreeBSD port maintainers, who can avoid trailing around dozens of websites
 looking for updates. However, I hope that others might find it useful too.
 
 The current version of Portroach is also capable of checking OpenBSD's ports,
-NetBSD's pkgsrc, and also a generic list of software from an XML file.
+NetBSD's pkgsrc.
 
 
 =head1 SYSTEM REQUIREMENTS
@@ -120,17 +120,13 @@ will do incremental 'builds', only updating what has changed.
 If you would like to check another software repository/source, Portroach
 has several options.
 
-Firstly, NetBSD and OpenBSD's ports trees are supported by the standard
+NetBSD and OpenBSD's ports trees are supported by the standard
 "Ports" backend. See F<portroach.conf> for details on how to configure this.
 Make sure you've got the correct C<make> at hand for Portroach if you're
 checking either of these from another operating system (e.g. FreeBSD).
 
 Caveat: neither of the above have been well-tested, and support should
 probably be considered experimental.
-
-Secondly, you can use the "XML" backend for a finite list of software
-that you want to manage by hand. See L<Portroach::DataSrc::XML|Portroach::DataSrc::XML>
-for more information.
 
 
 =head1 REGULAR OPERATION

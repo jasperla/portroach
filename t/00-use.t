@@ -2,7 +2,7 @@
 
 use Test;
 
-BEGIN { plan tests => 18; }
+BEGIN { plan tests => 17; }
 
 use strict;
 use warnings;
@@ -27,6 +27,5 @@ eval 'use Portroach::Template ();';                 ok(!$@);
 
 eval 'use Portroach::DataSrc ();';                  ok(!$@);
 eval 'use Portroach::DataSrc::Ports ();';           ok(!$@);
-eval 'use Portroach::DataSrc::XML ();';             ok(!$@);
 
 eval 'use Portroach ();';                           ok(!$@);

@@ -30,11 +30,6 @@ wwwdir           = %(prefix)/www/portroach/
 datasrc          = Portroach::DataSrc::Ports
 datasrc opts     = type:OpenBSD
 
-# Option Two: XML file
-
-#datasrc          = Portroach::DataSrc::XML
-#datasrc opts     = file:%(prefix)/etc/portroach/software.xml
-
 #-- User Privileges -----------------------------------------------------------
 
 # If these are not empty, portroach will switch to this
