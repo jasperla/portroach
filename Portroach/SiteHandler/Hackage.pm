@@ -118,7 +118,7 @@ sub GetFiles
 		my ($url, $version);
 
 		$version = $tp->get_trimmed_text('/strong');
-		$url = $hackage . $package . '-' . $version . '/' . $package . '-' . $version . '.tar.gz';
+		$url = 'package/' . $package . '-' . $version . '/' . $package . '-' . $version . '.tar.gz';
 		push @$files, $url;
 	    }
 	} else {
