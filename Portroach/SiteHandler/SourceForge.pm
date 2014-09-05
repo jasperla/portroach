@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: SourceForge.pm,v 1.8 2010/05/05 01:54:16 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::SiteHandler::SourceForge;

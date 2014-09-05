@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Ports.pm,v 1.17 2011/04/09 17:19:03 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::DataSrc::Ports;

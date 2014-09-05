@@ -11,7 +11,6 @@
 #   - You can reuse previously set variables, like: %(name) - these variables
 #     must use underscores, not spaces.
 #
-# $Id: portroach.conf,v 1.16 2011/04/09 17:17:34 samott Exp $
 #------------------------------------------------------------------------------
 
 # Space saving variables (only used within this file)

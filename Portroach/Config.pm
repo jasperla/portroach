@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Config.pm,v 1.5 2010/05/20 18:28:40 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::Config;

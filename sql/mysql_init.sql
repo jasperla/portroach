@@ -5,7 +5,6 @@
  * Copyright (C) 2011, Martin Matuska <mm@FreeBSD.org>
  * All rights reserved.
  *
- * $Id$
  */
 
 DROP TABLE IF EXISTS portdata;

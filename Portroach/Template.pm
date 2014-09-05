@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Template.pm,v 1.5 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::Template;

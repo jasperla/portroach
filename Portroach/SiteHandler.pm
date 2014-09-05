@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: SiteHandler.pm,v 1.2 2010/04/29 01:07:51 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::SiteHandler;

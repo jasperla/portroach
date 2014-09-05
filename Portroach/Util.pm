@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Util.pm,v 1.12 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::Util;

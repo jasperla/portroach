@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: SQLite.pm,v 1.9 2010/05/24 02:16:02 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::SQL::SQLite;

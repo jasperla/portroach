@@ -4,7 +4,6 @@
  * Copyright (C) 2006-2011, Shaun Amott <shaun@inerd.com>
  * All rights reserved.
  *
- * $Id: pgsql_init.sql,v 1.16 2011/05/15 17:27:05 samott Exp $
  */
 
 CREATE TABLE portdata (

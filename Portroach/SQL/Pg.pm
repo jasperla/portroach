@@ -23,7 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Pg.pm,v 1.6 2010/05/15 20:19:55 samott Exp $
 #------------------------------------------------------------------------------
 
 package Portroach::SQL::Pg;
