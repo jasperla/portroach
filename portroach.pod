@@ -65,8 +65,8 @@ The recommended database backend is PostgreSQL.
 
 Create database:
 
-    # createuser -U pgsql -P portroach
-    # createdb -U pgsql portroach
+    # createuser -U postgres -P portroach
+    # createdb -U postgres portroach
 
 Execute the included F<pgsql_init.sql> script via C<psql>:
 
