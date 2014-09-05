@@ -115,7 +115,7 @@ sub GetFiles
 
 	    my @hits = @{$json->{hits}->{hits}};
 
-	    push @$files, @hits[0]->{fields}->{download_url};
+	    push(@$files, @hits[0]->{fields}->{download_url}) if (@hits[0]);
 	} else {
 	    my $code = $resp->code;
 	    _debug("GET failed: $code");
