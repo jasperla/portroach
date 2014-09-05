@@ -1238,7 +1238,7 @@ sub robotsallowed
 
 sub GenerateHTML
 {
-	my (%sths, %outdata, @time, $dbh, $sth, $template);
+	my (%sths, %outdata, @time, @assets, $dbh, $sth, $template);
 
 	$dbh = connect_db();
 
@@ -1377,6 +1377,15 @@ sub GenerateHTML
 
 	finish_sql($dbh, \%sths);
 	$dbh->disconnect;
+
+	return unless (-d "$settings{templates_dir}/assets/");
+
+	print "Copying assets...\n";
+	emptydir("$settings{html_data_dir}/assets/");
+	@assets = glob("$settings{templates_dir}/assets/*");
+	foreach my $asset (glob("$settings{templates_dir}/assets/*")) {
+		copy($asset, "$settings{html_data_dir}/assets") or die $!;
+	}
 }
 
 
