@@ -17,7 +17,9 @@ Alternatively you can `git clone` this repository and run
 Usage
 ---
 
-Please see 'perldoc portroach' for usage instructions.
+Please see 'perldoc portroach' for usage instructions, or refer to
+[docs/portroach-portconfig.txt](docs/portroach-portconfig.txt) for
+details on the `PORTROACH` variable.
 
 Results
 ---
