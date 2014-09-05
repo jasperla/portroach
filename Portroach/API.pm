@@ -85,7 +85,7 @@ sub new
 #                    suffix     - Distfile suffix (e.g. ".tar.gz")
 #                    comment    - Description of port
 #                    masterport - "cat/name" of this port's master
-#                    options    - Hash of port options, from "PORTSCOUT" var.
+#                    options    - Hash of port options, from "PORTROACH" var.
 #
 # Retn: $success - true/false
 #------------------------------------------------------------------------------

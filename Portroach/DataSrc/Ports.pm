@@ -99,7 +99,7 @@ sub Init
 
 	Portroach::Make->Wanted(
 		qw(DISTNAME DISTFILES EXTRACT_SUFX MASTER_SITES MASTER_SITE_SUBDIR
-		    MAINTAINER COMMENT PORTSCOUT)
+		    MAINTAINER COMMENT PORTROACH)
 	);
 
 	if ($self->{opts}->{type} eq 'freebsd') {
@@ -580,7 +580,7 @@ sub BuildPort
 
 	# Create options hash
 
-	foreach (split /\s+/, $mv->{PORTSCOUT}) {
+	foreach (split /\s+/, $mv->{PORTROACH}) {
 		if (/^([A-Za-z]+):(.*)$/i) {
 			$pcfg{lc $1} = $2;
 		}

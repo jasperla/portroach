@@ -271,8 +271,7 @@ Portscout was originally written by Shaun Amott for the FreeBSD ports tree. In
 2014 Jasper Lievisse Adriaanse added support for OpenBSD. It was then decided to
 fork and rename the project to Portroach to indicate a new direction, focusing
 on OpenBSD allows Portroach to integrate better without carrying a burden of
-backwards compatibility with the FreeBSD tree. The PORTSCOUT variable for use in
-Makefile's remained unchanged.
+backwards compatibility with the FreeBSD tree.
 
 =head1 CREDITS
 
