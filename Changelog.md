@@ -12,3 +12,4 @@ Initial release of Portroach, summary of changes since Portscout 0.8.1:
   - Hackage
   - RubyGems
 - Allow ignoring certain master sites (i.e. backup sites with no new versions)
+- Support generating results in JSON format
