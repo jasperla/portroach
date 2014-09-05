@@ -1,8 +1,9 @@
 v1.1.0 (not released yet)
 ======
 
-Overhaul templates and default to dynamic pages utilizing AngularJS for
-better filtering and sorting options.
+- Overhaul templates and default to dynamic pages utilizing AngularJS for
+  better filtering and sorting options.
+- Add site handler for npmjs.org
 
 v1.0.0
 ======
