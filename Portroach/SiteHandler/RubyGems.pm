@@ -107,6 +107,7 @@ sub GetFiles
 
 	_debug("GET $api_url");
 	$ua = LWP::UserAgent->new;
+	$ua->agent(USER_AGENT);
 	$resp = $ua->request(HTTP::Request->new(GET => $api_url));
 
 	if ($resp->is_success) {

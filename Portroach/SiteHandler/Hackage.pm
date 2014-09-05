@@ -108,6 +108,7 @@ sub GetFiles
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
+	$ua->agent(USER_AGENT);
 	$resp = $ua->request(HTTP::Request->new(GET => $query));
 
 	if ($resp->is_success) {
