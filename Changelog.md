@@ -1,4 +1,4 @@
-v1.0.0 (not released yet)
+v1.0.0
 ======
 
 Initial release of Portroach, summary of changes since Portscout 0.8.1:
