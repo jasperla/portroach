@@ -211,7 +211,7 @@ sub ExecArgs
 	}
 	elsif ($cmd eq 'generate')
 	{
-		Portroach::Template->templatedir($settings{templates_dir});
+		Portroach::Template->templatedir($settings{templates_dir} . '/' . $settings{output_type});
 		Portroach::Template->outputdir($settings{html_data_dir});
 
 		$res = GenerateHTML();
@@ -1273,28 +1273,36 @@ sub GenerateHTML
 
 	# Produce indices, sorted by each header
 
-	foreach my $sortby ('withnewdistfile', 'maintainer', 'total', 'percentage')
-	{
-		my ($sth, $orderby);
+	if ($settings{output_type} eq 'static') {
+		foreach my $sortby ('withnewdistfile', 'maintainer', 'total', 'percentage')
+		{
+			my ($sth, $orderby);
 
-		$orderby = ($sortby eq 'maintainer') ? 'ASC' : 'DESC';
+			$orderby = ($sortby eq 'maintainer') ? 'ASC' : 'DESC';
 
-		$template->applyglobal(\%outdata);
+			$template->applyglobal(\%outdata);
 
-		print "Generating index sorted by $sortby...\n";
-		$sth = $dbh->prepare("SELECT * FROM results ORDER BY $sortby $orderby")
-			or die DBI->errstr;
-		$sth->execute;
+			print "Generating static index sorted by $sortby...\n";
+			$sth = $dbh->prepare("SELECT * FROM results ORDER BY $sortby $orderby")	
+				or die DBI->errstr;
+			$sth->execute;
 
-		while (my $row = $sth->fetchrow_hashref) {
-			$row->{percentage} = sprintf('%.2f%', $row->{percentage})
-				if ($row->{percentage});
-			$template->pushrow($row);
+			while (my $row = $sth->fetchrow_hashref) {
+				$row->{percentage} = sprintf('%.2f%', $row->{percentage})
+					if ($row->{percentage});
+				$template->pushrow($row);
+			}
+
+			$sth->finish;
+
+			$template->output("index-$sortby.html");
+
+			$template->reset;
 		}
-
-		$sth->finish;
-
-		$template->output("index-$sortby.html");
+	} else {
+		print "Generating dynamic index.html\n";
+		$template->applyglobal(\%outdata);
+		$template->output("index.html");
 		$template->reset;
 	}
 
@@ -1317,12 +1325,13 @@ sub GenerateHTML
 		undef @results;
 	}
 
-	# Point index.html at the default sorted index
-
-	symlink(
-		"index-$settings{default_html_sort}.html",
-		"$settings{html_data_dir}/index.html"
-	);
+	# Point static index.html at the default sorted index
+	unless ($settings{output_type} eq 'dynamic') {
+		symlink(
+			"index-$settings{default_html_sort}.html",
+			"$settings{html_data_dir}/index.html"
+		);
+	}
 
 	$template = undef;
 
@@ -1400,6 +1409,7 @@ sub GenerateHTML
 		$row->{limitevenwhich} = $row->{limitwhich} ? ($row->{limitwhich}.':'.$row->{limiteven}) : '';
 
 		$template->pushrow($row);
+		push(@results, $row);
 	}
 
 	$template->output('restricted-ports.html');
@@ -1407,12 +1417,20 @@ sub GenerateHTML
 	finish_sql($dbh, \%sths);
 	$dbh->disconnect;
 
-	return unless (-d "$settings{templates_dir}/assets/");
+	if ($settings{output_json}) {
+	    open(my $fh, '>', "$settings{html_data_dir}/json/restricted.json") or die $!;
+	    print $fh JSON::encode_json(\@results);
+	    close($fh);
+	    undef @results;
+	}
+
+	my $assets_dir = "$settings{templates_dir}/$settings{output_type}/assets/";
+	return unless (-d $assets_dir);
 
 	print "Copying assets...\n";
 	emptydir("$settings{html_data_dir}/assets/");
-	@assets = glob("$settings{templates_dir}/assets/*");
-	foreach my $asset (glob("$settings{templates_dir}/assets/*")) {
+	@assets = glob("$assets_dir/*");
+	foreach my $asset (glob("$assets_dir/*")) {
 		copy($asset, "$settings{html_data_dir}/assets") or die $!;
 	}
 }

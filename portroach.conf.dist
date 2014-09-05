@@ -44,6 +44,12 @@ html data dir    = %(wwwdir)/portroach 		# Where to put generated HTML
 
 templates dir    = /usr/local/share/portroach/templates # Where HTML templates are kept
 
+# Generate static (plain HTML) or dynamic (AngularJS) pages.
+# defaults to 'dynamic' and enables 'json'.
+
+#output type = static
+#output json = false
+
 #-- Limit Processing ----------------------------------------------------------
 
 # The following three variables are comma-separated lists of

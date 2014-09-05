@@ -120,7 +120,8 @@ my (@paths, %settings_types, $bool_opts);
 
 	hide_unchanged  	=> 0,
 
-	output_json		=> 0,
+	output_type		=> 'dynamic',
+	output_json		=> 1,
 );
 
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html ng-app="portroach">
+
+    <head>
+    	<title>portroach - new distfile scanner</title>
+    	<style>
+    	<!--
+    		body, table        { font-family: "Verdana", "Helvetica", Sans-Serif; }
+    		h2                 { font-family: "Verdana", "Helvetica", Sans-Serif; }
+    		tr                 { background-color: #FFFFFF; font-family: "Verdana", "Helvetica", Sans-Serif; }
+    		td, p, ul, span    { font-family: "Verdana", "Helvetica", Sans-Serif; font-size: 85%; }
+    		td a               { color: #000000; text-decoration: none; }
+    		.results           { width: 100%; background-color: #444444; }
+    		.resultshead       { color: #FFFFFF; font-weight: bold; background-color: #999999; }
+
+    		.resultsrow        { background-color: #FFFFFF; }
+    		.resultsrowupdated { background-color: #AAAADD; }
+
+    		.box               { border: 1px solid #000000; padding: 6px; }
+    	//-->
+    	</style>
+    </head>
+
+    <body ng-controller="MaintainerController as maint" ng-init="maintainer='%%(maintainer)'">
+    <h2>{{ maintainer }}'s ports</h2>
+    <a href="index.html">Index</a>
+    <hr>
+    <p>
+    	Notes:
+    	<ul>
+    		<li>Port version strings are derived from DISTNAME values; they are not in "ports format"</li>
+    		<li>
+    			Updated/Checked time is when the database was updated and when a new distfile scan was
+    			done, respectively.
+    		</li>
+    	</ul>
+    </p>
+
+    <p>
+    	<ul>
+            <li>Port and New Version columns are clickable</li>
+            <li>Table headings are clickable for different sorting.</li>
+        </ul>
+    </p>
+
+    <p>
+    	Key for the 'M' column:
+    	<ul>
+    		<li>G = file was found by sending incremental version guesses to server.</li>
+    		<li>L = file was found in FTP or HTTP directory index or with dedicated handler</li>
+    		<li>X = port is ignored - new versions are not reported.</li>
+    	</ul>
+    </p>
+
+    <span class="box">
+        Filter Port (by name): <input ng-model="search.name">
+        Only show outdated? <input type=checkbox ng-model="maint.onlyOutdated">
+    </span>
+
+    <br /><br />
+
+    <table class="results" cellspacing="1" cellpadding="2">
+    	<tbody id="results">
+    		<tr class="resultshead">
+    			<td><a href="" ng-click="predicate = 'port'; reverse=false">Port</a></td>
+    			<td><a href="" ng-click="predicate = 'cat'; reverse=false">Category</a></td>
+    			<td><a href="" ng-click="predicate = 'ver'; reverse=false">Current</a></td>
+    			<td><a href="" ng-click="predicate = 'newver'; reverse=false">New</a></td>
+    			<td><a href="" ng-click="predicate = 'updated'; reverse=!false">Last Updated</a></td>
+    			<td><a href="" ng-click="predicate = 'checked'; reverse=!false">Last Checked</a></td>
+    			<td><a href="" ng-click="predicate = 'method'; reverse=false">M</a></td>
+    		</tr>
+            <tr ng-class="maint.rowClass(port.newver)" ng-show="maint.showOutdated(port, maint.onlyOutdated)" ng-repeat="port in maint.ports | filter:search | orderBy:predicate:reverse">
+                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.cat }}/{{ port.name }}">{{ port.name }}</a></td>
+                <td>{{ port.cat }}</td>
+                <td>{{ port.ver }}</td>
+                <td><a href="{{ port.newurl }}">{{ port.newver }}</a></td>
+                <td>{{ port.updated }}</td>
+                <td>{{ port.checked }}</td>
+                <td>{{ port.method }}</td>
+            </tr>
+    	</tbody>
+    </table>
+
+	<script type="text/javascript" src="assets/angular.min.js"></script>
+    <script type="text/javascript" src="assets/app.js"></script>
+</body>
+</html>

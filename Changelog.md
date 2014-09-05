@@ -1,3 +1,9 @@
+v1.1.0 (not released yet)
+======
+
+Overhaul templates and default to dynamic pages utilizing AngularJS for
+better filtering and sorting options.
+
 v1.0.0
 ======
 
