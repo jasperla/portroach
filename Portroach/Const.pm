@@ -42,10 +42,10 @@ our @ISA = qw(Exporter);
 
 use constant {
 	APPNAME     		=> 'portroach',
-	APPVER      		=> '0.9.0',
+	APPVER      		=> '1.0.0',
 	AUTHOR      		=> 'Shaun Amott and Jasper Lievisse Adriaanse',
 
-	USER_AGENT  		=> 'portroach/0.9.0',
+	USER_AGENT  		=> 'portroach/1.0.0',
 
 	DB_VERSION  		=> 2014050901,
 
