@@ -1,6 +1,6 @@
 =head1 NAME
 
-portroach - A tool to scan for new versions of FreeBSD ports.
+portroach - Tool to scan for new versions of OpenBSD ports.
 
 
 =head1 SYNOPSIS
@@ -17,12 +17,9 @@ portroach - A tool to scan for new versions of FreeBSD ports.
 =head1 DESCRIPTION
 
 Portroach is an automated system designed to search for new versions of
-software available in the FreeBSD ports tree. It is primarily designed for use
-by FreeBSD port maintainers, who can avoid trailing around dozens of websites
+software available in the OpenBSD ports tree. It is primarily designed for use
+by OpenBSD port maintainers, who can avoid trailing around dozens of websites
 looking for updates. However, I hope that others might find it useful too.
-
-The current version of Portroach is also capable of checking OpenBSD's ports,
-NetBSD's pkgsrc.
 
 
 =head1 SYSTEM REQUIREMENTS
@@ -31,7 +28,7 @@ The following software is required to run Portroach:
 
     - PostgreSQL or SQLite
     - POSIX-compatible system
-    - The FreeBSD ports tree
+    - The OpenBSD ports tree
     - Berkeley make
     - Perl 5.6+
 
@@ -96,7 +93,7 @@ command line. For example:
 
     $ portroach --precious_data --num_children=8
 
-=head2 Update Ports Tree (FreeBSD Only)
+=head2 Update Ports Tree
 
 Ensure your ports tree is up to date.
 
@@ -104,9 +101,9 @@ Ensure your ports tree is up to date.
 
 We need now to populate the database with the software we want to check.
 
-=head3 Option One: FreeBSD
+=head3 Option One: OpenBSD
 
-If you're using Portroach to check FreeBSD ports, run:
+To start off, run:
 
     $ portroach build
 
@@ -115,23 +112,10 @@ the information it needs from the ports tree. Ports (by virtue of make) is
 slow; the database we're building is much faster. After this initial build, we
 will do incremental 'builds', only updating what has changed.
 
-=head3 Option Two: Other Software Repositories
-
-If you would like to check another software repository/source, Portroach
-has several options.
-
-NetBSD and OpenBSD's ports trees are supported by the standard
-"Ports" backend. See F<portroach.conf> for details on how to configure this.
-Make sure you've got the correct C<make> at hand for Portroach if you're
-checking either of these from another operating system (e.g. FreeBSD).
-
-Caveat: neither of the above have been well-tested, and support should
-probably be considered experimental.
-
 
 =head1 REGULAR OPERATION
 
-=head2 Update Ports Tree (FreeBSD Only)
+=head2 Update Ports Tree
 
 Ensure your ports tree is up to date.
 

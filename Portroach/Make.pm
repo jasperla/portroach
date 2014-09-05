@@ -144,9 +144,7 @@ sub Make
 		$doshow = 1;
 	}
 
-	if ($maketype eq 'freebsd') {
-		$list = join(' -V ', @vars);
-	} elsif ($maketype eq 'openbsd') {
+	if ($maketype eq 'openbsd') {
 		if ($doshow) {
 			$list = join('\\ ', @vars);
 		} else {

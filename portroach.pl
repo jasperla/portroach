@@ -1,12 +1,5 @@
 #!/usr/bin/perl
-#------------------------------------------------------------------------------
-# Project     : portscout
-# Author      : Shaun Amott <shaun@inerd.com>
-# Start date  : 2006-01-07
-# Environment : perl 5.8.x, PostgreSQL 7.4, FreeBSD 6.x
-# Download    : http://www.inerd.com/software/portroach/
 #
-#------------------------------------------------------------------------------
 # Copyright (C) 2005-2011, Shaun Amott. All rights reserved.
 # Copyright (C) 2014, Jasper Lievisse Adriaanse. All rights reserved.
 #

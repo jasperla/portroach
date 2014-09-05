@@ -89,7 +89,7 @@ sub Init
 
 	$self->{opts}->{type} = $self->{opts}->{type}
 		? lc $self->{opts}->{type}
-		: 'freebsd';
+		: 'openbsd';
 
 	Portroach::Make->Root($settings{ports_dir});
 	Portroach::Make->Debug($settings{debug});
@@ -101,13 +101,6 @@ sub Init
 		qw(DISTNAME DISTFILES EXTRACT_SUFX MASTER_SITES MASTER_SITE_SUBDIR
 		    MAINTAINER COMMENT PORTROACH)
 	);
-
-	if ($self->{opts}->{type} eq 'freebsd') {
-		Portroach::Make->InitCache(
-			qw(DISTVERSION MASTER_PORT SLAVE_PORT OSVERSION OSREL PORTOBJCFORMAT ARCH OPSYS UID
-			   PKGINSTALLVER CONFIGURE_MAX_CMD_LEN)
-		);
-	}
 }
 
 
@@ -262,13 +255,6 @@ sub BuildDB
 
 	@cats = split /\s+/, Portroach::Make->Make($settings{ports_dir}, 'SUBDIR');
 
-	if ($self->{opts}->{type} eq 'freebsd') {
-		$mfi = stat $settings{ports_dir} . '/MOVED'
-			or die "Couldn't stat MOVED file";
-
-		    $move_ports = 1 if ($mfi->mtime > $lastbuild);
-	}
-
 	# If the user has specified a maintainer restriction
 	# list, try to get to get the list of desired ports
 	# from the INDEX file.
@@ -399,26 +385,11 @@ sub BuildDB
 
 	if ($num_ports) {
 		print "\n" unless ($settings{quiet});
-		if ($self->{opts}->{type} eq 'freebsd') {
-			print "Cross-referencing master/slave ports...\n";
-
-			unless ($settings{precious_data}) {
-				$sths{portdata_masterport_str2id}->execute;
-				$sths{portdata_masterport_enslave}->execute;
-			}
-		}
 	}
 
 	setstat('buildtime', $buildtime);
 
 	finish_sql(\$dbh, \%sths);
-
-	if ($move_ports && $self->{opts}->{type} eq 'freebsd') {
-		if (!MovePorts($incremental ? 0 : 1)) {
-			#$dbh->disconnect;
-			return 0;
-		}
-	}
 
 	#$dbh->disconnect;
 	return 1;
