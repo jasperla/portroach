@@ -17,7 +17,7 @@
 
 prefix           = /var/
 tmpdir           = /tmp
-wwwdir           = %(prefix)/www/portroach/
+wwwdir           = %(prefix)/www/
 
 #-- Data Provider -------------------------------------------------------------
 
