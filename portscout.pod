@@ -268,7 +268,16 @@ ascertained from the distfile name.
 
 =head1 COPYRIGHT
 
+=over
+
+=item
 Copyright (C) 2005-2011, Shaun Amott E<lt>shaun@inerd.comE<gt>.
+
+=item
+Copyright (C) 2014, Jasper Lievisse Adriaanse E<lt>jasper@humppa.nlE<gt>.
+
+=back
+
 All rights reserved.
 
 =cut

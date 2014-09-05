@@ -44,7 +44,7 @@ our @ISA = qw(Exporter);
 use constant {
 	APPNAME     		=> 'portscout',
 	APPVER      		=> '0.8.1',
-	AUTHOR      		=> 'Shaun Amott',
+	AUTHOR      		=> 'Shaun Amott and Jasper Lievisse Adriaanse',
 
 	USER_AGENT  		=> 'portscout/0.8.1',
 

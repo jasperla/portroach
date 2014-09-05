@@ -9,6 +9,7 @@
 # $Id: portscout.pl,v 1.82 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 # Copyright (C) 2005-2011, Shaun Amott. All rights reserved.
+# Copyright (C) 2014, Jasper Lievisse Adriaanse. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
