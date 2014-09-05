@@ -38,6 +38,7 @@ use LWP::UserAgent;
 use MIME::Lite;
 use Net::FTP;
 use URI;
+use JSON;
 
 use DBI;
 
@@ -1238,7 +1239,7 @@ sub robotsallowed
 
 sub GenerateHTML
 {
-	my (%sths, %outdata, @time, @assets, $dbh, $sth, $template);
+	my (%sths, %outdata, @time, @assets, @results, $dbh, $sth, $template);
 
 	$dbh = connect_db();
 
@@ -1256,6 +1257,7 @@ sub GenerateHTML
 	$sths{portdata_genresults}->execute;
 
 	emptydir($settings{html_data_dir});
+	emptydir("$settings{html_data_dir}/json/") if ($settings{output_json});
 
 	# Put together some output data for the templates
 
@@ -1294,6 +1296,25 @@ sub GenerateHTML
 
 		$template->output("index-$sortby.html");
 		$template->reset;
+	}
+
+	if ($settings{output_json}) {
+		print "Writing results in JSON format...\n";
+		my $sth = $dbh->prepare("SELECT * FROM results") or die DBI->errstr;
+		$sth->execute;
+
+		while (my $row = $sth->fetchrow_hashref) {
+			$row->{percentage} = sprintf('%.2f%', $row->{percentage})
+				if ($row->{percentage});
+			push(@results, $row);
+		}
+
+		$sth->finish;
+
+		open(my $fh, '>>', "$settings{html_data_dir}/json/totals.json") or die $!;
+		print $fh JSON::encode_json(\@results);
+		close($fh);
+		undef @results;
 	}
 
 	# Point index.html at the default sorted index
@@ -1347,9 +1368,17 @@ sub GenerateHTML
 			$row->{checked} =~ s/:\d\d(?:\.\d+)?$/ $settings{local_timezone}/;
 
 			$template->pushrow($row);
+			push(@results, $row);
 		}
 		$template->output("$outdata{maintainer}.html");
 		$template->reset;
+
+		if ($settings{output_json}) {
+		    open(my $fh, '>>', "$settings{html_data_dir}/json/$outdata{maintainer}.json") or die $!;
+		    print $fh JSON::encode_json(\@results);
+		    close($fh);
+		    undef @results;
+		}
 
 		# We don't want this polluting the data
 		# when the next template uses it.

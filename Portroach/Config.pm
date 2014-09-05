@@ -118,7 +118,9 @@ my (@paths, %settings_types, $bool_opts);
 
 	quickmake_enable	=> 0,
 
-	hide_unchanged  	=> 0
+	hide_unchanged  	=> 0,
+
+	output_json		=> 0,
 );
 
 
