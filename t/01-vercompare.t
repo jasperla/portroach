@@ -7,9 +7,9 @@ BEGIN { plan tests => 18; }
 use strict;
 use warnings;
 
-use Portscout::Const;
-use Portscout::Util;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Util;
+use Portroach::Config;
 
 $settings{version_compare} = 'internal';
 

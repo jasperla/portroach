@@ -26,15 +26,15 @@
 # $Id: XML.pm,v 1.8 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::DataSrc::XML;
+package Portroach::DataSrc::XML;
 
-use base qw(Portscout::DataSrc);
+use base qw(Portroach::DataSrc);
 
 use XML::XPath;
 use XML::XPath::XMLParser;
 
-use Portscout::API;
-use Portscout::Util;
+use Portroach::API;
+use Portroach::Util;
 
 use strict;
 
@@ -89,7 +89,7 @@ sub Build
 	my $got_ports = 0;
 	my $num_ports = $self->Count(); # XXX: caching?
 
-	my $ps = Portscout::API->new;
+	my $ps = Portroach::API->new;
 
 	%singlemap = (
 		'name'       => 'name',
@@ -284,30 +284,30 @@ sub Count
 
 =head1 NAME
 
-Portscout::DataSrc::XML
+Portroach::DataSrc::XML
 
-XML file DataSrc backend for Portscout.
+XML file DataSrc backend for Portroach.
 
 =head1 DESCRIPTION
 
 This module provides a simple means of describing software you want to
-monitor to Portscout. Instead of checking the FreeBSD ports tree,
-Portscout will read the required data from an XML file.
+monitor to Portroach. Instead of checking the FreeBSD ports tree,
+Portroach will read the required data from an XML file.
 
 The XML module is also intended as a demonstration for developers
-wishing to extend Portscout to support other repositories.
+wishing to extend Portroach to support other repositories.
 
 =head1 CONFIGURATION
 
-Update F<portscout.conf> to enable XML as the DataSrc backend:
+Update F<portroach.conf> to enable XML as the DataSrc backend:
 
-    datasrc = Portscout::DataSrc::XML
+    datasrc = Portroach::DataSrc::XML
     datasrc_opts = file:/path/to/file.xml
 
 =head1 FILE FORMAT
 
 The file should be in the following format. It must contain well-formed
-XML and be in the location specified in F<portscout.conf>.
+XML and be in the location specified in F<portroach.conf>.
 
     <items>
         <item>
@@ -351,7 +351,7 @@ the defaults and can be omitted.
 =head1 USING THE BACKEND
 
 Once you have your file ready, you can use the standard C<build> and
-C<rebuild> commands to update Portscout's internal database with any
+C<rebuild> commands to update Portroach's internal database with any
 changes.
 
 =cut

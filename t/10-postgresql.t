@@ -10,9 +10,9 @@ use File::Temp qw(tempfile tempdir);
 use strict;
 use warnings;
 
-use Portscout::Util;
-use Portscout::Config;
-use Portscout::SQL;
+use Portroach::Util;
+use Portroach::Config;
+use Portroach::SQL;
 
 my (%sths, $dbh, $dbuser, $dbname, $ret);
 
@@ -38,14 +38,14 @@ $settings{db_user} = $dbuser;
 $settings{db_pass} = '';
 $settings{db_connstr} = "DBI:Pg:dbname=$dbname";
 
-Portscout::SQL->Load('Pg');
+Portroach::SQL->Load('Pg');
 
 $dbh = connect_db();
 
 # Prepare all SQL statements
 
 eval {
-	prepare_sql($dbh, \%sths, keys %Portscout::SQL::sql);
+	prepare_sql($dbh, \%sths, keys %Portroach::SQL::sql);
 };
 
 ok(!$@);

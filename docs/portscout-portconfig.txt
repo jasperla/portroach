@@ -18,14 +18,14 @@ Details of the PORTSCOUT variable
 Keys
 ----
 
-site:   Tell portscout to look at one specific page or site for downloads,
+site:   Tell portroach to look at one specific page or site for downloads,
         rather than looking through MASTER_SITES.
 
         Example: site:http://www.example.net/downloads.php
 
         Apache index pages or FTP directories are ideal for this.
 
-limit:  Tell portscout to reject any new versions unless they match this
+limit:  Tell portroach to reject any new versions unless they match this
         Perl regular expression.
 
         Example: limit:.*[acd]$$

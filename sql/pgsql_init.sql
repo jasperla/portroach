@@ -1,5 +1,5 @@
 /*
- * Create initial portscout SQL tables
+ * Create initial portroach SQL tables
  *
  * Copyright (C) 2006-2011, Shaun Amott <shaun@inerd.com>
  * All rights reserved.
@@ -79,7 +79,7 @@ CREATE TABLE allocators (
 	allocator text
 );
 
-CREATE TABLE portscout (
+CREATE TABLE portroach (
 	dbver integer
 );
 
@@ -89,7 +89,7 @@ CREATE TABLE stats (
 );
 
 INSERT
-  INTO portscout (dbver)
+  INTO portroach (dbver)
 VALUES (2011040901);
 
 INSERT

@@ -1,5 +1,5 @@
 /*
- * Create initial portscout SQL tables
+ * Create initial portroach SQL tables
  *
  * Copyright (C) 2006-2011, Shaun Amott <shaun@inerd.com>
  * Copyright (C) 2011, Martin Matuska <mm@FreeBSD.org>
@@ -86,8 +86,8 @@ CREATE TABLE allocators (
 	allocator text
 );
 
-DROP TABLE IF EXISTS portscout;
-CREATE TABLE portscout (
+DROP TABLE IF EXISTS portroach;
+CREATE TABLE portroach (
 	dbver integer
 );
 
@@ -106,7 +106,7 @@ CREATE TABLE results (
 );
 
 INSERT
-  INTO portscout (dbver)
+  INTO portroach (dbver)
 VALUES (2011040901);
 
 INSERT

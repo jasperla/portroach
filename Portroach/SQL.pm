@@ -26,7 +26,7 @@
 # $Id: SQL.pm,v 1.20 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::SQL;
+package Portroach::SQL;
 
 require Exporter;
 
@@ -369,19 +369,19 @@ $sql{allocators_select} =
 
 # Misc.
 
-$sql{portscout_version} =
+$sql{portroach_version} =
 	q(SELECT dbver
-	    FROM portscout
+	    FROM portroach
 	ORDER BY dbver DESC
 	   LIMIT 1);
 
-$sql{portscout_getstat} =
+$sql{portroach_getstat} =
 	q(SELECT val
 	    FROM stats
 	   WHERE key = ?
 	   LIMIT 1);
 
-$sql{portscout_setstat} =
+$sql{portroach_setstat} =
 	q(UPDATE stats
 	     SET val = ?
 	   WHERE key = ?);
@@ -423,7 +423,7 @@ sub Load
 
 	return 0 if (!$db);
 
-	eval 'use Portscout::SQL::' . $db . ' qw(RegisterHacks);';
+	eval 'use Portroach::SQL::' . $db . ' qw(RegisterHacks);';
 
 	if ($@) {
 		warn $@;

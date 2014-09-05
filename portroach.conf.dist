@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# portscout config file
+# portroach config file
 #
 # Format:
 #   - Comments begin with '#' and extend to the end of the line
@@ -11,52 +11,52 @@
 #   - You can reuse previously set variables, like: %(name) - these variables
 #     must use underscores, not spaces.
 #
-# $Id: portscout.conf,v 1.16 2011/04/09 17:17:34 samott Exp $
+# $Id: portroach.conf,v 1.16 2011/04/09 17:17:34 samott Exp $
 #------------------------------------------------------------------------------
 
 # Space saving variables (only used within this file)
 
 prefix           = /var/
 tmpdir           = /tmp
-wwwdir           = %(prefix)/www/portscout/
+wwwdir           = %(prefix)/www/portroach/
 
 #-- Data Provider -------------------------------------------------------------
 
-# The DataSrc module is what portscout uses to compile information
+# The DataSrc module is what portroach uses to compile information
 # into its internal database. In other words, it's the layer between
-# the repository of software and portscout itself.
+# the repository of software and portroach itself.
 
 # Option One: FreeBSD ports (NetBSD and OpenBSD supported too)
 
-datasrc          = Portscout::DataSrc::Ports
+datasrc          = Portroach::DataSrc::Ports
 datasrc opts     = type:OpenBSD
 
 # Option Two: XML file
 
-#datasrc          = Portscout::DataSrc::XML
-#datasrc opts     = file:%(prefix)/etc/portscout/software.xml
+#datasrc          = Portroach::DataSrc::XML
+#datasrc opts     = file:%(prefix)/etc/portroach/software.xml
 
 #-- User Privileges -----------------------------------------------------------
 
-# If these are not empty, portscout will switch to this
+# If these are not empty, portroach will switch to this
 # user/group as soon as is practical after starting (if it
 # is running as root).
 
-#user             = portscout
-#group            = portscout
+#user             = portroach
+#group            = portroach
 
 #-- Directories ---------------------------------------------------------------
 
 ports dir        = /usr/ports          		# Ports root directory
 
-html data dir    = %(wwwdir)/portscout 		# Where to put generated HTML
+html data dir    = %(wwwdir)/portroach 		# Where to put generated HTML
 
-templates dir    = /home/jasper/portscout/templates # Where HTML templates are kept
+templates dir    = /home/jasper/portroach/templates # Where HTML templates are kept
 
 #-- Limit Processing ----------------------------------------------------------
 
 # The following three variables are comma-separated lists of
-# items that portscout should process. If left empty, portscout
+# items that portroach should process. If left empty, portroach
 # will not limit itself, and will process the whole ports tree.
 
 # Items in the list may contain * and ? wildcard characters.
@@ -67,7 +67,7 @@ restrict port       =	  				# "     "  "     ports
 
 # Note that if you set restrict_maintainer, the entire ports
 # tree needs to be processed to ascertain which ports meet
-# the restriction criterion. This can be avoided if portscout
+# the restriction criterion. This can be avoided if portroach
 # has access to an INDEX file. If you don't have an INDEX file,
 # and aren't impatient, you can switch off the following.
 # With no maintainer restriction in place, it has no effect.
@@ -85,7 +85,7 @@ indexfile enable    = true   				# Use INDEX if needed
 
 mail enable      = false
 
-mail from        = portscout 				# Sender address
+mail from        = portroach 				# Sender address
 mail subject     = FreeBSD ports you maintain which are out of date
 mail method      = sendmail  				# Can be 'sendmail' or 'smtp'
 #mail host        = localhost				# SMTP server, if method is 'smtp'
@@ -93,7 +93,7 @@ mail method      = sendmail  				# Can be 'sendmail' or 'smtp'
 #-- Output Settings -----------------------------------------------------------
 
 # Timezone options. This is just eye-candy for template generation,
-# but setting it to anything other than 'GMT' will cause portscout
+# but setting it to anything other than 'GMT' will cause portroach
 # to use the local time, rather than GMT.
 
 local timezone   = GMT       				# Use Greenwich Time
@@ -131,7 +131,7 @@ version compare  = internal  				# Version algorithm to use
 
 portconfig enable = true     				# Respect port config hints
 
-# If you're using portscout with a something other than the
+# If you're using portroach with a something other than the
 # FreeBSD ports tree, switch this off to disable rejection of
 # non-FreeBSD distfiles (such as 1.3.2-win32.zip).
 
@@ -145,9 +145,9 @@ ftp timeout      = 120       				# Timeout in seconds
 ftp passive      = true      				# Try to use passive FTP
 ftp retries      = 3         				# Give up after this many failures
 
-# The following tell portscout how to deal with sites which have a robots.txt
+# The following tell portroach how to deal with sites which have a robots.txt
 # file. Possible values:
-#   standard - Check for robots.txt but only respect portscout-specific bans.
+#   standard - Check for robots.txt but only respect portroach-specific bans.
 #   strict   - Respect all bans, including '*' wildcards.
 #
 # You can disable any robots checks with robots_enable. But think twice
@@ -163,9 +163,9 @@ robots checking  = strict    				# Strict robots.txt checking
 
 # Database connection details
 
-db user          = portscout 				# Database username
-db name          = portscout 				# Database name
-db pass          = portscout   				# Password
+db user          = portroach 				# Database username
+db name          = portroach 				# Database name
+db pass          = portroach   				# Password
 
 # These two are only used for db_connstr, below
 
@@ -174,7 +174,7 @@ db port          =           				# Port
 
 db connstr       = DBI:Pg:dbname=%(db_name)
 #db connstr       = DBI:Pg:dbname=%(db_name);host=%(db_host);port=%(db_port)
-#db connstr       = DBI:SQLite:dbname=/var/db/portscout.db
+#db connstr       = DBI:SQLite:dbname=/var/db/portroach.db
 
 
 # ex: ts=4 sw=4

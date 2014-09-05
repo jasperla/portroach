@@ -23,10 +23,10 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: SQLite.pm,v 1.9 2010/05/24 02:16:02 samott Exp $
+# $Id: Pg.pm,v 1.6 2010/05/15 20:19:55 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::SQL::SQLite;
+package Portroach::SQL::Pg;
 
 require Exporter;
 
@@ -42,7 +42,7 @@ our @EXPORT_OK = qw(RegisterHacks);
 # Globals
 #------------------------------------------------------------------------------
 
-my $sql = \%Portscout::SQL::sql;
+my $sql = \%Portroach::SQL::sql;
 
 
 #------------------------------------------------------------------------------
@@ -55,32 +55,29 @@ $$sql{sitedata_setrobots} =
 	q(UPDATE sitedata
 	     SET robots = ?,
 	         robots_paths = ?,
-	         robots_nextcheck = datetime(CURRENT_TIMESTAMP, '+14 days')
+	         robots_nextcheck = CURRENT_TIMESTAMP + INTERVAL '2 weeks'
 	   WHERE host = ?);
 
 # GenerateHTML
 
-$$sql{portdata_genresults_init} =
-	q(DELETE FROM results);
-
 $$sql{portdata_genresults} =
-	q(INSERT
-	    INTO results
-	
-	  SELECT lower(maintainer) AS maintainer,
+	q(SELECT maintainer,
 	         total,
 	         COALESCE(withnewdistfile, 0) AS withnewdistfile,
 	         CAST (100*(COALESCE(withnewdistfile, 0)*1.0/total*1.0) AS FLOAT)
 	           AS percentage
+	    INTO TEMP results
 	
 	    FROM (
-	  SELECT maintainer,
+	  SELECT lower(maintainer) AS maintainer,
 	         COUNT(maintainer) AS total,
 	         COUNT(newver != ver) AS withnewdistfile
 	    FROM portdata
-	   WHERE moved != 1
-	GROUP BY maintainer
-	));
+	   WHERE moved != true
+	GROUP BY lower(maintainer)
+	)
+	      AS pd1
+	);
 
 _transformsql();
 
@@ -119,30 +116,6 @@ sub RegisterHacks
 {
 	my ($self) = shift;
 
-	my ($dbh) = @_;
-
-	# Stolen from DBD::PgLite
-	$dbh->func(
-		'split_part',
-		3,
-		sub {
-			my ($str, $delim, $i) = @_;
-			$i ||= 1;
-			return (split(/\Q$delim\E/, $str))[$i-1];
-		},
-		'create_function'
-	);
-
-	$dbh->func(
-		'position',
-		2,
-		sub {
-			my ($part, $whole) = @_;
-			return index($whole, $part) + 1;
-		},
-		'create_function'
-	);
-
 	return;
 }
 
@@ -160,32 +133,6 @@ sub RegisterHacks
 
 sub _transformsql
 {
-	# A bit over-engineered...
-	foreach my $k (keys %$sql) {
-		my ($from, $to);
-
-		$$sql{$k} =~ s/true/1/g;
-		$$sql{$k} =~ s/false/0/g;
-
-		# Try to implement age()
-		if ($$sql{$k} =~ s/age\((.*?)\)\s*([<>=])\s*'(\d+ hours?|minutes?|seconds?)'/datetime($1) _EQU_ datetime('now', '_SIG_$3')/g) {
-			my ($sig) = $2;
-			if ($sig eq '>') { $$sql{$k} =~ s/_EQU_/</g; $$sql{$k} =~ s/_SIG_/-/; }
-			if ($sig eq '<') { $$sql{$k} =~ s/_EQU_/>/g; $$sql{$k} =~ s/_SIG_/-/; }
-			if ($sig eq '=') { $$sql{$k} =~ s/_EQU_/=/g; $$sql{$k} =~ s/_SIG_/-/; }
-		}
-
-		# Convert position(X in Y) to position(X, Y) for
-		# our function implemented above.
-		$$sql{$k} =~ s/position\((.*?)\s*[Ii][Nn]\s*(.*?)\)/position($1, $2)/g;
-
-		# Use case-insensitive maintainer INDEX when required
-		#$$sql{$k} =~ s/lower\(maintainer\)\s*=\s*lower\(\?\)/maintainer COLLATE NOCASE = ?/gi
-		$$sql{$k} =~ s/lower\(maintainer\)\s*=\s*lower\(\?\)/maintainer = ?/gi;
-		$$sql{$k} =~ s/lower\(address\)\s*=\s*lower\(\?\)/address = ?/gi;
-		$$sql{$k} =~ s/ORDER\s*BY\s*lower\(maintainer\)/ORDER BY maintainer/gi;
-	}
-
 	return;
 }
 

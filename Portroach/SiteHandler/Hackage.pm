@@ -15,13 +15,13 @@
 #
 #------------------------------------------------------------------------------
 
-package Portscout::SiteHandler::RubyGems;
+package Portroach::SiteHandler::Hackage;
 
-use JSON qw(decode_json);
+use HTML::TokeParser;
 use LWP::UserAgent;
 
-use Portscout::Const;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Config;
 
 use strict;
 
@@ -32,7 +32,7 @@ require 5.006;
 # Globals
 #------------------------------------------------------------------------------
 
-push @Portscout::SiteHandler::sitehandlers, __PACKAGE__;
+push @Portroach::SiteHandler::sitehandlers, __PACKAGE__;
 
 our %settings;
 
@@ -51,7 +51,7 @@ sub new
 	my $self      = {};
 	my $class     = shift;
 
-	$self->{name} = 'RubyGems';
+	$self->{name} = 'Hackage';
 
 	bless ($self, $class);
 	return $self;
@@ -73,14 +73,15 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /http:\/\/rubygems\.org\/downloads\//);
+	return ($url =~ /http:\/\/hackage\.haskell\.org\/package\//);
 }
 
 
 #------------------------------------------------------------------------------
 # Func: GetFiles()
-# Desc: Extract a list of files from the given URL. For RubyGems.org we query
-#        the API for all available versions and iteratively store them.
+# Desc: Extract a list of files from the given URL. Parse the package's
+#       HTML page and extract the latest version in a rather crude manner.
+#       Ideally it should query the Hackage API for this.
 #
 # Args: $url     - URL we would normally fetch from.
 #       \%port   - Port hash fetched from database.
@@ -95,25 +96,30 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($api_url, $gem, $resp, $ua);
-	my $gems_host = 'https://rubygems.org/api/v1/versions/';
+	my ($hackage, $package, $query, $resp, $ua);
 
-	# Strip all the digits at the end to keep the stem of the Gem.
+	# Strip all the digits at the end to keep the stem of the module.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
-	    $gem = $1;
+	    $package = $1;
 	}
 
-	$api_url = $gems_host . $gem . '.json';
+	$hackage = 'http://hackage.haskell.org/package/';
+	$query = $hackage . $package;
 
-	_debug("GET $api_url");
+	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
-	$resp = $ua->request(HTTP::Request->new(GET => $api_url));
+	$resp = $ua->request(HTTP::Request->new(GET => $query));
 
 	if ($resp->is_success) {
-	    my @releases = @{decode_json($resp->decoded_content)};
-	    foreach my $release (@releases) {
-		my $gem_url = $url . $gem . '-' . $release->{number} . '.gem';
-	        push @$files, $gem_url;
+	    my $tp = HTML::TokeParser->new(\$resp->decoded_content);
+	    # XXX: Bad heuristic to depend on the only <strong> tag, but
+	    # it's the best we can get by with for the moment.
+	    while (my $token = $tp->get_tag('strong')) {
+		my ($url, $version);
+
+		$version = $tp->get_trimmed_text('/strong');
+		$url = $hackage . $package . '-' . $version . '/' . $package . '-' . $version . '.tar.gz';
+		push @$files, $url;
 	    }
 	} else {
 	    my $code = $resp->code;
@@ -140,7 +146,7 @@ sub _debug
 
 	$msg = '' if (!$msg);
 
-	print STDERR "(SiteHandler::RubyGems) $msg\n"
+	print STDERR "(SiteHandler::CPAN) $msg\n"
 		if ($settings{debug});
 }
 

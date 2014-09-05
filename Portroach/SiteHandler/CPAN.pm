@@ -15,13 +15,13 @@
 #
 #------------------------------------------------------------------------------
 
-package Portscout::SiteHandler::Hackage;
+package Portroach::SiteHandler::CPAN;
 
-use HTML::TokeParser;
+use JSON qw(decode_json);
 use LWP::UserAgent;
 
-use Portscout::Const;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Config;
 
 use strict;
 
@@ -32,7 +32,7 @@ require 5.006;
 # Globals
 #------------------------------------------------------------------------------
 
-push @Portscout::SiteHandler::sitehandlers, __PACKAGE__;
+push @Portroach::SiteHandler::sitehandlers, __PACKAGE__;
 
 our %settings;
 
@@ -51,7 +51,7 @@ sub new
 	my $self      = {};
 	my $class     = shift;
 
-	$self->{name} = 'Hackage';
+	$self->{name} = 'CPAN';
 
 	bless ($self, $class);
 	return $self;
@@ -73,15 +73,14 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /http:\/\/hackage\.haskell\.org\/package\//);
+	return ($url =~ /(http|ftp):\/\/(.*?)\/CPAN\/modules\//);
 }
 
 
 #------------------------------------------------------------------------------
 # Func: GetFiles()
-# Desc: Extract a list of files from the given URL. Parse the package's
-#       HTML page and extract the latest version in a rather crude manner.
-#       Ideally it should query the Hackage API for this.
+# Desc: Extract a list of files from the given URL. Query the MetaCPAN API
+#       for the latest available version of a given module.
 #
 # Args: $url     - URL we would normally fetch from.
 #       \%port   - Port hash fetched from database.
@@ -96,31 +95,27 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($hackage, $package, $query, $resp, $ua);
+	my ($metacpan, $module, $api_url, $ua, $resp);
+	my $metacpan = 'http://api.metacpan.org/v0/release/_search?q=';
 
 	# Strip all the digits at the end to keep the stem of the module.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
-	    $package = $1;
+	    $module = $1;
 	}
 
-	$hackage = 'http://hackage.haskell.org/package/';
-	$query = $hackage . $package;
+	my $query = $metacpan . 'distribution:' . $module . '%20AND%20status:latest&fields=name,download_url';
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
 	$resp = $ua->request(HTTP::Request->new(GET => $query));
 
 	if ($resp->is_success) {
-	    my $tp = HTML::TokeParser->new(\$resp->decoded_content);
-	    # XXX: Bad heuristic to depend on the only <strong> tag, but
-	    # it's the best we can get by with for the moment.
-	    while (my $token = $tp->get_tag('strong')) {
-		my ($url, $version);
+    	    my $json = decode_json($resp->decoded_content);
+	    next if $json->{timed_out};
 
-		$version = $tp->get_trimmed_text('/strong');
-		$url = $hackage . $package . '-' . $version . '/' . $package . '-' . $version . '.tar.gz';
-		push @$files, $url;
-	    }
+	    my @hits = @{$json->{hits}->{hits}};
+
+	    push @$files, @hits[0]->{fields}->{download_url};
 	} else {
 	    my $code = $resp->code;
 	    _debug("GET failed: $code");

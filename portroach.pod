@@ -1,33 +1,33 @@
 =head1 NAME
 
-portscout - A tool to scan for new versions of FreeBSD ports.
+portroach - A tool to scan for new versions of FreeBSD ports.
 
 
 =head1 SYNOPSIS
 
-    portscout build
+    portroach build
 
     while (lazy) {
-        portscout rebuild
-        portscout check
-        portscout showupdates
+        portroach rebuild
+        portroach check
+        portroach showupdates
     }
 
 
 =head1 DESCRIPTION
 
-Portscout is an automated system designed to search for new versions of
+Portroach is an automated system designed to search for new versions of
 software available in the FreeBSD ports tree. It is primarily designed for use
 by FreeBSD port maintainers, who can avoid trailing around dozens of websites
 looking for updates. However, I hope that others might find it useful too.
 
-The current version of Portscout is also capable of checking OpenBSD's ports,
+The current version of Portroach is also capable of checking OpenBSD's ports,
 NetBSD's pkgsrc, and also a generic list of software from an XML file.
 
 
 =head1 SYSTEM REQUIREMENTS
 
-The following software is required to run Portscout:
+The following software is required to run Portroach:
 
     - PostgreSQL or SQLite
     - POSIX-compatible system
@@ -50,8 +50,8 @@ Plus we need a few Perl modules:
     - JSON
 
 SQLite support is currently limited to non-forking mode only. That is, if you
-decide to use SQLite, Portscout will only check one port at a time; this will
-severely limit Portscout's speed/efficiency. It is therefore suggested that
+decide to use SQLite, Portroach will only check one port at a time; this will
+severely limit Portroach's speed/efficiency. It is therefore suggested that
 SQLite only be used for relatively light workloads.
 
 
@@ -65,12 +65,12 @@ The recommended database backend is PostgreSQL.
 
 Create database:
 
-    # createuser -U pgsql -P portscout
-    # createdb -U pgsql portscout
+    # createuser -U pgsql -P portroach
+    # createdb -U pgsql portroach
 
 Execute the included F<pgsql_init.sql> script via C<psql>:
 
-    # psql portscout portscout < sql/pgsql_init.sql
+    # psql portroach portroach < sql/pgsql_init.sql
 
 This will create the database tables for you.
 
@@ -78,23 +78,23 @@ This will create the database tables for you.
 
 Create a database file with the included script:
 
-    # sqlite3 /var/db/portscout.db < sql/sqlite_init.sql
+    # sqlite3 /var/db/portroach.db < sql/sqlite_init.sql
 
-=head2 Configure Portscout
+=head2 Configure Portroach
 
-Review F<portscout.conf>, and check it suits your needs. The defaults should be
+Review F<portroach.conf>, and check it suits your needs. The defaults should be
 reasonable for most people. You can reduce C<num_children> and C<workqueue_size>
-if you don't want Portscout sucking up all your resources.
+if you don't want Portroach sucking up all your resources.
 
-Please note that Portscout's internal defaults differ from the defaults in
-F<portscout.conf> - this is because without a config file, Portscout tries to be
+Please note that Portroach's internal defaults differ from the defaults in
+F<portroach.conf> - this is because without a config file, Portroach tries to be
 "portable" and use its own directory for storing things under, whereas if a
 config file is found, it assumes it is installed and being used "system-wide".
 
-Any of the options in F<portscout.conf> can also be set on the fly on the
+Any of the options in F<portroach.conf> can also be set on the fly on the
 command line. For example:
 
-    $ portscout --precious_data --num_children=8
+    $ portroach --precious_data --num_children=8
 
 =head2 Update Ports Tree (FreeBSD Only)
 
@@ -106,30 +106,30 @@ We need now to populate the database with the software we want to check.
 
 =head3 Option One: FreeBSD
 
-If you're using Portscout to check FreeBSD ports, run:
+If you're using Portroach to check FreeBSD ports, run:
 
-    $ portscout build
+    $ portroach build
 
-This takes around 70 minutes for me. Basically, Portscout is extracting all
+This takes around 70 minutes for me. Basically, Portroach is extracting all
 the information it needs from the ports tree. Ports (by virtue of make) is
 slow; the database we're building is much faster. After this initial build, we
 will do incremental 'builds', only updating what has changed.
 
 =head3 Option Two: Other Software Repositories
 
-If you would like to check another software repository/source, Portscout
+If you would like to check another software repository/source, Portroach
 has several options.
 
 Firstly, NetBSD and OpenBSD's ports trees are supported by the standard
-"Ports" backend. See F<portscout.conf> for details on how to configure this.
-Make sure you've got the correct C<make> at hand for Portscout if you're
+"Ports" backend. See F<portroach.conf> for details on how to configure this.
+Make sure you've got the correct C<make> at hand for Portroach if you're
 checking either of these from another operating system (e.g. FreeBSD).
 
 Caveat: neither of the above have been well-tested, and support should
 probably be considered experimental.
 
 Secondly, you can use the "XML" backend for a finite list of software
-that you want to manage by hand. See L<Portscout::DataSrc::XML|Portscout::DataSrc::XML>
+that you want to manage by hand. See L<Portroach::DataSrc::XML|Portroach::DataSrc::XML>
 for more information.
 
 
@@ -142,15 +142,15 @@ Ensure your ports tree is up to date.
 =head2 Incremental Database Update
 
 If your ports tree / data source was updated since your last build/rebuild,
-ensure Portscout knows about the changes:
+ensure Portroach knows about the changes:
 
-    $ portscout rebuild
+    $ portroach rebuild
 
 =head2 Run Version Checks
 
-    $ portscout check
+    $ portroach check
 
-This will instruct Portscout to search for new distfiles for each port in the
+This will instruct Portroach to search for new distfiles for each port in the
 database. It will take several hours for a complete ports tree scan.
 
 =head2 View Results
@@ -159,14 +159,14 @@ Now you've got some results, you can view them.
 
 =head3 Option One: HTML Reports
 
-    $ portscout generate
+    $ portroach generate
 
 This will put HTML pages inside C<html_data_dir> - existing pages will be
 deleted.
 
 =head3 Option Two: E-Mail Reports
 
-    $ portscout mail
+    $ portroach mail
 
 This will send out an e-mail message to the maintainers of ports with updates.
 The e-mail messages are opt-in; you will need to add addresses to the database
@@ -174,7 +174,7 @@ before any e-mails are sent out.
 
 =head3 Option Three: Console Summary
 
-    $ portscout showupdates
+    $ portroach showupdates
 
 This will output a summary of software with outstanding updates. It is
 recommended if you're checking a limited set of software/ports.
@@ -183,29 +183,29 @@ recommended if you're checking a limited set of software/ports.
 =head1 ADDING E-MAIL ADDRESSES
 
 If you want to send e-mail reports to maintainers of updated of software, the
-e-mail addresses need to be registered with Portscout. This is a safeguard to
+e-mail addresses need to be registered with Portroach. This is a safeguard to
 ensure no one gets e-mails they don't want.
 
 Use the following to manage these e-mail "subscriptions":
 
-    $ portscout add-mail dave@example.net
+    $ portroach add-mail dave@example.net
 
-    $ portscout remove-mail john@localhost
+    $ portroach remove-mail john@localhost
 
-    $ portscout show-mail
+    $ portroach show-mail
 
 
 =head1 UPGRADING
 
 When upgrading, check the F<sql> directory for any relevant database schema
 upgrade scripts. If there were multiple schema updates between the previous
-version of Portscout and the version to which you have upgraded, be sure to
+version of Portroach and the version to which you have upgraded, be sure to
 run each script in sequence to arrive at the latest database version.
 
 
 =head1 CHECKING ALGORITHM
 
-For anyone interested in how Portscout operates, here is a high-level summary
+For anyone interested in how Portroach operates, here is a high-level summary
 of the checking algorithm in use:
 
  Test 1:
@@ -218,7 +218,7 @@ of the checking algorithm in use:
    1) Increment each part of the port's version string and attempt to
       download file, e.g. for 1.4.2, try 2.0.0, 1.5.0 and 1.4.3
 
-The last test is not yet included in Portscout, but I may add it at some
+The last test is not yet included in Portroach, but I may add it at some
 point, depending on the results of testing:
 
  Test 3:
@@ -233,7 +233,7 @@ point, depending on the results of testing:
 
 =item
 
-Portscout tries to make a reasonable guess when it encounters version
+Portroach tries to make a reasonable guess when it encounters version
 strings in a different format to the original distname (e.g. 3.2,
 3.6-pre7), but this is difficult and error-prone since vendor version
 schemes vary wildly.
@@ -254,17 +254,32 @@ The restrict_* variables don't affect generate/mail.
 
 =item
 
-Portscout doesn't handle ports with multiple distfiles very well.
+Portroach doesn't handle ports with multiple distfiles very well.
 
 =item
 
 At least one port (archivers/zip, as of 2010-04-28) doesn't provide
-a version string in the vendor's format. portscout doesn't know what
+a version string in the vendor's format. portroach doesn't know what
 to do in this case, although the version could theoretically be
 ascertained from the distfile name.
 
 =back
 
+=head1 HISTORY
+
+Portscout was originally written by Shaun Amott for the FreeBSD ports tree. In
+2014 Jasper Lievisse Adriaanse added support for OpenBSD. It was then decided to
+fork and rename the project to Portroach to indicate a new direction, focusing
+on OpenBSD allows Portroach to integrate better without carrying a burden of
+backwards compatibility with the FreeBSD tree. The PORTSCOUT variable for use in
+Makefile's remained unchanged.
+
+=head1 CREDITS
+
+Many thanks to Shaun Amott for Portscout from which portroach is derived.
+Portroach wouldn't exist if it wasn't for Shaun's great work on portscout.
+
+Thanks for Antoine Jacoutot for suggesting the new project name, Portroach.
 
 =head1 COPYRIGHT
 

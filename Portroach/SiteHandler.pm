@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (C) 2011, Shaun Amott <shaun@inerd.com>
+# Copyright (C) 2010, Shaun Amott <shaun@inerd.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -23,57 +23,73 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Const.pm,v 1.5 2011/05/15 17:27:05 samott Exp $
+# $Id: SiteHandler.pm,v 1.2 2010/04/29 01:07:51 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::Const;
+package Portroach::SiteHandler;
 
-require Exporter;
+use XML::XPath;
+use XML::XPath::XMLParser;
+
+use Portroach::SiteHandler::CPAN;
+use Portroach::SiteHandler::GitHub;
+use Portroach::SiteHandler::Hackage;
+use Portroach::SiteHandler::RubyGems;
+use Portroach::SiteHandler::SourceForge;
 
 use strict;
 
 require 5.006;
 
-our @ISA = qw(Exporter);
+
+#------------------------------------------------------------------------------
+# Globals
+#------------------------------------------------------------------------------
+
+our @sitehandlers;
 
 
 #------------------------------------------------------------------------------
-# Constants
+# Func: new()
+# Desc: Constructor.
+#
+# Args: n/a
+#
+# Retn: $self
 #------------------------------------------------------------------------------
 
-use constant {
-	APPNAME     		=> 'portscout',
-	APPVER      		=> '0.8.1',
-	AUTHOR      		=> 'Shaun Amott and Jasper Lievisse Adriaanse',
+sub new
+{
+	my $self      = {};
+	my $class     = shift;
 
-	USER_AGENT  		=> 'portscout/0.8.1',
-
-	DB_VERSION  		=> 2011040901,
-
-	MAX_PATH    		=> 1024,
-
-	PREFIX      		=> '/usr/local',
-	CONFIG_FILE 		=> 'portscout.conf',
-
-	METHOD_GUESS		=> 1,
-	METHOD_LIST 		=> 2,
-
-	ROBOTS_ALLOW   		=> 0,
-	ROBOTS_UNKNOWN 		=> 1,
-	ROBOTS_BLANKET 		=> 2,
-	ROBOTS_SPECIFIC		=> 3,
-
-	TYPE_INT    		=> 1,
-	TYPE_BOOL   		=> 2,
-	TYPE_STRING 		=> 3,
-};
+	bless ($self, $class);
+	return $self;
+}
 
 
 #------------------------------------------------------------------------------
-# Export our constants.
+# Func: FindHandler()
+# Desc: Iterate over known handlers to find one, if any, that can handle the
+#       given site.
+#
+# Args: $url - A URL we want to "handle".
+#
+# Retn: $sitehandler or undef
 #------------------------------------------------------------------------------
 
-our @EXPORT = grep s/^Portscout::Const:://, keys %constant::declared;
+sub FindHandler
+{
+	my $self = shift;
+
+	my ($url) = @_;
+
+	foreach (@sitehandlers) {
+		return new $_ if $_->CanHandle($url);
+	}
+
+	return undef;
+}
 
 
 1;

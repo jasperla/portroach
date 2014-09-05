@@ -26,7 +26,7 @@
 # $Id: DataSrc.pm,v 1.1 2010/05/05 01:54:16 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::DataSrc;
+package Portroach::DataSrc;
 
 use strict;
 
@@ -65,7 +65,7 @@ sub new
 	};
 
 	# Little shortcut
-	$src = "Portscout::DataSrc$src"
+	$src = "Portroach::DataSrc$src"
 		if ($src =~ /^::/);
 
 	eval "use $src";

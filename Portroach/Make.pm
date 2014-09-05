@@ -26,7 +26,7 @@
 # $Id: Make.pm,v 1.14 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::Make;
+package Portroach::Make;
 
 use strict;
 

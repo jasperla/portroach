@@ -26,13 +26,13 @@
 # $Id: SourceForge.pm,v 1.8 2010/05/05 01:54:16 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::SiteHandler::SourceForge;
+package Portroach::SiteHandler::SourceForge;
 
 use XML::Feed;
 use LWP::UserAgent;
 
-use Portscout::Const;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Config;
 
 use strict;
 
@@ -43,7 +43,7 @@ require 5.006;
 # Globals
 #------------------------------------------------------------------------------
 
-push @Portscout::SiteHandler::sitehandlers, __PACKAGE__;
+push @Portroach::SiteHandler::sitehandlers, __PACKAGE__;
 
 our %settings;
 

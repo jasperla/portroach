@@ -1,6 +1,5 @@
 #------------------------------------------------------------------------------
 # Copyright (C) 2010, Shaun Amott <shaun@inerd.com>
-# Copyright (C) 2011, Martin Matuska <mm@FreeBSD.org>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -24,10 +23,10 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id$
+# $Id: SQLite.pm,v 1.9 2010/05/24 02:16:02 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::SQL::mysql;
+package Portroach::SQL::SQLite;
 
 require Exporter;
 
@@ -43,7 +42,7 @@ our @EXPORT_OK = qw(RegisterHacks);
 # Globals
 #------------------------------------------------------------------------------
 
-my $sql = \%Portscout::SQL::sql;
+my $sql = \%Portroach::SQL::sql;
 
 
 #------------------------------------------------------------------------------
@@ -56,7 +55,7 @@ $$sql{sitedata_setrobots} =
 	q(UPDATE sitedata
 	     SET robots = ?,
 	         robots_paths = ?,
-	         robots_nextcheck = TIMESTAMPADD(WEEK,2,CURRENT_TIMESTAMP)
+	         robots_nextcheck = datetime(CURRENT_TIMESTAMP, '+14 days')
 	   WHERE host = ?);
 
 # GenerateHTML
@@ -67,46 +66,24 @@ $$sql{portdata_genresults_init} =
 $$sql{portdata_genresults} =
 	q(INSERT
 	    INTO results
-
-	  SELECT maintainer,
-	         total,
-	         COALESCE(withnewdistfile,0) AS withnewdistfile,
-	         CAST(100*(COALESCE(withnewdistfile,0)*1.0/total*1.0) AS DECIMAL(10,2))
-	           AS percentage
-	    FROM (
+	
 	  SELECT lower(maintainer) AS maintainer,
+	         total,
+	         COALESCE(withnewdistfile, 0) AS withnewdistfile,
+	         CAST (100*(COALESCE(withnewdistfile, 0)*1.0/total*1.0) AS FLOAT)
+	           AS percentage
+	
+	    FROM (
+	  SELECT maintainer,
 	         COUNT(maintainer) AS total,
 	         COUNT(newver != ver) AS withnewdistfile
 	    FROM portdata
-	   WHERE moved != true
-	GROUP BY lower(maintainer)
-	)
-	      AS pd1
-	);
-
-$$sql{portdata_masterport_str2id} =
-	q(UPDATE portdata
-      INNER JOIN portdata as master
-	     SET portdata.masterport_id = master.id
-	   WHERE master.cat = SUBSTRING_INDEX(portdata.masterport,'/',1)
-	     AND master.name = SUBSTRING_INDEX(portdata.masterport,'/',-1)
-	     AND portdata.masterport is not NULL
-	     AND portdata.masterport != ''
-	     AND portdata.moved != true);
-
-$$sql{portdata_masterport_enslave} =
-        q(UPDATE portdata
-      INNER JOIN portdata as master
-	     SET portdata.enslaved = 1
-	   WHERE master.id = portdata.masterport_id
-	     AND master.ver = portdata.ver
-	     AND master.distfiles = portdata.distfiles
-	     AND master.mastersites = portdata.mastersites
-	     AND portdata.masterport_id != 0
-	     AND portdata.masterport_id is not NULL
-	     AND portdata.moved != true);
+	   WHERE moved != 1
+	GROUP BY maintainer
+	));
 
 _transformsql();
+
 
 #------------------------------------------------------------------------------
 # Func: new()
@@ -142,8 +119,33 @@ sub RegisterHacks
 {
 	my ($self) = shift;
 
+	my ($dbh) = @_;
+
+	# Stolen from DBD::PgLite
+	$dbh->func(
+		'split_part',
+		3,
+		sub {
+			my ($str, $delim, $i) = @_;
+			$i ||= 1;
+			return (split(/\Q$delim\E/, $str))[$i-1];
+		},
+		'create_function'
+	);
+
+	$dbh->func(
+		'position',
+		2,
+		sub {
+			my ($part, $whole) = @_;
+			return index($whole, $part) + 1;
+		},
+		'create_function'
+	);
+
 	return;
 }
+
 
 #------------------------------------------------------------------------------
 # Func: _transformsql()
@@ -158,11 +160,32 @@ sub RegisterHacks
 
 sub _transformsql
 {
+	# A bit over-engineered...
 	foreach my $k (keys %$sql) {
-		$$sql{$k} =~ s/key/`key`/gi;
-		$$sql{$k} =~ s/ignore/`ignore`/gi;
-		$$sql{$k} =~ s/random\(\)/rand\(\)/gi;
+		my ($from, $to);
+
+		$$sql{$k} =~ s/true/1/g;
+		$$sql{$k} =~ s/false/0/g;
+
+		# Try to implement age()
+		if ($$sql{$k} =~ s/age\((.*?)\)\s*([<>=])\s*'(\d+ hours?|minutes?|seconds?)'/datetime($1) _EQU_ datetime('now', '_SIG_$3')/g) {
+			my ($sig) = $2;
+			if ($sig eq '>') { $$sql{$k} =~ s/_EQU_/</g; $$sql{$k} =~ s/_SIG_/-/; }
+			if ($sig eq '<') { $$sql{$k} =~ s/_EQU_/>/g; $$sql{$k} =~ s/_SIG_/-/; }
+			if ($sig eq '=') { $$sql{$k} =~ s/_EQU_/=/g; $$sql{$k} =~ s/_SIG_/-/; }
+		}
+
+		# Convert position(X in Y) to position(X, Y) for
+		# our function implemented above.
+		$$sql{$k} =~ s/position\((.*?)\s*[Ii][Nn]\s*(.*?)\)/position($1, $2)/g;
+
+		# Use case-insensitive maintainer INDEX when required
+		#$$sql{$k} =~ s/lower\(maintainer\)\s*=\s*lower\(\?\)/maintainer COLLATE NOCASE = ?/gi
+		$$sql{$k} =~ s/lower\(maintainer\)\s*=\s*lower\(\?\)/maintainer = ?/gi;
+		$$sql{$k} =~ s/lower\(address\)\s*=\s*lower\(\?\)/address = ?/gi;
+		$$sql{$k} =~ s/ORDER\s*BY\s*lower\(maintainer\)/ORDER BY maintainer/gi;
 	}
+
 	return;
 }
 

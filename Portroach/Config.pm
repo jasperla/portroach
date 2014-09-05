@@ -26,13 +26,13 @@
 # $Id: Config.pm,v 1.5 2010/05/20 18:28:40 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::Config;
+package Portroach::Config;
 
 require Exporter;
 
 use Getopt::Long;
 
-use Portscout::Const;
+use Portroach::Const;
 
 use strict;
 
@@ -63,7 +63,7 @@ my (@paths, %settings_types, $bool_opts);
 	html_data_dir   	=> '_html',
 	sup_data_dir    	=> '_supdata',
 
-	datasrc         	=> 'Portscout::DataSrc::Ports',
+	datasrc         	=> 'Portroach::DataSrc::Ports',
 	datasrc_opts    	=> '',
 
 	cache_sup_data  	=> 1, 		# Keep old supdata (could be useful)

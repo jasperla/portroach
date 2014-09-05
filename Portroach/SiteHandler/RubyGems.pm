@@ -15,13 +15,13 @@
 #
 #------------------------------------------------------------------------------
 
-package Portscout::SiteHandler::CPAN;
+package Portroach::SiteHandler::RubyGems;
 
 use JSON qw(decode_json);
 use LWP::UserAgent;
 
-use Portscout::Const;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Config;
 
 use strict;
 
@@ -32,7 +32,7 @@ require 5.006;
 # Globals
 #------------------------------------------------------------------------------
 
-push @Portscout::SiteHandler::sitehandlers, __PACKAGE__;
+push @Portroach::SiteHandler::sitehandlers, __PACKAGE__;
 
 our %settings;
 
@@ -51,7 +51,7 @@ sub new
 	my $self      = {};
 	my $class     = shift;
 
-	$self->{name} = 'CPAN';
+	$self->{name} = 'RubyGems';
 
 	bless ($self, $class);
 	return $self;
@@ -73,14 +73,14 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /(http|ftp):\/\/(.*?)\/CPAN\/modules\//);
+	return ($url =~ /http:\/\/rubygems\.org\/downloads\//);
 }
 
 
 #------------------------------------------------------------------------------
 # Func: GetFiles()
-# Desc: Extract a list of files from the given URL. Query the MetaCPAN API
-#       for the latest available version of a given module.
+# Desc: Extract a list of files from the given URL. For RubyGems.org we query
+#        the API for all available versions and iteratively store them.
 #
 # Args: $url     - URL we would normally fetch from.
 #       \%port   - Port hash fetched from database.
@@ -95,27 +95,26 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($metacpan, $module, $api_url, $ua, $resp);
-	my $metacpan = 'http://api.metacpan.org/v0/release/_search?q=';
+	my ($api_url, $gem, $resp, $ua);
+	my $gems_host = 'https://rubygems.org/api/v1/versions/';
 
-	# Strip all the digits at the end to keep the stem of the module.
+	# Strip all the digits at the end to keep the stem of the Gem.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
-	    $module = $1;
+	    $gem = $1;
 	}
 
-	my $query = $metacpan . 'distribution:' . $module . '%20AND%20status:latest&fields=name,download_url';
+	$api_url = $gems_host . $gem . '.json';
 
-	_debug("GET $query");
+	_debug("GET $api_url");
 	$ua = LWP::UserAgent->new;
-	$resp = $ua->request(HTTP::Request->new(GET => $query));
+	$resp = $ua->request(HTTP::Request->new(GET => $api_url));
 
 	if ($resp->is_success) {
-    	    my $json = decode_json($resp->decoded_content);
-	    next if $json->{timed_out};
-
-	    my @hits = @{$json->{hits}->{hits}};
-
-	    push @$files, @hits[0]->{fields}->{download_url};
+	    my @releases = @{decode_json($resp->decoded_content)};
+	    foreach my $release (@releases) {
+		my $gem_url = $url . $gem . '-' . $release->{number} . '.gem';
+	        push @$files, $gem_url;
+	    }
 	} else {
 	    my $code = $resp->code;
 	    _debug("GET failed: $code");
@@ -141,7 +140,7 @@ sub _debug
 
 	$msg = '' if (!$msg);
 
-	print STDERR "(SiteHandler::CPAN) $msg\n"
+	print STDERR "(SiteHandler::RubyGems) $msg\n"
 		if ($settings{debug});
 }
 

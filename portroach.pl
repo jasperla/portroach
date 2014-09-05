@@ -4,7 +4,7 @@
 # Author      : Shaun Amott <shaun@inerd.com>
 # Start date  : 2006-01-07
 # Environment : perl 5.8.x, PostgreSQL 7.4, FreeBSD 6.x
-# Download    : http://www.inerd.com/software/portscout/
+# Download    : http://www.inerd.com/software/portroach/
 #
 # $Id: portscout.pl,v 1.82 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
@@ -49,10 +49,10 @@ use URI;
 
 use DBI;
 
-use Portscout;
-use Portscout::Const;
-use Portscout::Util;
-use Portscout::Config;
+use Portroach;
+use Portroach::Const;
+use Portroach::Util;
+use Portroach::Config;
 
 use strict;
 #use warnings;
@@ -162,7 +162,7 @@ sub main
 	$dbengine = $settings{db_connstr};
 	$dbengine =~ s/^\s*DBI:([A-Za-z0-9]+):?.*$/$1/;
 
-	Portscout::SQL->Load($dbengine)
+	Portroach::SQL->Load($dbengine)
 		or die 'Failed to load queries for DBI engine "' . $dbengine . '"';
 
 	# Check DB schema version
@@ -179,7 +179,7 @@ sub main
 		sleep 2;
 	}
 
-	$datasrc = Portscout::DataSrc->new(
+	$datasrc = Portroach::DataSrc->new(
 		$settings{datasrc},
 		$settings{datasrc_opts}
 	);
@@ -218,8 +218,8 @@ sub ExecArgs
 	}
 	elsif ($cmd eq 'generate')
 	{
-		Portscout::Template->templatedir($settings{templates_dir});
-		Portscout::Template->outputdir($settings{html_data_dir});
+		Portroach::Template->templatedir($settings{templates_dir});
+		Portroach::Template->outputdir($settings{html_data_dir});
 
 		$res = GenerateHTML();
 	}
@@ -229,7 +229,7 @@ sub ExecArgs
 	}
 	elsif ($cmd eq 'mail')
 	{
-		Portscout::Template->templatedir($settings{templates_dir});
+		Portroach::Template->templatedir($settings{templates_dir});
 
 		if ($settings{mail_method} ne 'sendmail') {
 			MIME::Lite->send($settings{mail_method}, $settings{mail_host});
@@ -406,7 +406,7 @@ sub Uncheck
 
 	$dbh = connect_db();
 
-	$sth = $dbh->prepare($Portscout::SQL::sql{portdata_uncheck})
+	$sth = $dbh->prepare($Portroach::SQL::sql{portdata_uncheck})
 		or die DBI->errstr;
 
 	print "Resetting 'check' data...\n";
@@ -494,7 +494,7 @@ sub VersionCheck
 		}
 
 		# Check for special handler for this site first
-		if (my $sh = Portscout::SiteHandler->FindHandler($site))
+		if (my $sh = Portroach::SiteHandler->FindHandler($site))
 		{
 			info($k, $site, 'Using dedicated site handler for site.');
 
@@ -1254,10 +1254,10 @@ sub GenerateHTML
 		qw(portdata_genresults portdata_selectall portdata_selectall_limited)
 	);
 
-	if ($Portscout::SQL::sql{portdata_genresults_init}) {
+	if ($Portroach::SQL::sql{portdata_genresults_init}) {
 		# SQLite needs to create the temp. table
 		# in a separate statement.
-		$dbh->do($Portscout::SQL::sql{portdata_genresults_init});
+		$dbh->do($Portroach::SQL::sql{portdata_genresults_init});
 	}
 
 	print "Organising results...\n";
@@ -1274,7 +1274,7 @@ sub GenerateHTML
 	$outdata{appver}  = APPVER;
 	$outdata{author}  = AUTHOR;
 
-	$template = Portscout::Template->new('index.html')
+	$template = Portroach::Template->new('index.html')
 		or die "index.html template not found!\n";
 
 	# Produce indices, sorted by each header
@@ -1317,7 +1317,7 @@ sub GenerateHTML
 
 	print "Creating maintainer pages...\n";
 
-	$template = Portscout::Template->new('maintainer.html')
+	$template = Portroach::Template->new('maintainer.html')
 		or die "maintainer.html template not found!\n";
 
 	$sth = $dbh->prepare('SELECT DISTINCT maintainer FROM results')
@@ -1368,7 +1368,7 @@ sub GenerateHTML
 
 	print "Creating restricted ports (portconfig) page...\n";
 
-	$template = Portscout::Template->new('restricted-ports.html')
+	$template = Portroach::Template->new('restricted-ports.html')
 		or die "restricted-ports.html template not found!\n";
 
 	$sths{portdata_selectall_limited}->execute;
@@ -1416,7 +1416,7 @@ sub MailMaintainers
 
 	$sths{maildata_select}->execute;
 
-	$template = Portscout::Template->new('reminder.mail')
+	$template = Portroach::Template->new('reminder.mail')
 		or die "reminder.mail template not found!\n";
 
 	while (my ($addr) = $sths{maildata_select}->fetchrow_array) {
@@ -1629,7 +1629,7 @@ sub ShowMailAddrs
 
 #------------------------------------------------------------------------------
 # Func: AllocatePorts()
-# Desc: Divide up the ports database and allocate to machines in the portscout
+# Desc: Divide up the ports database and allocate to machines in the portroach
 #       cluster -- if there are any.
 #
 # Args: n/a
@@ -1662,7 +1662,7 @@ sub AllocatePorts
 	($remaining) = $sths{allocators_count}->fetchrow_array;
 
 	if ($remaining <= 0) {
-		print "Found none (portscout will run on just this machine)\n";
+		print "Found none (portroach will run on just this machine)\n";
 		return 1;
 	} else {
 		print "Allocating work using $remaining allocator rule(s)...\n";

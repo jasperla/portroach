@@ -26,7 +26,7 @@
 # $Id: Template.pm,v 1.5 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::Template;
+package Portroach::Template;
 
 use URI::Escape;
 

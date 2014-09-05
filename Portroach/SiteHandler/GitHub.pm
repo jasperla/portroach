@@ -15,13 +15,13 @@
 #
 #------------------------------------------------------------------------------
 
-package Portscout::SiteHandler::GitHub;
+package Portroach::SiteHandler::GitHub;
 
 use XML::Feed;
 use LWP::UserAgent;
 
-use Portscout::Const;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Config;
 
 use strict;
 
@@ -32,7 +32,7 @@ require 5.006;
 # Globals
 #------------------------------------------------------------------------------
 
-push @Portscout::SiteHandler::sitehandlers, __PACKAGE__;
+push @Portroach::SiteHandler::sitehandlers, __PACKAGE__;
 
 our %settings;
 

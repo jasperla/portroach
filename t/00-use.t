@@ -7,26 +7,26 @@ BEGIN { plan tests => 18; }
 use strict;
 use warnings;
 
-eval 'use Portscout::Const ();';                    ok(!$@);
-eval 'use Portscout::API();';                       ok(!$@);
-eval 'use Portscout::Util ();';                     ok(!$@);
-eval 'use Portscout::Config ();';                   ok(!$@);
+eval 'use Portroach::Const ();';                    ok(!$@);
+eval 'use Portroach::API();';                       ok(!$@);
+eval 'use Portroach::Util ();';                     ok(!$@);
+eval 'use Portroach::Config ();';                   ok(!$@);
 
-eval 'use Portscout::SiteHandler ();';              ok(!$@);
-eval 'use Portscout::SiteHandler::CPAN ();';        ok(!$@);
-eval 'use Portscout::SiteHandler::GitHub ();';      ok(!$@);
-eval 'use Portscout::SiteHandler::RubyGems ();';    ok(!$@);
-eval 'use Portscout::SiteHandler::SourceForge ();'; ok(!$@);
+eval 'use Portroach::SiteHandler ();';              ok(!$@);
+eval 'use Portroach::SiteHandler::CPAN ();';        ok(!$@);
+eval 'use Portroach::SiteHandler::GitHub ();';      ok(!$@);
+eval 'use Portroach::SiteHandler::RubyGems ();';    ok(!$@);
+eval 'use Portroach::SiteHandler::SourceForge ();'; ok(!$@);
 
-eval 'use Portscout::SQL ();';                      ok(!$@);
-eval 'use Portscout::SQL::SQLite ();';              ok(!$@);
-eval 'use Portscout::SQL::Pg ();';                  ok(!$@);
+eval 'use Portroach::SQL ();';                      ok(!$@);
+eval 'use Portroach::SQL::SQLite ();';              ok(!$@);
+eval 'use Portroach::SQL::Pg ();';                  ok(!$@);
 
-eval 'use Portscout::Make ();';                     ok(!$@);
-eval 'use Portscout::Template ();';                 ok(!$@);
+eval 'use Portroach::Make ();';                     ok(!$@);
+eval 'use Portroach::Template ();';                 ok(!$@);
 
-eval 'use Portscout::DataSrc ();';                  ok(!$@);
-eval 'use Portscout::DataSrc::Ports ();';           ok(!$@);
-eval 'use Portscout::DataSrc::XML ();';             ok(!$@);
+eval 'use Portroach::DataSrc ();';                  ok(!$@);
+eval 'use Portroach::DataSrc::Ports ();';           ok(!$@);
+eval 'use Portroach::DataSrc::XML ();';             ok(!$@);
 
-eval 'use Portscout ();';                           ok(!$@);
+eval 'use Portroach ();';                           ok(!$@);

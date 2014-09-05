@@ -26,11 +26,11 @@
 # $Id: API.pm,v 1.8 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::API;
+package Portroach::API;
 
-use Portscout::Const;
-use Portscout::Util;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Util;
+use Portroach::Config;
 
 require Exporter;
 

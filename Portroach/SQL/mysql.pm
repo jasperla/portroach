@@ -1,5 +1,6 @@
 #------------------------------------------------------------------------------
 # Copyright (C) 2010, Shaun Amott <shaun@inerd.com>
+# Copyright (C) 2011, Martin Matuska <mm@FreeBSD.org>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -23,10 +24,10 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: Pg.pm,v 1.6 2010/05/15 20:19:55 samott Exp $
+# $Id$
 #------------------------------------------------------------------------------
 
-package Portscout::SQL::Pg;
+package Portroach::SQL::mysql;
 
 require Exporter;
 
@@ -42,7 +43,7 @@ our @EXPORT_OK = qw(RegisterHacks);
 # Globals
 #------------------------------------------------------------------------------
 
-my $sql = \%Portscout::SQL::sql;
+my $sql = \%Portroach::SQL::sql;
 
 
 #------------------------------------------------------------------------------
@@ -55,19 +56,23 @@ $$sql{sitedata_setrobots} =
 	q(UPDATE sitedata
 	     SET robots = ?,
 	         robots_paths = ?,
-	         robots_nextcheck = CURRENT_TIMESTAMP + INTERVAL '2 weeks'
+	         robots_nextcheck = TIMESTAMPADD(WEEK,2,CURRENT_TIMESTAMP)
 	   WHERE host = ?);
 
 # GenerateHTML
 
+$$sql{portdata_genresults_init} =
+	q(DELETE FROM results);
+
 $$sql{portdata_genresults} =
-	q(SELECT maintainer,
+	q(INSERT
+	    INTO results
+
+	  SELECT maintainer,
 	         total,
-	         COALESCE(withnewdistfile, 0) AS withnewdistfile,
-	         CAST (100*(COALESCE(withnewdistfile, 0)*1.0/total*1.0) AS FLOAT)
+	         COALESCE(withnewdistfile,0) AS withnewdistfile,
+	         CAST(100*(COALESCE(withnewdistfile,0)*1.0/total*1.0) AS DECIMAL(10,2))
 	           AS percentage
-	    INTO TEMP results
-	
 	    FROM (
 	  SELECT lower(maintainer) AS maintainer,
 	         COUNT(maintainer) AS total,
@@ -79,8 +84,29 @@ $$sql{portdata_genresults} =
 	      AS pd1
 	);
 
-_transformsql();
+$$sql{portdata_masterport_str2id} =
+	q(UPDATE portdata
+      INNER JOIN portdata as master
+	     SET portdata.masterport_id = master.id
+	   WHERE master.cat = SUBSTRING_INDEX(portdata.masterport,'/',1)
+	     AND master.name = SUBSTRING_INDEX(portdata.masterport,'/',-1)
+	     AND portdata.masterport is not NULL
+	     AND portdata.masterport != ''
+	     AND portdata.moved != true);
 
+$$sql{portdata_masterport_enslave} =
+        q(UPDATE portdata
+      INNER JOIN portdata as master
+	     SET portdata.enslaved = 1
+	   WHERE master.id = portdata.masterport_id
+	     AND master.ver = portdata.ver
+	     AND master.distfiles = portdata.distfiles
+	     AND master.mastersites = portdata.mastersites
+	     AND portdata.masterport_id != 0
+	     AND portdata.masterport_id is not NULL
+	     AND portdata.moved != true);
+
+_transformsql();
 
 #------------------------------------------------------------------------------
 # Func: new()
@@ -119,7 +145,6 @@ sub RegisterHacks
 	return;
 }
 
-
 #------------------------------------------------------------------------------
 # Func: _transformsql()
 # Desc: Transform the SQL queries into a form that works with this database.
@@ -133,6 +158,11 @@ sub RegisterHacks
 
 sub _transformsql
 {
+	foreach my $k (keys %$sql) {
+		$$sql{$k} =~ s/key/`key`/gi;
+		$$sql{$k} =~ s/ignore/`ignore`/gi;
+		$$sql{$k} =~ s/random\(\)/rand\(\)/gi;
+	}
 	return;
 }
 

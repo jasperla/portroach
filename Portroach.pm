@@ -26,16 +26,16 @@
 # $Id: Portscout.pm,v 1.6 2010/05/05 01:54:16 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout;
+package Portroach;
 
 use strict;
 
 require 5.006;
 
-use Portscout::SQL;
-use Portscout::SiteHandler;
-use Portscout::DataSrc;
-use Portscout::Template;
+use Portroach::SQL;
+use Portroach::SiteHandler;
+use Portroach::DataSrc;
+use Portroach::Template;
 
 
 1;

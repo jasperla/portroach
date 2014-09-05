@@ -36,10 +36,10 @@ use DateTime;
 use XML::RSS;
 use CGI::Cache;
 
-use Portscout::Const;
-use Portscout::Util;
-use Portscout::Config;
-use Portscout::SQL;
+use Portroach::Const;
+use Portroach::Util;
+use Portroach::Config;
+use Portroach::SQL;
 
 use strict;
 
@@ -50,7 +50,7 @@ require 5.006;
 # Extra config options for this script
 #------------------------------------------------------------------------------
 
-$settings{rss_url_base} ||= '/portscout/';
+$settings{rss_url_base} ||= '/portroach/';
 
 
 #------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ sub main
 		my $dbengine = $settings{db_connstr};
 		$dbengine =~ s/^\s*DBI:([A-Za-z0-9]+):?.*$/$1/;
 
-		Portscout::SQL->Load($dbengine)
+		Portroach::SQL->Load($dbengine)
 			or die 'Failed to load queries for DBI engine "' . $dbengine . '"';
 	}
 
@@ -150,8 +150,8 @@ sub main
 	# Global RSS bits
 
 	$rss->channel(
-		title         => 'Portscout Port Updates',
-		description   => 'New distfiles found via the portscout scanner',
+		title         => 'Portroach Port Updates',
+		description   => 'New distfiles found via the portroach scanner',
 		category      => [ @maintainers ? @maintainers : '*' ],
 		lastBuildDate => rssdate(),
 		generator     => APPNAME.' v'.APPVER.', by '.AUTHOR,

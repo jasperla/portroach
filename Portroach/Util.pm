@@ -26,10 +26,10 @@
 # $Id: Util.pm,v 1.12 2011/05/15 17:27:05 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::Util;
+package Portroach::Util;
 
-use Portscout::Const;
-use Portscout::Config;
+use Portroach::Const;
+use Portroach::Config;
 
 require Exporter;
 
@@ -851,7 +851,7 @@ sub getdbver
 
 	$dbh = connect_db();
 
-	$sth = $dbh->prepare($Portscout::SQL::sql{portscout_version})
+	$sth = $dbh->prepare($Portroach::SQL::sql{portroach_version})
 		or die DBI->errstr;
 	$sth->execute;
 
@@ -881,7 +881,7 @@ sub getstat
 
 	$dbh = connect_db();
 
-	$sth = $dbh->prepare($Portscout::SQL::sql{portscout_getstat})
+	$sth = $dbh->prepare($Portroach::SQL::sql{portroach_getstat})
 		or die DBI->errstr;
 	$sth->execute($key);
 
@@ -919,7 +919,7 @@ sub setstat
 
 	$dbh = connect_db();
 
-	$sth = $dbh->prepare($Portscout::SQL::sql{portscout_setstat})
+	$sth = $dbh->prepare($Portroach::SQL::sql{portroach_setstat})
 		or die DBI->errstr;
 	$sth->execute($val, $key);
 
@@ -945,8 +945,8 @@ sub prepare_sql
 	my ($dbh, $sths, @queries) = @_;
 
 	foreach (@queries) {
-		if (exists $Portscout::SQL::sql{$_}) {
-			$$sths{$_} = $dbh->prepare($Portscout::SQL::sql{$_})
+		if (exists $Portroach::SQL::sql{$_}) {
+			$$sths{$_} = $dbh->prepare($Portroach::SQL::sql{$_})
 				or die DBI->errstr . "; statement \"$_\"";
 		} else {
 			print STDERR "Attempted to prepare non-existent SQL query ($_).\n";
@@ -1012,7 +1012,7 @@ sub connect_db
 		$g_dbh = $dbh; # Keep handle alive
 	}
 
-	Portscout::SQL->RegisterHacks($dbh);
+	Portroach::SQL->RegisterHacks($dbh);
 
 	return $dbh;
 }

@@ -26,9 +26,9 @@
 # $Id: Ports.pm,v 1.17 2011/04/09 17:19:03 samott Exp $
 #------------------------------------------------------------------------------
 
-package Portscout::DataSrc::Ports;
+package Portroach::DataSrc::Ports;
 
-use base qw(Portscout::DataSrc);
+use base qw(Portroach::DataSrc);
 
 use File::stat;
 
@@ -36,11 +36,11 @@ use URI;
 
 use Try::Tiny;
 
-use Portscout::Const;
-use Portscout::Config;
-use Portscout::API;
-use Portscout::Util;
-use Portscout::Make;
+use Portroach::Const;
+use Portroach::Config;
+use Portroach::API;
+use Portroach::Util;
+use Portroach::Make;
 
 use strict;
 
@@ -92,19 +92,19 @@ sub Init
 		? lc $self->{opts}->{type}
 		: 'freebsd';
 
-	Portscout::Make->Root($settings{ports_dir});
-	Portscout::Make->Debug($settings{debug});
+	Portroach::Make->Root($settings{ports_dir});
+	Portroach::Make->Debug($settings{debug});
 
-	Portscout::Make->Type($self->{opts}->{type})
+	Portroach::Make->Type($self->{opts}->{type})
 		if ($self->{opts}->{type});
 
-	Portscout::Make->Wanted(
+	Portroach::Make->Wanted(
 		qw(DISTNAME DISTFILES EXTRACT_SUFX MASTER_SITES MASTER_SITE_SUBDIR
 		    MAINTAINER COMMENT PORTSCOUT)
 	);
 
 	if ($self->{opts}->{type} eq 'freebsd') {
-		Portscout::Make->InitCache(
+		Portroach::Make->InitCache(
 			qw(DISTVERSION MASTER_PORT SLAVE_PORT OSVERSION OSREL PORTOBJCFORMAT ARCH OPSYS UID
 			   PKGINSTALLVER CONFIGURE_MAX_CMD_LEN)
 		);
@@ -243,7 +243,7 @@ sub BuildDB
 
 	my @ports;
 
-	my $ps = Portscout::API->new;
+	my $ps = Portroach::API->new;
 
 	my $lastbuild = getstat('buildtime', TYPE_INT);
 
@@ -261,7 +261,7 @@ sub BuildDB
 		   portdata_findslaves)
 	);
 
-	@cats = split /\s+/, Portscout::Make->Make($settings{ports_dir}, 'SUBDIR');
+	@cats = split /\s+/, Portroach::Make->Make($settings{ports_dir}, 'SUBDIR');
 
 	if ($self->{opts}->{type} eq 'freebsd') {
 		$mfi = stat $settings{ports_dir} . '/MOVED'
@@ -282,7 +282,7 @@ sub BuildDB
 
 		my $index_file =
 			$settings{ports_dir}.'/'.
-			Portscout::Make->Make($settings{ports_dir}, 'INDEXFILE');
+			Portroach::Make->Make($settings{ports_dir}, 'INDEXFILE');
 
 		open my $if, "<$index_file"
 			or die 'Unable to open INDEX file';
@@ -430,7 +430,7 @@ sub BuildDB
 # Func: BuildPort()
 # Desc: Compile data for one port, and add to the database.
 #
-# Args: $ps      - Portscout::API ref.
+# Args: $ps      - Portroach::API ref.
 #       $dbh     - Database handle.
 #       \%sths   - Statement handles.
 #       $name    - Port name.
@@ -451,10 +451,10 @@ sub BuildPort
 	# Query make for variables -- this is a huge bottleneck
 
 	if ($settings{quickmake_enable}) {
-		#$mv = Portscout::Make->QuickMake("$cat/$port");
+		#$mv = Portroach::Make->QuickMake("$cat/$port");
 		die 'quickmake not yet (fully) implemented';
 	} else {
-		$mv = Portscout::Make->Make("$settings{ports_dir}/$cat/$name");
+		$mv = Portroach::Make->Make("$settings{ports_dir}/$cat/$name");
 	}
 
 	defined $mv or return 0;
@@ -495,7 +495,7 @@ sub BuildPort
 			$site = URI->new($site)->canonical;
 			next if (length $site->host == 0);
 
-			my $mastersite_regex = Portscout::Util::restrict2regex($settings{mastersite_ignore});
+			my $mastersite_regex = Portroach::Util::restrict2regex($settings{mastersite_ignore});
 			if ($mastersite_regex) {
 				$ignored = 1 if ($site =~ /$mastersite_regex/);
 			}
