@@ -1,9 +1,12 @@
-v1.1.0 (not released yet)
+v1.1.0
 ======
 
 - Overhaul templates and default to dynamic pages utilizing AngularJS for
-  better filtering and sorting options.
+  better filtering and sorting options. Defaults to `output type = dynamic`,
+  use `output type = static` for the static HTML-only pages.
 - Add site handler for npmjs.org
+- Configuration option `output json = true` was removed.
+  Instead use `output type = json`
 
 v1.0.0
 ======
