@@ -1257,7 +1257,7 @@ sub GenerateHTML
 	$sths{portdata_genresults}->execute;
 
 	emptydir($settings{html_data_dir});
-	emptydir("$settings{html_data_dir}/json/") if ($settings{output_json});
+	emptydir("$settings{html_data_dir}/json/") if ($settings{output_type} =~ /(json|dynamic)/);
 
 	# Put together some output data for the templates
 
@@ -1306,7 +1306,7 @@ sub GenerateHTML
 		$template->reset;
 	}
 
-	if ($settings{output_json}) {
+	if ($settings{output_type} =~ /(json|dynamic)/) {
 		print "Writing results in JSON format...\n";
 		my $sth = $dbh->prepare("SELECT * FROM results") or die DBI->errstr;
 		$sth->execute;
@@ -1382,7 +1382,7 @@ sub GenerateHTML
 		$template->output("$outdata{maintainer}.html");
 		$template->reset;
 
-		if ($settings{output_json}) {
+		if ($settings{output_type} =~ /(json|dynamic)/) {
 		    open(my $fh, '>>', "$settings{html_data_dir}/json/$outdata{maintainer}.json") or die $!;
 		    print $fh JSON::encode_json(\@results);
 		    close($fh);
