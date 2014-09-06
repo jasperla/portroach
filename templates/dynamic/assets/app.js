@@ -19,6 +19,10 @@
 				return false;
 			}
 		};
+
+		this.stripEmail = function(maintainer) {
+			return maintainer.replace(/ \<.*\>$/, '');
+		};
 	}]);
 
 	app.controller('MaintainerController', ['$http', '$scope', function($http, $scope) {
