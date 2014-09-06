@@ -21,7 +21,7 @@
 		};
 
 		this.stripEmail = function(maintainer) {
-			return maintainer.replace(/ \<.*\>$/, '');
+			return maintainer.replace(/\<.*?\>/g, '');
 		};
 	}]);
 
