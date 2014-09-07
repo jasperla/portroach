@@ -51,7 +51,7 @@
 			<td><a href="" ng-click="predicate = 'percentage'; reverse=!false">% Out of Date</a></td>
 		</tr>
         <tr class="resultsrow" ng-show="overview.showOutdated(maintainer, overview.onlyOutdated)" ng-repeat="maintainer in overview.maintainers | filter:search | orderBy:predicate:reverse">
-            <td><a href="{{ maintainer.maintainer }}.html">{{ overview.stripEmail(maintainer.maintainer) }}</a></td><td>{{ maintainer.total }}</td><td>{{ maintainer.withnewdistfile }}</td><td>{{ maintainer.percentage }}</td>
+            <td><a href="{{ maintainer.maintainer }}.html">{{ overview.stripEmail(maintainer.maintainer) }}</a></td><td>{{ maintainer.total }}</td><td>{{ maintainer.withnewdistfile }}</td><td>{{ maintainer.percentage }}%</td>
         </tr>
 	</tbody>
 </table>
