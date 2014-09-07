@@ -1326,7 +1326,7 @@ sub GenerateHTML
 	}
 
 	# Point static index.html at the default sorted index
-	unless ($settings{output_type} eq 'dynamic') {
+	unless ($settings{output_type} =~ /(json|dynamic)/) {
 		symlink(
 			"index-$settings{default_html_sort}.html",
 			"$settings{html_data_dir}/index.html"
