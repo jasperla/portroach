@@ -1,7 +1,8 @@
 v1.1.1
 ======
 
-- Sort index page by maintainer name by default
+- Various sorting adjustments to the dynamic pages
+- Force floats in the JSON output for percentages
 - Make failure to write a maintainer page non-fatal again
 - Differentiate between having found a file by directory listing and having used
   a dedicated site handler.
