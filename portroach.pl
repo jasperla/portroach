@@ -1317,7 +1317,7 @@ sub GenerateHTML
 		$sth->execute;
 
 		while (my $row = $sth->fetchrow_hashref) {
-			$row->{percentage} = sprintf('%.2f%', $row->{percentage})
+			$row->{percentage} = 0 + sprintf('%.2f', $row->{percentage})
 				if ($row->{percentage});
 			push(@results, $row);
 		}
