@@ -1,3 +1,11 @@
+v1.1.1
+======
+
+- Sort index page by maintainer name by default
+- Make failure to write a maintainer page non-fatal again
+- Differentiate between having found a file by directory listing and having used
+  a dedicated site handler.
+
 v1.1.0
 ======
 
