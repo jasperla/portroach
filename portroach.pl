@@ -47,10 +47,11 @@ use Portroach::Const;
 use Portroach::Util;
 use Portroach::Config;
 
+use feature qw(switch);
 use strict;
 #use warnings;
 
-require 5.006;
+require v5.10.0;
 
 
 #------------------------------------------------------------------------------
@@ -1358,12 +1359,10 @@ sub GenerateHTML
 				$row->{newver} = '';
 				$row->{newurl} = '';
 			} else {
-				if ($row->{method} == METHOD_LIST) {
-					$row->{method} = 'L';
-				} elsif ($row->{method} == METHOD_GUESS) {
-					$row->{method} = 'G';
-				} else {
-					$row->{method} = '';
+				given($row->{method}) {
+					when(METHOD_LIST)  { $row->{method} = 'L' }
+					when(METHOD_GUESS) { $row->{method} = 'G' }
+					default            { $row->{method} = ''  }
 				}
 			}
 

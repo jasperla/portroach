@@ -30,7 +30,7 @@ The following software is required to run Portroach:
     - POSIX-compatible system
     - The OpenBSD ports tree
     - Berkeley make
-    - Perl 5.6+
+    - Perl 5.10+
 
 Plus we need a few Perl modules:
 
