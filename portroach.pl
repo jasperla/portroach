@@ -1383,7 +1383,7 @@ sub GenerateHTML
 		$template->reset;
 
 		if ($settings{output_type} =~ /(json|dynamic)/) {
-		    open(my $fh, '>>', "$settings{html_data_dir}/json/$outdata{maintainer}.json") or die $!;
+		    open(my $fh, '>', "$settings{html_data_dir}/json/$outdata{maintainer}.json") or warn "$outdata{maintainer}: $!";
 		    print $fh JSON::encode_json(\@results);
 		    close($fh);
 		    undef @results;
