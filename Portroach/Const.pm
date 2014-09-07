@@ -56,6 +56,7 @@ use constant {
 
 	METHOD_GUESS		=> 1,
 	METHOD_LIST 		=> 2,
+	METHOD_HANDLER		=> 3,
 
 	ROBOTS_ALLOW   		=> 0,
 	ROBOTS_UNKNOWN 		=> 1,

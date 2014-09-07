@@ -48,11 +48,12 @@ use Portroach::Util;
 use Portroach::Config;
 
 use feature qw(switch);
+no if $] >= 5.018, warnings => "experimental::smartmatch";
+
 use strict;
 #use warnings;
 
 require v5.10.0;
-
 
 #------------------------------------------------------------------------------
 # Globals
@@ -445,6 +446,7 @@ sub VersionCheck
 	while (my $sitedata = $sths->{sitedata_select}->fetchrow_hashref)
 	{
 		my (@files, @dates, $site, $path_ver, $new_found, $old_found);
+		my $method = METHOD_LIST;
 
 		$old_found = 0;
 		$new_found = 0;
@@ -495,6 +497,8 @@ sub VersionCheck
 			if (!$sh->GetFiles($site, $port, \@files)) {
 				info($k, $site, 'SiteHandler::GetFiles() failed for ' . $site);
 				next;
+			} else {
+				$method = METHOD_HANDLER;
 			}
 		}
 		elsif ($site->scheme eq 'ftp')
@@ -818,7 +822,7 @@ sub VersionCheck
 			info($k, $site, "UPDATE $port->{ver} -> $file->{version}");
 			$sths->{portdata_setnewver}->execute(
 				$file->{version},
-				METHOD_LIST,
+				$method,
 				$file->{url},
 				$port->{id},
 				$port->{id}
@@ -1360,9 +1364,10 @@ sub GenerateHTML
 				$row->{newurl} = '';
 			} else {
 				given($row->{method}) {
-					when(METHOD_LIST)  { $row->{method} = 'L' }
-					when(METHOD_GUESS) { $row->{method} = 'G' }
-					default            { $row->{method} = ''  }
+					when(METHOD_LIST)   { $row->{method} = 'L' }
+					when(METHOD_GUESS)  { $row->{method} = 'G' }
+					when(METHOD_HANDLER){ $row->{method} = 'S' }
+					default             { $row->{method} = ''  }
 				}
 			}
 
