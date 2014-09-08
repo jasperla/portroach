@@ -67,8 +67,8 @@
     			<td><a href="" ng-click="predicate = 'cat'; reverse=false">Category</a></td>
     			<td><a href="" ng-click="predicate = 'ver'; reverse=false">Current</a></td>
     			<td><a href="" ng-click="predicate = 'newver'; reverse=false">New</a></td>
-    			<td><a href="" ng-click="predicate = 'updated'; reverse=!false">Last Updated</a></td>
-    			<td><a href="" ng-click="predicate = 'checked'; reverse=!false">Last Checked</a></td>
+    			<td><a href="" ng-click="predicate = 'updated'; reverse=!reverse">Last Updated</a></td>
+    			<td><a href="" ng-click="predicate = 'checked'; reverse=!reverse">Last Checked</a></td>
     			<td><a href="" ng-click="predicate = 'method'; reverse=false">M</a></td>
     		</tr>
             <tr ng-class="maint.rowClass(port.newver)" ng-show="maint.showOutdated(port, maint.onlyOutdated)" ng-repeat="port in maint.ports | filter:search | orderBy:predicate:reverse">
