@@ -8,6 +8,13 @@
 		overview.summary = [];
 
 		$http.get('./json/totals.json').success(function(data) {
+		        var i, l = data.results.length;
+		        for (i = 0; i < l; i++) {
+			    data.results[i].percentage = parseFloat(data.results[i].percentage);
+			    data.results[i].total = parseInt(data.results[i].total, 10);
+			    data.results[i].withnewdistfile = parseInt(data.results[i].withnewdistfile, 10);
+			}
+
 			overview.maintainers = data.results;
 			overview.summary = data.summary;
 		});
