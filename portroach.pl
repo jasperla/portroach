@@ -1320,6 +1320,10 @@ sub GenerateHTML
 		while (my $row = $sth->fetchrow_hashref) {
 			$row->{percentage} = 0 + sprintf('%.2f', $row->{percentage})
 				if ($row->{percentage});
+			$row->{total} += 0
+			        if ($row->{total});
+			$row->{withnewdistfile} += 0
+			        if ($row->{withnewdistfile});
 			push(@results, $row);
 			$total += $row->{total};
 			$outdated += $row->{withnewdistfile};
