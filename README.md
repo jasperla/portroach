@@ -28,6 +28,15 @@ The results are available over at
 [ftp.fr.openbsd.org/portroach/](http://ftp.fr.openbsd.org/portroach/), kindly
 hosted by ajacoutot@.
 
+ToDo
+---
+
+Here's a shortlist of outstanding tasks or ideas:
+
+- add Makefile.PL
+- harden site handlers against incorrect/empty data
+- recurse into remaining subdirectories (graphics/gimp, etc)
+
 Copyright
 ---
 
