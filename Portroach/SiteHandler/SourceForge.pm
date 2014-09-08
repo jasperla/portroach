@@ -114,17 +114,15 @@ sub GetFiles
 		# Find the RSS feed for this project.
 		$rsspage = 'http://sourceforge.net/projects/' . $projname . '/rss';
 
-		_debug("Trying RSS @ $rsspage");
-
+		_debug("GET $rsspage");
 		$ua = LWP::UserAgent->new;
-
 		$ua->agent(USER_AGENT);
 		$ua->timeout($settings{http_timeout});
 
 		$response = $ua->get($rsspage);
 
 		if (!$response->is_success || $response->status_line !~ /^2/) {
-			_debug('RSS feed failed: ' . $response->status_line);
+			_debug('GET failed: ' . $response->status_line);
 			return 0;
 		}
 

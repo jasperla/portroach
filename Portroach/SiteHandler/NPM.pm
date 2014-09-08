@@ -94,15 +94,15 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($registry, $package, $api_url, $ua, $resp);
-	my $registry = 'https://registry.npmjs.org/';
+	my ($registry, $package, $resp, $query, $ua);
+	$registry = 'https://registry.npmjs.org/';
 
 	# Strip all the digits at the end to keep the stem of the module.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
 	    $package = $1;
 	}
 
-	my $query = $registry . $package . '/latest';
+	$query = $registry . $package . '/latest';
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
@@ -114,11 +114,11 @@ sub GetFiles
 
     	    $json = decode_json($resp->decoded_content);
 	    $version = $json->{version};
+	    next unless $version;
 
 	    push(@$files, "$package/-/$package-$version.tgz");
 	} else {
-	    my $code = $resp->code;
-	    _debug("GET failed: $code");
+	    _debug("GET failed: " . $resp->code);
 	    return 0;
 	}
 

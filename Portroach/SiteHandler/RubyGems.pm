@@ -95,30 +95,30 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($api_url, $gem, $resp, $ua);
-	my $gems_host = 'https://rubygems.org/api/v1/versions/';
+	my ($gems_host, $gem, $resp, $query, $ua);
+	$gems_host = 'https://rubygems.org/api/v1/versions/';
 
 	# Strip all the digits at the end to keep the stem of the Gem.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
 	    $gem = $1;
 	}
 
-	$api_url = $gems_host . $gem . '.json';
+	$query = $gems_host . $gem . '.json';
 
-	_debug("GET $api_url");
+	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
 	$ua->agent(USER_AGENT);
-	$resp = $ua->request(HTTP::Request->new(GET => $api_url));
+	$resp = $ua->request(HTTP::Request->new(GET => $query));
 
 	if ($resp->is_success) {
 	    my @releases = @{decode_json($resp->decoded_content)};
+
 	    foreach my $release (@releases) {
 		my $gem_url = $url . $gem . '-' . $release->{number} . '.gem';
 	        push @$files, $gem_url;
 	    }
 	} else {
-	    my $code = $resp->code;
-	    _debug("GET failed: $code");
+	    _debug("GET failed: " . $resp->code);
 	    return 0;
 	}
 

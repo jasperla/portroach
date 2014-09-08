@@ -97,13 +97,13 @@ sub GetFiles
 	my ($url, $port, $files) = @_;
 
 	my ($hackage, $package, $query, $resp, $ua);
+	$hackage = 'http://hackage.haskell.org/package/';
 
 	# Strip all the digits at the end to keep the stem of the module.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
 	    $package = $1;
 	}
 
-	$hackage = 'http://hackage.haskell.org/package/';
 	$query = $hackage . $package;
 
 	_debug("GET $query");
@@ -119,12 +119,13 @@ sub GetFiles
 		my ($url, $version);
 
 		$version = $tp->get_trimmed_text('/strong');
+		next unless $version;
+
 		$url = 'package/' . $package . '-' . $version . '/' . $package . '-' . $version . '.tar.gz';
 		push @$files, $url;
 	    }
 	} else {
-	    my $code = $resp->code;
-	    _debug("GET failed: $code");
+	    _debug("GET failed: " . $resp->code);
 	    return 0;
 	}
 

@@ -95,15 +95,15 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($metacpan, $module, $api_url, $ua, $resp);
-	my $metacpan = 'http://api.metacpan.org/v0/release/_search?q=';
+	my ($metacpan, $module, $query, $resp, $ua);
+	$metacpan = 'http://api.metacpan.org/v0/release/_search?q=';
 
 	# Strip all the digits at the end to keep the stem of the module.
 	if ($port->{distname} =~ /(.*?)-(\d+)/) {
 	    $module = $1;
 	}
 
-	my $query = $metacpan . 'distribution:' . $module . '%20AND%20status:latest&fields=name,download_url';
+	$query = $metacpan . 'distribution:' . $module . '%20AND%20status:latest&fields=name,download_url';
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
@@ -115,11 +115,11 @@ sub GetFiles
 	    next if $json->{timed_out};
 
 	    my @hits = @{$json->{hits}->{hits}};
+	    next unless @hits[0];
 
-	    push(@$files, @hits[0]->{fields}->{download_url}) if (@hits[0]);
+	    push(@$files, @hits[0]->{fields}->{download_url});
 	} else {
-	    my $code = $resp->code;
-	    _debug("GET failed: $code");
+	    _debug("GET failed: " . $resp->code);
 	    return 0;
 	}
 

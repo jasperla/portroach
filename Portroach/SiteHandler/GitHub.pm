@@ -104,17 +104,15 @@ sub GetFiles
 		# Find the Atom feed for this repository
 		$atomfeed = 'https://github.com/' . $projname . '/releases.atom';
 
-		_debug("Trying Atom feed @ $atomfeed");
-
+		_debug("GET $atomfeed");
 		$ua = LWP::UserAgent->new;
-
 		$ua->agent(USER_AGENT);
 		$ua->timeout($settings{http_timeout});
 
 		$response = $ua->get($atomfeed);
 
 		if (!$response->is_success || $response->status_line !~ /^2/) {
-			_debug('Atom feed failed: ' . $response->status_line);
+			_debug('GET failed: ' . $response->status_line);
 			return 0;
 		}
 
