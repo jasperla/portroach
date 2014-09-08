@@ -1421,7 +1421,7 @@ sub GenerateHTML
 	finish_sql($dbh, \%sths);
 	$dbh->disconnect;
 
-	if ($settings{output_json}) {
+	if ($settings{output_type} =~ /(json|dynamic)/) {
 	    open(my $fh, '>', "$settings{html_data_dir}/json/restricted.json") or die $!;
 	    print $fh JSON::encode_json(\@results);
 	    close($fh);
