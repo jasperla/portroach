@@ -10,6 +10,8 @@
 		        var i, l = data.length;
 		        for (i = 0; i < l; i++) {
 			    data[i].percentage = parseFloat(data[i].percentage);
+			    data[i].total = parseInt(data[i].total, 10);
+			    data[i].withnewdistfile = parseInt(data[i].withnewdistfile, 10);
 			}
 			overview.maintainers = data;
 		});
