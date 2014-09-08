@@ -1313,19 +1313,31 @@ sub GenerateHTML
 
 	if ($settings{output_type} =~ /(json|dynamic)/) {
 		print "Writing results in JSON format...\n";
-		my $sth = $dbh->prepare("SELECT * FROM results") or die DBI->errstr;
+		my ($total, $outdated, $sth);
+		$sth = $dbh->prepare("SELECT * FROM results") or die DBI->errstr;
 		$sth->execute;
 
 		while (my $row = $sth->fetchrow_hashref) {
 			$row->{percentage} = 0 + sprintf('%.2f', $row->{percentage})
 				if ($row->{percentage});
 			push(@results, $row);
+			$total += $row->{total};
+			$outdated += $row->{withnewdistfile};
 		}
 
 		$sth->finish;
 
+		my %totals;
+
+		$totals{'results'} = \@results;
+		$totals{'summary'} = {
+			'total_ports'         => $total,
+			'total_outdated'      => $outdated,
+			'outdated_percentage' => sprintf('%.2f', ($outdated/$total)*100),
+		};
+
 		open(my $fh, '>>', "$settings{html_data_dir}/json/totals.json") or die $!;
-		print $fh JSON::encode_json(\@results);
+		print $fh JSON::encode_json(\%totals);
 		close($fh);
 		undef @results;
 	}

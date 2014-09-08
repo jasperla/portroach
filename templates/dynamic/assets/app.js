@@ -5,9 +5,11 @@
 		this.onlyOutdated = false;
 		var overview = this;
 		overview.maintainers = [];
+		overview.summary = [];
 
 		$http.get('./json/totals.json').success(function(data) {
-			overview.maintainers = data;
+			overview.maintainers = data.results;
+			overview.summary = data.summary;
 		});
 
 		this.showOutdated = function(maintainer, onlyOutdated) {

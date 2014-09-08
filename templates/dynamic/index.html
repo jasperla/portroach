@@ -31,6 +31,11 @@
 
 <p>Generated on %%(date) at %%(time), by <a href="http://jasperla.github.io/portroach/">portroach</a> v%%(appver)</p>
 
+<p>Summary:<br />
+Total ports: {{ overview.summary.total_ports }}<br />
+Outdated ports: {{ overview.summary.total_outdated }} ({{ overview.summary.outdated_percentage }}%)
+</p>
+
 <p>Table headings are clickable for different sorting.</p>
 
 <p><a href="restricted-ports.html">Restricted ports</a> <font color="#CC0000"><b>&lt;-- Please check this!</b></font></p>
