@@ -7,6 +7,10 @@
 		overview.maintainers = [];
 
 		$http.get('./json/totals.json').success(function(data) {
+		        var i, l = data.length;
+		        for (i = 0; i < l; i++) {
+			    data[i].percentage = parseFloat(data[i].percentage);
+			}
 			overview.maintainers = data;
 		});
 
