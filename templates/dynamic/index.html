@@ -31,12 +31,14 @@
 <h2>All Maintainers</h2>
 <hr>
 
-<p>Generated on %%(date) at %%(time), by <a href="http://jasperla.github.io/portroach/">portroach</a> v%%(appver)</p>
 
-<p>Summary:<br />
-Total ports: {{ overview.summary.total_ports }}<br />
-Outdated ports: {{ overview.summary.total_outdated }} ({{ overview.summary.outdated_percentage }}%)
-</p>
+  <p>Generated on %%(date) at %%(time), by <a href="http://jasperla.github.io/portroach/">portroach</a> v%%(appver)</p>
+<div ng-cloak>
+  <p>Summary:<br />
+    Total ports: {{ overview.summary.total_ports }}<br />
+    Outdated ports: {{ overview.summary.total_outdated }} ({{ overview.summary.outdated_percentage }}%)
+  </p>
+</div>
 
 <p>Table headings are clickable for different sorting.</p>
 
