@@ -2,6 +2,7 @@
 <html ng-app="portroach">
 
     <head>
+	<script type="text/javascript" src="assets/angular.min.js"></script>
     	<title>portroach - new distfile scanner</title>
 	<link rel="icon" type="image/ico" href="assets/favicon.ico"/>
     	<style>
@@ -72,7 +73,9 @@
     			<td><a href="" ng-click="predicate = 'checked'; reverse=!reverse">Last Checked</a></td>
     			<td><a href="" ng-click="predicate = 'method'; reverse=false">M</a></td>
     		</tr>
-            <tr ng-class="maint.rowClass(port.newver)" ng-show="maint.showOutdated(port, maint.onlyOutdated)" ng-repeat="port in maint.ports | filter:search | orderBy:predicate:reverse">
+	        <tr id="loading" ng-show="loading"><td colspan="7">Loading...</td></tr>
+            <tr ng-cloak ng-class="maint.rowClass(port.newver)" ng-show="maint.showOutdated(port, maint.onlyOutdated)" ng-repeat="port in maint.ports | filter:search | orderBy:predicate:reverse">
+
                 <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.cat }}/{{ port.name }}">{{ port.name }}</a></td>
                 <td>{{ port.cat }}</td>
                 <td>{{ port.ver }}</td>
@@ -83,8 +86,6 @@
             </tr>
     	</tbody>
     </table>
-
-	<script type="text/javascript" src="assets/angular.min.js"></script>
     <script type="text/javascript" src="assets/app.js"></script>
 </body>
 </html>
