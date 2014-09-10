@@ -1,11 +1,13 @@
 (function() {
 	var app = angular.module('portroach', []);
 
-	app.controller('OverviewController',['$http', function($http) {
+	app.controller('OverviewController',['$http', '$scope', function($http, $scope) {
 		this.onlyOutdated = false;
 		var overview = this;
 		overview.maintainers = [];
 		overview.summary = [];
+	        
+	        $scope.loading = true;
 
 		$http.get('./json/totals.json').success(function(data) {
 		        var i, l = data.results.length;
@@ -17,6 +19,7 @@
 
 			overview.maintainers = data.results;
 			overview.summary = data.summary;
+		        $scope.loading = false;
 		});
 
 		this.showOutdated = function(maintainer, onlyOutdated) {
@@ -39,9 +42,12 @@
 		var maint = this;
 		maint.ports = [];
 
+	        $scope.loading = true;
+
 		$scope.$watch("maintainer", function(){
 			$http.get('./json/' + $scope.maintainer + '.json').success(function(data) {
 				maint.ports = data;
+			        $scope.loading = false;
 			});
 		});
 
