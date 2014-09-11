@@ -10,7 +10,7 @@ You will not be e-mailed again for any of the port/version combinations
 below.
 
 Full details can be found at the following URL:
-http://beta.inerd.com/portroach/%%(maintainer).html
+http://ftp.fr.openbsd.org/portroach/%%(maintainer).html
 
 
 Port                                            | Current version | New version
@@ -23,7 +23,7 @@ If any of the above results are invalid, please check the following page
 for details on how to improve portroach's detection and selection of
 distfiles on a per-port basis:
 
-http://beta.inerd.com/portroach-portconfig.txt
+http://jasperla.github.io/portroach/docs/portroach-portconfig.txt
 
 If wish to stop (or start!) receiving portroach reminders, please
 contact the operator of this installation.
