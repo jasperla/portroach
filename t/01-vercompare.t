@@ -11,8 +11,6 @@ use Portroach::Const;
 use Portroach::Util;
 use Portroach::Config;
 
-$settings{version_compare} = 'internal';
-
 ok(vercompare('1.3.2', '1.3.2'), 0);                 # Equal, therefore not greater
 ok(vercompare('1.8.2', '1.1.2'), 1);
 ok(vercompare('1.1.2', '1.8.2'), 0);

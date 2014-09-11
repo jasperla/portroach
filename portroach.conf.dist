@@ -112,15 +112,6 @@ precious data    = false     				# Don't write anything to database
 num children     = 15        				# How many worker children to spawn
 workqueue size   = 20        				# How many ports per child at a time
 
-# This variable specifies what version comparison algorithm
-# to use. Supported values are "internal" and "pkg_version";
-# the latter uses 'pkg_version -t', which is pretty straight-
-# forward, but makes no attempt at best-guessing backwards
-# looking version numbers. The former is a bit more
-# sophisticated.
-
-version compare  = internal  				# Version algorithm to use
-
 # It is possible for individual ports to give us information
 # such as the "limit version" regex. The following variable
 # enables this.

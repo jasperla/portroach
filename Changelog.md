@@ -5,6 +5,7 @@ v1.1.2 (not yet released)
 - Add summary of total ports (found and outdated)
 - Unbreak sending notification emails to maintainers
 - Unbreak restricted ports' JSON output
+- Drop pkg_version handling and unfinished "quick make" mode
 
 v1.1.1
 ======

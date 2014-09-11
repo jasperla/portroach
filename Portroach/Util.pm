@@ -283,17 +283,6 @@ sub vercompare
 {
 	my ($new, $old) = @_;
 
-	if ($settings{version_compare} eq 'pkg_version') {
-		my $res;
-
-		$new = quotemeta $new;
-		$old = quotemeta $old;
-
-		$res = qx(pkg_version -t "$new" "$old");
-
-		return (($res eq '>') ? 1 : 0);
-	}
-
 	# Attempt to stop false positives on versions that
 	# look newer - e.g. 2.5 is newer than 2.5-prerelease3
 

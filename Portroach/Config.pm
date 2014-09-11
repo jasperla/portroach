@@ -95,8 +95,6 @@ my (@paths, %settings_types, $bool_opts);
 
 	default_html_sort  	=> 'maintainer',
 
-	version_compare 	=> 'internal',
-
 	db_user         	=> APPNAME,
 	db_name         	=> APPNAME,
 	db_connstr      	=> 'DBI:Pg:dbname='.APPNAME,
