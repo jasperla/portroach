@@ -419,13 +419,7 @@ sub BuildPort
 	my ($mv);
 
 	# Query make for variables -- this is a huge bottleneck
-
-	if ($settings{quickmake_enable}) {
-		#$mv = Portroach::Make->QuickMake("$cat/$port");
-		die 'quickmake not yet (fully) implemented';
-	} else {
-		$mv = Portroach::Make->Make("$settings{ports_dir}/$cat/$name");
-	}
+	$mv = Portroach::Make->Make("$settings{ports_dir}/$cat/$name");
 
 	defined $mv or return 0;
 

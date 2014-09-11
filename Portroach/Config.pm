@@ -116,8 +116,6 @@ my (@paths, %settings_types, $bool_opts);
 	debug           	=> 0,
 	quiet           	=> 0,
 
-	quickmake_enable	=> 0,
-
 	hide_unchanged  	=> 0,
 
 	output_type		=> 'dynamic',
