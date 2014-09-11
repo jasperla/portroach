@@ -1490,7 +1490,7 @@ sub MailMaintainers
 	while (my ($addr) = $sths{maildata_select}->fetchrow_array) {
 		my $msg;
 		my $ports = 0;
-		$sths{portdata_findnewnew}->execute($addr);
+		$sths{portdata_findnewnew}->execute("%<${addr}>");
 		$template->applyglobal({maintainer => lc $addr});
 
 		while (my $port = $sths{portdata_findnewnew}->fetchrow_hashref) {

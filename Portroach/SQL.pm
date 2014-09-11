@@ -308,7 +308,7 @@ $sql{maildata_select} =
 $sql{portdata_findnewnew} =
 	q(SELECT name,cat,ver,newver
 	    FROM portdata
-	   WHERE lower(maintainer) = lower(?)
+	   WHERE lower(maintainer) LIKE ?
 	     AND newver != ver
 	     AND newver is not NULL
 	     AND moved != true
