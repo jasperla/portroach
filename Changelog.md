@@ -1,6 +1,11 @@
 v1.1.2 (not yet released)
 ======
 
+- Various improvements to HTML pages
+- Add summary of total ports (found and outdated)
+- Unbreak sending notification emails to maintainers
+- Unbreak restricted ports' JSON output
+
 v1.1.1
 ======
 
