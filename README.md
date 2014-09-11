@@ -40,7 +40,6 @@ Here's a shortlist of outstanding tasks or ideas:
 - ports removed from the tree aren't purged from the database
 - for the dynamic pages:
   - use a single `maintainer.html`
-- support sending notification emails for ports with multiple maintainers
 
 Copyright
 ---
