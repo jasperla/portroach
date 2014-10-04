@@ -24,7 +24,7 @@ details on the `PORTROACH` variable.
 Results
 ---
 
-The results are available over at
+The results are available at
 [portroach.openbsd.org](http://portroach.openbsd.org), kindly
 hosted by ajacoutot@.
 
@@ -40,6 +40,7 @@ Here's a shortlist of outstanding tasks or ideas:
 - ports removed from the tree aren't purged from the database
 - for the dynamic pages:
   - use a single `maintainer.html`
+  - generate indexes by category
 
 Copyright
 ---
