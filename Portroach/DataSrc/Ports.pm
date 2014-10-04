@@ -202,6 +202,8 @@ sub ScanCat
 		next if ($name =~ /^\./);
 		next if (! -d $settings{ports_dir}."/$cat/$name");
 		next if (! -f $settings{ports_dir}."/$cat/$name/Makefile");
+		# Don't record a directory that only has other ports.
+		next if (-f $settings{ports_dir}."/$cat/$name/Makefile.inc");
 
 		push @results, $name;
 	}
