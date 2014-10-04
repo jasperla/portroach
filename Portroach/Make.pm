@@ -39,8 +39,6 @@ require 5.006;
 my $root_dir;
 my $make_cache;
 
-my $maketype = 'openbsd';
-
 my $debug = 0;
 
 my %wanted = ();
@@ -94,15 +92,6 @@ sub Wanted
 	}
 }
 
-sub Type
-{
-	my $self = shift;
-
-	$maketype = lc shift if (@_);
-
-	return $maketype;
-}
-
 sub Debug
 {
 	my $self = shift;
@@ -139,25 +128,15 @@ sub Make
 
 	@vars = keys %wanted if (scalar @vars == 0);
 
-	# For a single variable, just -V, but use 'show=' otherwise
-	if ($#vars > 1) {
+	# For a single variable just use -V, unless requested otherwise.
+	if ($#vars > 1 || $force_show) {
 		$doshow = 1;
 	}
 
-	if ($maketype eq 'openbsd') {
-		if ($doshow) {
-			$list = join('\\ ', @vars);
-		} else {
-			$list = join(' ', @vars);
-		}
+	if ($doshow) {
+		$list = join('\\ ', @vars);
 	} else {
-		$list = join(' -V ',
-			map {
-				my $v = $_;
-				$v =~ s/^(.*)$/'\${$1}'/;
-				$v
-			} @vars
-		);
+		$list = join(' ', @vars);
 	}
 
 	# Ensure we aren't affected by locally installed stuff

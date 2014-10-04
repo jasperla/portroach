@@ -87,15 +87,8 @@ sub Init
 {
 	my $self = shift;
 
-	$self->{opts}->{type} = $self->{opts}->{type}
-		? lc $self->{opts}->{type}
-		: 'openbsd';
-
 	Portroach::Make->Root($settings{ports_dir});
 	Portroach::Make->Debug($settings{debug});
-
-	Portroach::Make->Type($self->{opts}->{type})
-		if ($self->{opts}->{type});
 
 	Portroach::Make->Wanted(
 		qw(DISTNAME DISTFILES EXTRACT_SUFX MASTER_SITES MASTER_SITE_SUBDIR
