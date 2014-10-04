@@ -34,7 +34,6 @@ ToDo
 Here's a shortlist of outstanding tasks or ideas:
 
 - add Makefile.PL
-- recurse into remaining subdirectories (graphics/gimp, etc)
 - improve DISTFILES handling and "lack" of versions
 - add MySQL installation instructions
 - ports removed from the tree aren't purged from the database
