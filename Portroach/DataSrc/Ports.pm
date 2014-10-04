@@ -253,7 +253,7 @@ sub BuildDB
 		   portdata_findslaves)
 	);
 
-	@cats = split /\s+/, Portroach::Make->Make($settings{ports_dir}, 'SUBDIR');
+	@cats = split /\s+/, Portroach::Make->Make(0, $settings{ports_dir}, 'SUBDIR');
 
 	# If the user has specified a maintainer restriction
 	# list, try to get to get the list of desired ports
@@ -267,7 +267,7 @@ sub BuildDB
 
 		my $index_file =
 			$settings{ports_dir}.'/'.
-			Portroach::Make->Make($settings{ports_dir}, 'INDEXFILE');
+			Portroach::Make->Make(0, $settings{ports_dir}, 'INDEXFILE');
 
 		open my $if, "<$index_file"
 			or die 'Unable to open INDEX file';
@@ -419,7 +419,7 @@ sub BuildPort
 	my ($mv);
 
 	# Query make for variables -- this is a huge bottleneck
-	$mv = Portroach::Make->Make("$settings{ports_dir}/$cat/$name");
+	$mv = Portroach::Make->Make(0, "$settings{ports_dir}/$cat/$name");
 
 	defined $mv or return 0;
 

@@ -129,7 +129,7 @@ sub Make
 {
 	my $self = shift;
 
-	my ($dir, @vars) = @_;
+	my ($force_show, $dir, @vars) = @_;
 
 	my (%results, @outp, $list, $cache, $lb, $doshow);
 
