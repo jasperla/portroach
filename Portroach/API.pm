@@ -160,34 +160,38 @@ sub AddPort
 			$nvcleared = 1;
 		}
 
-		$sths->{portdata_update}->execute(
-			$port->{version},
-			$port->{comment},
-			$port->{category},
-			$_distfiles,
-			$port->{distname},
-			$port->{suffix},
-			$_sites,
-			$port->{maintainer},
-			$port->{masterport},
-			$port->{name},
-			$port->{category}
-		) unless ($settings{precious_data});
+		unless ($settings{precious_data}) {
+			$sths->{portdata_update}->execute(
+				$port->{version},
+				$port->{comment},
+				$port->{category},
+				$_distfiles,
+				$port->{distname},
+				$port->{suffix},
+				$_sites,
+				$port->{maintainer},
+				$port->{masterport},
+				$port->{name},
+				$port->{category}
+			) or die "Failed to execute: $DBI::errstr";
+		}
 	}
 	else
 	{
-		$sths->{portdata_insert}->execute(
-			$port->{name},
-			$port->{category},
-			$port->{distname},
-			$port->{version},
-			$port->{comment},
-			$_distfiles,
-			$port->{suffix},
-			$_sites,
-			$port->{maintainer},
-			$port->{masterport}
-		) unless ($settings{precious_data});
+		unless ($settings{precious_data}) {
+			$sths->{portdata_insert}->execute(
+				$port->{name},
+				$port->{category},
+				$port->{distname},
+				$port->{version},
+				$port->{comment},
+				$_distfiles,
+				$port->{suffix},
+				$_sites,
+				$port->{maintainer},
+				$port->{masterport}
+			) or die "Failed to execute: $DBI::errstr";
+		}
 	}
 
 	# Portconfig stuff
@@ -374,8 +378,10 @@ sub AddSite
 	$sths->{sitedata_exists}->execute($site->host);
 	($exists) = $sths->{sitedata_exists}->fetchrow_array;
 
-	$sths->{sitedata_insert}->execute($site->scheme, $site->host)
-		if (!$exists && !$settings{precious_data});
+	if (!$exists && !$settings{precious_data}) {
+		$sths->{sitedata_insert}->execute($site->scheme, $site->host)
+		    or die "Failed to add new site: $DBI::errstr";
+	}
 }
 
 
