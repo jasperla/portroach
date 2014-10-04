@@ -1525,7 +1525,7 @@ sub MailMaintainers
 
 		if (!$settings{precious_data}) {
 			$sths{portdata_findnewnew}->finish;
-			$sths{portdata_findnewnew}->execute($addr);
+			$sths{portdata_findnewnew}->execute("%<${addr}>%");
 
 			while (my $port = $sths{portdata_findnewnew}->fetchrow_hashref) {
 				$sths{portdata_setmailed}->execute($port->{newver}, $port->{name}, $port->{cat});
