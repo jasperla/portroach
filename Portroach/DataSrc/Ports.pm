@@ -176,33 +176,34 @@ sub Count
 sub ScanCat
 {
 	my $self = shift;
-	my ($maincat, $subcat) = @_;
+	my ($cat) = @_;
+	my @results;
 
-	my (@results);
+	my @cats = grep { not /^\s*$/ }
+		Portroach::Make->Make(1, $settings{ports_dir} . "/" . $cat, 'SUBDIR');
 
-	my $cat = "$maincat/$subcat";
-
-	opendir my $catdir, $settings{ports_dir}."/$cat";
+	# Spring cleaning!
+	foreach (@cats) {
+	    # Trim any excess fluff
+	    s/^\=\=\=\>\s*(.*)/$1/;
+	    # Remove subpackages, we only need the directory
+	    s/,.*//;
+	    # Now remove the leading category
+	    s/^.*?\///g;
+	}
+	# Strip duplicates that we may have after stripping the paths
+	@cats = do { my %seen; grep { !$seen{$_}++ } @cats };
 
 	print "Scanning $cat...\n"
 		unless ($settings{quiet});
 
 	# Build a shortlist, taking into account subcategories.
-	while (my $name = readdir $catdir) {
+	foreach my $name (@cats) {
 		next if ($name =~ /^\./);
-		next if ($name =~ /^CVS$/);
 		next if (! -d $settings{ports_dir}."/$cat/$name");
 		next if (! -f $settings{ports_dir}."/$cat/$name/Makefile");
 
-		# If the "port" directory contains a Makefile.inc, descend into it.
-		if (-f $settings{ports_dir} . "/" . $cat . "/" . $name . "/Makefile.inc") {
-		    # Now go through this dir and it's subdirs.
-		    @results = (@results, $self->ScanCat($cat, $name));
-		} else {
-			# Prevent recording a stray slash
-			$name = "$subcat/$name" if ($subcat);
-			push @results, $name;
-		}
+		push @results, $name;
 	}
 
 	return @results;

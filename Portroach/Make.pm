@@ -145,8 +145,10 @@ sub Make
 	# Undo list of variable annotation
 	$list =~ s,\'\$\{,,g; $list =~ s,\}\',,g;
 	if ($doshow) {
+		#print("make show=${list} in ${dir}\n") if $debug;
 		@outp = split /\n/, qx(cd $dir && make show=$list);
 	} else {
+		#print("make -V ${list} in ${dir}\n") if $debug;
 		@outp = split /\n/, qx(cd $dir && make -V $list);
 	}
 
@@ -156,7 +158,13 @@ sub Make
 	}
 
 	if ($#vars == 0) {
+	    # Return first element if only a single variable was requested,
+	    # unless we have a lot more results.
+	    if ($#outp == 0) {
 		return $outp[0];
+	    } else {
+		return @outp;
+	    }
 	}
 
 	foreach (@vars) {
