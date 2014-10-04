@@ -25,7 +25,7 @@ Results
 ---
 
 The results are available over at
-[ftp.fr.openbsd.org/portroach/](http://ftp.fr.openbsd.org/portroach/), kindly
+[portroach.openbsd.org](http://portroach.openbsd.org), kindly
 hosted by ajacoutot@.
 
 ToDo
