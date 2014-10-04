@@ -366,6 +366,17 @@ $sql{allocators_select} =
 	    FROM allocators
 	ORDER BY seq ASC, allocator);
 
+# Prune
+$sql{portdata_dirs} =
+	q(SELECT id,name,cat
+	    FROM portdata
+	ORDER BY cat ASC);
+
+$sql{delete_removed} =
+	q(DELETE
+	    FROM portdata
+	   WHERE id = ?);
+
 # Misc.
 
 $sql{portroach_version} =

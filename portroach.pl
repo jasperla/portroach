@@ -259,6 +259,11 @@ sub ExecArgs
 	{
 		$res = AllocatePorts();
 	}
+	elsif ($cmd eq 'prune')
+	{
+		die "prune command disabled until scanner's parsing is improved.";
+		$res = Prune();
+	}
 	else
 	{
 		Usage();
@@ -1807,6 +1812,42 @@ sub AllocatePorts
 	return 1;
 }
 
+#------------------------------------------------------------------------------
+# Func: Prune()
+# Desc: Prune the database from removed ports
+#
+# Retn: $success - true/false
+#------------------------------------------------------------------------------
+
+sub Prune
+{
+	my (%sths, $dbh);
+
+	$dbh = connect_db();
+
+	prepare_sql($dbh, \%sths, qw( portdata_dirs delete_removed ));
+	$sths{portdata_dirs}->execute() or die $DBI::errstr;
+
+	my @removed;
+
+	while (my $port = $sths{portdata_dirs}->fetchrow_hashref) {
+		my $dir = $port->{cat} . "/" . $port->{name};
+		unless ($datasrc->Exists($dir)) {
+			print "Removed: ${dir} (id: " . $port->{id} . ")\n" if $settings{debug};
+			push(@removed, $port->{id});
+		}
+	}
+
+	unless ($settings{precious_data}) {
+		foreach my $id (@removed) {
+			$sths{delete_removed}->execute($id);
+		}
+	}
+
+	$dbh->disconnect;
+
+	return 1;
+}
 
 #------------------------------------------------------------------------------
 # Func: SwitchUser()
@@ -1855,6 +1896,7 @@ sub Usage
 	print STDERR "       $s rebuild\n";
 	print STDERR "       $s check\n";
 	print STDERR "       $s uncheck\n";
+	print STDERR "       $s prune\n";
 	print STDERR "\n";
 	print STDERR "       $s mail\n";
 	print STDERR "       $s generate\n";

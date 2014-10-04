@@ -175,6 +175,18 @@ Use the following to manage these e-mail "subscriptions":
     $ portroach show-mail
 
 
+=head1 CLEANING
+
+Ports that have been removed are not automatically removed from the database, so
+over time the database may contain data that doesn't refer to anything anymore.
+In order to cleanup the database the "prune" command can be used:
+
+    $ portroach prune
+
+Currently this will ensure the following:
+
+    - that all ports in the database still exist in the ports tree
+
 =head1 UPGRADING
 
 When upgrading, check the F<sql> directory for any relevant database schema
