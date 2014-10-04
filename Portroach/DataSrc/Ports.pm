@@ -258,9 +258,7 @@ sub BuildDB
 		my %maintainers = map +($_, 1),
 			split /,/, lc $settings{restrict_maintainer};
 
-		my $index_file =
-			$settings{ports_dir}.'/'.
-			Portroach::Make->Make(0, $settings{ports_dir}, 'INDEXFILE');
+		my $index_file = $settings{ports_dir}.'/INDEX';
 
 		open my $if, "<$index_file"
 			or die 'Unable to open INDEX file';
