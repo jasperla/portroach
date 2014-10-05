@@ -1,4 +1,4 @@
-v1.1.2 (not yet released)
+v1.2.0
 ======
 
 - Various improvements to HTML pages
