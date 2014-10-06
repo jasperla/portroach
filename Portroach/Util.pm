@@ -283,6 +283,23 @@ sub vercompare
 {
 	my ($new, $old) = @_;
 
+	# Check for version with a single alphabetical character as to not to
+	# get entangled with rc,beta,alpha,whatnot. These are dealt with below.
+	# Get the last char, check if the remaining version is equal (otherwise
+	# it will be properly compared below) and return the comparison of the
+	# letters.
+	if (($new =~ m/.*?([a-zA-Z]{1})$/) || ($old =~ m/.*?([a-zA-Z]{1})$/)) {
+		my ($new_v, $new_c, $old_v, $old_c);
+
+		# Now save the last chars and versions.
+		($new_v, $new_c) = $new =~ m/(.*?)([a-zA-Z]{1})$/;
+		($old_v, $old_c) = $old =~ m/(.*?)([a-zA-Z]{1})$/;
+
+		if ($new_v eq $old_v) {
+			return (($new_c cmp $old_c) == 1) ? 1 : 0;
+		}
+	}
+
 	# Attempt to stop false positives on versions that
 	# look newer - e.g. 2.5 is newer than 2.5-prerelease3
 

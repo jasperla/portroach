@@ -2,7 +2,7 @@
 
 use Test;
 
-BEGIN { plan tests => 21; }
+BEGIN { plan tests => 23; }
 
 use strict;
 use warnings;
@@ -10,6 +10,8 @@ use warnings;
 use Portroach::Const;
 use Portroach::Util;
 use Portroach::Config;
+
+# vercompare returns: 1 when 'new > old', and 0 when 'new < old'
 
 ok(vercompare('1.3.2', '1.3.2'), 0);                 # Equal, therefore not greater
 ok(vercompare('1.8.2', '1.1.2'), 1);
@@ -37,5 +39,8 @@ ok(vercompare('8.9-beta2.3.3', '8.9b2.3.4'), 0);     #
 ok(vercompare('9.20_src_all', '9.20.1_src_all'), 0); # Hyphens and underbars
 ok(vercompare('1_1_0', '1_0_0'), 1);
 ok(vercompare('1_0', '0_9_9'), 1);
+
+ok(vercompare('5.21p', '5.21m'), 1);                 # Single alphabetic suffix
+ok(vercompare('5.20p', '5.21p'), 0);
 
 ok(vercompare('2.dog', '2.cat'), 1);                 # Strings should compare too
