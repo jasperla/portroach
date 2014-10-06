@@ -2,7 +2,7 @@
 
 use Test;
 
-BEGIN { plan tests => 18; }
+BEGIN { plan tests => 19; }
 
 use strict;
 use warnings;
@@ -33,5 +33,7 @@ ok(vercompare('1.8rc2', '1.8b6'), 1);                # release candidate > beta
 ok(vercompare('2.0-beta4', '2.0-beta3.1'), 1);       # Complex beta number
 ok(vercompare('2.0-beta3.1.7', '2.0-beta3.1.4'), 1); #
 ok(vercompare('8.9-beta2.3.3', '8.9b2.3.4'), 0);     #
+
+ok(vercompare('9.20_src_all', '9.20.1_src_all'), 0);
 
 ok(vercompare('2.dog', '2.cat'), 1);                 # Strings should compare too
