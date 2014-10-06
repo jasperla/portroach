@@ -946,7 +946,6 @@ sub FindNewestFile
 
 			# Possible candidate - extract version
 
-			#warn "distfile = $distfile 2 = $2";
 			if (($file =~ /^($distfile)$/ && $2) or $github)
 			{
 				my ($version, $new_v);
