@@ -273,7 +273,7 @@ sub verguess
 # Desc: Compare two version strings and return true if $new is greater than
 #       $old; otherwise return false.
 #
-# Args: $ver    - New version string
+# Args: $new    - New version string
 #       $old    - Old version string
 #
 # Retn: $result - Is $new greater than $old? Returns -1 for "Maybe"
@@ -441,8 +441,12 @@ sub vercompare
 		return 0 if (0+$nums_new[$n] < 0+$nums_old[$n]);
 	}
 
-	# Fall back to string compare
+	# Handle versions like 1.0_suffix; strip away any hyphens or underbars,
+	# but only if they're between letters. That prevents mangling 1_0 vs 1_1.
+	$new =~ s/([-_]+[a-zA-Z]+)+$//;
+	$old =~ s/([-_]+[a-zA-Z]+)+$//;
 
+	# Fall back to string compare
 	return (($new cmp $old) == 1) ? 1 : 0;
 }
 
