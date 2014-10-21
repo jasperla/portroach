@@ -1,7 +1,7 @@
-v1.2.1 (not yet released)
+v1.2.1
 ======
 
-- Improved version comparision for non-standard versioning schemes
+- Started to improve version comparision for non-standard versioning schemes
 
 
 v1.2.0
