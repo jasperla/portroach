@@ -1,4 +1,4 @@
-v1.2.2 (not yet released)
+v1.2.2
 ======
 
 - Add sitehandlers for PEAR (pear.php.net) and PECL (pecl.php.net)
@@ -7,7 +7,6 @@ v1.2.1
 ======
 
 - Started to improve version comparision for non-standard versioning schemes
-
 
 v1.2.0
 ======
