@@ -1,7 +1,7 @@
 v1.2.2 (not yet released)
 ======
 
-- ...
+- Add sitehandler for PEAR (pear.php.net)
 
 v1.2.1
 ======

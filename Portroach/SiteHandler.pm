@@ -34,6 +34,7 @@ use Portroach::SiteHandler::CPAN;
 use Portroach::SiteHandler::GitHub;
 use Portroach::SiteHandler::Hackage;
 use Portroach::SiteHandler::NPM;
+use Portroach::SiteHandler::Pear;
 use Portroach::SiteHandler::RubyGems;
 use Portroach::SiteHandler::SourceForge;
 
