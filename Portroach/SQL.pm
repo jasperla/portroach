@@ -54,29 +54,25 @@ $sql{portdata_exists} =
 	    FROM portdata
 	   WHERE name = ?
 	     AND cat = ?
-	     AND moved != true
 	   LIMIT 1);
 
 $sql{portdata_getver} =
 	q(SELECT ver
 	    FROM portdata
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 $sql{portdata_getnewver} =
 	q(SELECT newver
 	    FROM portdata
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 $sql{portdata_clearnewver} =
 	q(UPDATE portdata
 	     SET newver = NULL, method = NULL
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 $sql{portdata_update} =
 	q(UPDATE portdata
@@ -84,8 +80,7 @@ $sql{portdata_update} =
 	         sufx = ?, mastersites = ?, maintainer = ?,  masterport = ?,
 	         updated = CURRENT_TIMESTAMP
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 $sql{portdata_insert} =
 	q(INSERT
@@ -103,8 +98,7 @@ $sql{portdata_masterport_str2id} =
 	                             AND master.name = split_part(portdata.masterport, '/', 2)
 	                           LIMIT 1)
 	   WHERE masterport is not NULL
-	     AND masterport != ''
-	     AND moved != true);
+	     AND masterport != '');
 
 # Note: enslaved only meaningful when masterport_id != 0
 $sql{portdata_masterport_enslave} =
@@ -117,8 +111,7 @@ $sql{portdata_masterport_enslave} =
 	                              AND master.distfiles = portdata.distfiles
 	                              AND master.mastersites = portdata.mastersites))
 	   WHERE masterport_id != 0
-	     AND masterport_id is not NULL
-	     AND moved != true);
+	     AND masterport_id is not NULL);
 
 $sql{portconfig_update} =
 	q(UPDATE portdata
@@ -126,15 +119,13 @@ $sql{portconfig_update} =
 	         skipbeta = ?,  skipversions = ?, limitwhich = ?,
 	         ignore = ?
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 $sql{portconfig_isstatic} =
 	q(SELECT pcfg_static
 	    FROM portdata
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 # BuildPortsDBFast
 
@@ -145,8 +136,7 @@ $sql{portdata_findslaves} =
 	                            FROM portdata
 	                           WHERE name = ?
 	                             AND cat = ?
-	                           LIMIT 1)
-	     AND moved != true);
+	                           LIMIT 1));
 
 # CheckPortsDB
 
@@ -159,7 +149,6 @@ $sql{portdata_select} =
 	                        WHERE host = ?
 	                        LIMIT 1)
 	           OR systemid is NULL )
-	     AND moved != true
 	     AND ignore != true
 	ORDER BY random());
 
@@ -236,7 +225,6 @@ $sql{portdata_selectall} =
 	q(SELECT *
 	    FROM portdata
 	   WHERE lower(maintainer) = lower(?)
-	     AND moved != true
 	ORDER BY cat,name);
 
 $sql{portdata_selectall_limited} =
@@ -247,7 +235,6 @@ $sql{portdata_selectall_limited} =
 	      OR ( limitwhich   is not NULL )
 	      OR ( indexsite    is not NULL )
 	      OR ( skipversions is not NULL )
-	     AND moved != true
 	ORDER BY cat,name);
 
 # ShowUpdates
@@ -258,41 +245,6 @@ $sql{portdata_selectupdated} =
 	    FROM portdata
 	   WHERE ver != newver
 	ORDER BY lower(maintainer));
-
-
-# MovePorts
-
-$sql{moveddata_exists} =
-	q(SELECT 1
-	    FROM moveddata
-	   WHERE fromport = ?
-	     AND toport = ?
-	     AND date = ?
-	   LIMIT 1);
-
-$sql{moveddata_insert} =
-	q(INSERT
-	    INTO moveddata (fromport, toport, date, reason)
-	  VALUES (?,?,?,?));
-
-$sql{portdata_move} =
-	q(UPDATE portdata
-	     SET cat = ?, name = ?
-	   WHERE cat = ?
-	     AND name = ?
-	     AND moved != true);
-
-$sql{portdata_setmoved} =
-	q(UPDATE portdata
-	     SET moved = true
-	   WHERE name = ?
-	     AND cat = ?);
-
-$sql{portdata_removestale} =
-	q(DELETE
-	    FROM portdata
-	   WHERE moved = true
-	     AND pcfg_static != true);
 
 $sql{portdata_exists} =
 	q(SELECT 1
@@ -313,7 +265,6 @@ $sql{portdata_findnewnew} =
 	   WHERE lower(maintainer) LIKE ?
 	     AND newver != ver
 	     AND newver is not NULL
-	     AND moved != true
 	     AND ignore != true
 	     AND (( mailed != ver AND mailed != newver )
 	            OR mailed is NULL )
@@ -323,8 +274,7 @@ $sql{portdata_setmailed} =
 	q(UPDATE portdata
 	     SET mailed = ?
 	   WHERE name = ?
-	     AND cat = ?
-	     AND moved != true);
+	     AND cat = ?);
 
 # AddMailAddrs
 
@@ -351,8 +301,7 @@ $sql{maildata_delete} =
 $sql{portdata_countleft} =
 	q(SELECT COUNT(*)
 	    FROM portdata
-	   WHERE moved != true
-	     AND systemid is NULL);
+	   WHERE systemid is NULL);
 
 $sql{portdata_deallocate} =
 	q(UPDATE portdata

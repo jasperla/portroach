@@ -32,7 +32,6 @@ CREATE TABLE portdata (
 	skipbeta boolean DEFAULT TRUE,
 	limiteven boolean,
 	limitwhich smallint,
-	moved boolean DEFAULT FALSE,
 	indexsite text,
 	skipversions text,
 	pcfg_static boolean DEFAULT FALSE,
@@ -51,14 +50,6 @@ CREATE TABLE sitedata (
 	type text,
 	host text,
 	ignore boolean DEFAULT FALSE
-);
-
-CREATE TABLE moveddata (
-	id serial UNIQUE,
-	fromport text,
-	toport text,
-	date text,
-	reason text
 );
 
 CREATE TABLE maildata (
@@ -89,7 +80,7 @@ CREATE TABLE stats (
 
 INSERT
   INTO portroach (dbver)
-VALUES (2014050901);
+VALUES (2015040401);
 
 INSERT
   INTO stats (key)
@@ -118,7 +109,3 @@ CREATE
 CREATE
  INDEX sitedata_index_host
     ON sitedata (host);
-
-CREATE
- INDEX moveddata_index_fromport
-    ON moveddata (fromport);

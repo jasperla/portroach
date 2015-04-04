@@ -1760,8 +1760,7 @@ sub AllocatePorts
 
 			$query = q(UPDATE portdata
 			              SET systemid = ?
-			            WHERE moved != true
-			              AND systemid is NULL);
+			            WHERE systemid is NULL);
 
 			$sths{portdata_countleft}->execute;
 			($unallocated) = $sths{portdata_countleft}->fetchrow_array;

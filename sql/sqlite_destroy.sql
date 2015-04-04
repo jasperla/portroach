@@ -8,7 +8,6 @@
 
 DROP TABLE portdata;
 DROP TABLE sitedata;
-DROP TABLE moveddata;
 DROP TABLE portroach;
 DROP TABLE stats;
 DROP TABLE maildata;

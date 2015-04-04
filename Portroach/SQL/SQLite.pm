@@ -77,7 +77,6 @@ $$sql{portdata_genresults} =
 	         COUNT(maintainer) AS total,
 	         COUNT(newver != ver) AS withnewdistfile
 	    FROM portdata
-	   WHERE moved != 1
 	GROUP BY maintainer
 	));
 
