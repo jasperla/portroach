@@ -39,7 +39,6 @@ use Portroach::Const;
 use Portroach::Config;
 use Portroach::API;
 use Portroach::Util;
-use Portroach::Make;
 
 use strict;
 
@@ -86,14 +85,6 @@ sub new
 sub Init
 {
 	my $self = shift;
-
-	Portroach::Make->Root($settings{ports_dir});
-	Portroach::Make->Debug($settings{debug});
-
-	Portroach::Make->Wanted(
-		qw(DISTNAME DISTFILES EXTRACT_SUFX MASTER_SITES MASTER_SITE_SUBDIR
-		    MAINTAINER COMMENT PORTROACH)
-	);
 }
 
 
@@ -166,54 +157,6 @@ sub Count
 }
 
 #------------------------------------------------------------------------------
-# Func: ScanCat()
-# Desc: Scan a given category for directories.
-#
-# Args: $maincat - Category to descend into.
-#       $subcat  - Subcategory to descend into.
-#
-# Retn: @results     - Scanned (sub)category results
-#------------------------------------------------------------------------------
-
-sub ScanCat
-{
-	my $self = shift;
-	my ($cat) = @_;
-	my @results;
-
-	my @cats = grep { not /^\s*$/ }
-		Portroach::Make->Make(1, $settings{ports_dir} . "/" . $cat, 'SUBDIR');
-
-	# Spring cleaning!
-	foreach (@cats) {
-	    # Trim any excess fluff
-	    s/^\=\=\=\>\s*(.*)/$1/;
-	    # Remove subpackages, we only need the directory
-	    s/,.*//;
-	    # Now remove the leading category
-	    s/^.*?\///g;
-	}
-	# Strip duplicates that we may have after stripping the paths
-	@cats = do { my %seen; grep { !$seen{$_}++ } @cats };
-
-	print "Scanning $cat...\n"
-		unless ($settings{quiet});
-
-	# Build a shortlist, taking into account subcategories.
-	foreach my $name (@cats) {
-		next if ($name =~ /^\./);
-		next if (! -d $settings{ports_dir}."/$cat/$name");
-		next if (! -f $settings{ports_dir}."/$cat/$name/Makefile");
-		# Don't record a directory that only has other ports.
-		next if (-f $settings{ports_dir}."/$cat/$name/Makefile.inc");
-
-		push @results, $name;
-	}
-
-	return @results;
-}
-
-#------------------------------------------------------------------------------
 # Func: BuildDB()
 # Desc: Build database.
 #
@@ -228,10 +171,8 @@ sub BuildDB
 
 	my ($sdbh, $incremental) = @_;
 
-	my (%sths, $dbh, @cats, %portsmaintok, $mfi, $move_ports,
+	my (%sths, $dbh,  %portsmaintok, $mfi, @ports,
 		$num_ports, $got_ports, $buildtime, $ssth, %psths);
-
-	my @ports;
 
 	my $ps = Portroach::API->new;
 
@@ -250,8 +191,6 @@ sub BuildDB
 		   portdata_findslaves)
 	);
 
-	@cats = split /\s+/, Portroach::Make->Make(0, $settings{ports_dir}, 'SUBDIR');
-
 	if ($settings{restrict_maintainer}) {
 		print "Querying for maintainer associations...\n";
 
@@ -264,101 +203,23 @@ sub BuildDB
 		}
 	}
 
-	# Iterate over ports directories
-	while (my $cat = shift @cats) {
-		next if (! -d $settings{ports_dir}."/$cat");
+	# Query SQLports for all the information we need. We don't care about
+	# restrictions for now as this step basically copies sqlports. Check()
+	# will handle any restrictions instead.
+	# XXX: Re-add support for $incremental
+	$num_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
-		# Skip category if user doesn't want it.
-		wantport(undef, $cat) or next;
+	print "\n" unless ($num_ports < 1 or $settings{quiet});
 
-		foreach my $name ($self->ScanCat($cat)) {
-			# If we're doing an incremental build, check the
-			# port directory's mtime; skip if not updated.
-			if ($incremental) {
-				my ($updated);
-
-				opendir my $portdir, $settings{ports_dir}."/$cat/$name";
-
-				while (my $subfile = readdir $portdir) {
-					my ($subfile_path, $fi);
-
-					$subfile_path = $settings{ports_dir}."/$cat/$name/$subfile";
-					next if (! -f $subfile_path);
-
-					$fi = stat $subfile_path
-						or die "Couldn't stat $subfile_path: $!";
-
-					if ($fi->mtime > $lastbuild) {
-						$updated = 1;
-						last;
-					}
-				}
-
-				next if (!$updated);
-			}
-
-			# Check this port is wanted by user
-			wantport($name, $cat) or next;
-
-			# Check maintainer if we were able to ascertain
-			# it from the INDEX file (otherwise, we've got to
-			# wait until make(1) has been queried.
-			if ($settings{restrict_maintainer}) {
-				next if (!$portsmaintok{"$cat/$name"});
-			}
-
-			push @ports, "$cat/$name";
-		}
+	if ($num_ports > 1) {
+	    print("Building...\n\n");
+	} else {
+	    print("None found!\n");
 	}
 
-	# Find slave ports, which might not have been
-	# directly modified.
+	BuildPort($ps, $sdbh);
 
-	if ($incremental) {
-		foreach (@ports) {
-			if (/^(.*)\/(.*)$/) {
-				my ($name, $cat) = ($2, $1);
-
-				print "findslaves -> $cat/$name\n"
-					if ($settings{debug});
-				$sths{portdata_findslaves}->execute($name, $cat);
-				while (my $port = $sths{portdata_findslaves}->fetchrow_hashref) {
-					wantport($name, $cat) or next;
-
-					push @ports, "$port->{cat}/$port->{name}"
-						unless (arrexists(\@ports, "$port->{cat}/$port->{name}"));
-				}
-			}
-		}
-	}
-
-	$num_ports = $#ports + 1;
-
-	print "\n" unless (!$num_ports or $settings{quiet});
-
-	print $num_ports
-		? "Building...\n\n"
-		: "None found!\n";
-
-	# Build the ports we found
-
-	while (my $port = shift @ports) {
-		my ($cat, $name);
-
-		($cat, $name) = ($1, $2) if $port =~ /^(.*)\/(.*)$/;
-
-		$got_ports++;
-
-		print '[' . strchop($cat, 15) . '] ' unless ($settings{quiet});
-		info($name, "(got $got_ports out of $num_ports)");
-
-		BuildPort($ps, $dbh, \%sths, $name, $cat);
-	}
-
-	# Go through and convert all masterport cat/name strings
-	# into numerical ID values
-
-	if ($num_ports) {
+	if ($num_ports > 1) {
 		print "\n" unless ($settings{quiet});
 	}
 
@@ -366,68 +227,54 @@ sub BuildDB
 
 	finish_sql(\$dbh, \%sths);
 
-	#$dbh->disconnect;
 	return 1;
 }
 
-
-#------------------------------------------------------------------------------
-# Func: BuildPort()
-# Desc: Compile data for one port, and add to the database.
-#
-# Args: $ps      - Portroach::API ref.
-#       $dbh     - Database handle.
-#       \%sths   - Statement handles.
-#       $name    - Port name.
-#       $cat     - Port category.
-#
-# Retn: $success - true/false
-#------------------------------------------------------------------------------
-
+# Queries SQLports for:
 sub BuildPort
 {
-	my ($ps, $dbh, $sths, $name, $cat) = @_;
+    my ($ps, $sdbh) = @_;
+    my (@ports, $ssth);
+    my $n_port = 0;
+    my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
-	my (@sites, @distfiles, %pcfg);
-	my ($ver, $distname, $distfiles, $sufx, $subdir,
-	    $distver, $masterport, $maintainer, $comment);
-	my ($mv);
+    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH, EXTRACT_SUFX FROM Ports");
+    $ssth->execute() or die DBI->errstr;
 
-	# Query make for variables -- this is a huge bottleneck
-	$mv = Portroach::Make->Make(0, "$settings{ports_dir}/$cat/$name");
+    while(@ports = $ssth->fetchrow_array()) {
+	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
+	    $comment, $version, $sufx, %pcfg, @sites, $ver);
+	$n_port++;
 
-	defined $mv or return 0;
+	$fullpkgpath = $ports[0];
+	$category    = primarycategory($ports[1]);
 
-	$maintainer = $mv->{MAINTAINER}         || '';
-	$distname   = $mv->{DISTNAME}           || '';
-	$sufx       = $mv->{EXTRACT_SUFX}       || '';
-	$subdir     = $mv->{MASTER_SITE_SUBDIR} || '';
-	$distver    = $mv->{DISTVERSION}        || '';
-	$comment    = $mv->{COMMENT}            || '';
+	# Bail out early if the port has no distfiles to begin with
+	next if (split(/ /, $ports[3]) < 1);
 
-	$mv->{$_} =~ s/\s+/ /g foreach (keys %$mv);
+	$name     = fullpkgpathtoport($fullpkgpath);
 
-	# Never allow spaces in SUBDIR
-	$subdir =~ s/\s+.*$//;
-
-	# Now we can check the maintainer restriction (if any)
-	wantport(undef, undef, $maintainer) or return 0;
-
-	$masterport = (lc $mv->{SLAVE_PORT} eq 'yes') ? $mv->{MASTER_PORT} : '';
-
-	$masterport = $1 if ($masterport =~ /^\Q$settings{ports_dir}\E\/(.*)\/$/);
-
-	# Get rid of unexpanded placeholders
-
-	foreach my $site (split /\s+/, $mv->{MASTER_SITES}) {
+	$distname = $ports[2];
+	foreach my $file (split /\s+/, $ports[3]) {
+	    $file =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g;
+	    push @distfiles, $file;
+	}
+	$maintainer = $ports[5];
+	$comment    = $ports[6];
+	foreach (split /\s+/, $ports[7]) {
+		if (/^([A-Za-z]+):(.*)$/i) {
+			$pcfg{lc $1} = $2;
+		}
+	}
+	$sufx = $ports[8];
+	foreach my $site (split /\s+/, $ports[4]) {
 		my $ignored = 0;
 
-		$site =~ s/\%SUBDIR\%/$subdir/g;
 		$site =~ s/^\s+//;
 		$site =~ s/\/+$/\//;
 		$site =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g; # site group spec.
 		if (length($site) == 0) {
-			print "Empty or no master sites for $cat/$name\n" unless ($settings{quiet});
+			print "Empty or no master sites for $fullpkgpath \n" unless ($settings{quiet});
 			next;
 		}
 		try {
@@ -445,28 +292,7 @@ sub BuildPort
 		};
 	}
 
-	foreach my $file (split /\s+/, $mv->{DISTFILES}) {
-		$file =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g;
-		push @distfiles, $file;
-	}
-
-	# A port without distfiles has no files we can check for upstream
-	# so drop it early.
-	return 0 if (@distfiles < 1);
-
-	# Remove ports-system "site group" specifiers
-
-	$distname =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g;
-
-	# Attempt to extract real version from
-	# distname (this needs refining)
-
-	if ($distver)
-	{
-		$ver = $distver;
-	}
-	elsif ($distname =~ /\d/)
-	{
+	if ($distname =~ /\d/) {
 		my $name_q;
 		$ver = $distname;
 		$name_q = quotemeta $name;
@@ -474,7 +300,6 @@ sub BuildPort
 		$name_q =~ s/^(node|p5|mod|py|ruby|hs)(?:[\-\_])/($1\[\\-\\_\])?/;
 
 		# XXX: fix me
-
 		my $chop =
 			'sources?|bin|src|snapshot|freebsd\d*|freebsd-?\d\.\d{1,2}|'
 			. 'linux|unstable|elf|i\d86|x86|sparc|mips|linux-i\d86|html|'
@@ -518,31 +343,25 @@ sub BuildPort
 		$ver = '' if ($ver eq $name);
 	}
 
-	# Create options hash
 
-	foreach (split /\s+/, $mv->{PORTROACH}) {
-		if (/^([A-Za-z]+):(.*)$/i) {
-			$pcfg{lc $1} = $2;
-		}
-	}
-
-	# Store port data
+	print '[' . strchop($category, 15) . '] ' unless ($settings{quiet});
+	info($name, "($n_port out of $total_ports)");
 
 	$ps->AddPort({
-		'name'       => $name,
-		'category'   => $cat,
-		'version'    => $ver,
-		'maintainer' => $maintainer,
-		'comment'    => $comment,
-		'distname'   => $distname,
-		'suffix'     => $sufx,
-		'masterport' => $masterport,
-		'distfiles'  => \@distfiles,
-		'sites'      => \@sites,
-		'options'    => \%pcfg
+	    'name'       => $name,
+	    'category'   => $category,
+	    'version'    => $ver,
+	    'maintainer' => $maintainer,
+	    'comment'    => $comment,
+	    'distname'   => $distname,
+	    'suffix'     => $sufx,
+	    'distfiles'  => \@distfiles,
+	    'sites'      => \@sites,
+	    'options'    => \%pcfg
 	});
+    }
 
-	return 1;
+    return 1;
 }
 
 

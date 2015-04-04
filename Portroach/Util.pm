@@ -54,10 +54,12 @@ our @EXPORT = qw(
 	&checkevenodd
 	&extractfilenames
 	&extractdirectories
+	&fullpkgpathtoport
 	&info
 	&randstr
 	&arrexists
 	&wantport
+	&primarycategory
 	&uri_filename
 	&uri_lastdir
 	&getdbver
@@ -746,7 +748,7 @@ sub wantport
 	return ($matched == $needed);
 }
 
-sub FullpkgpathToPort
+sub fullpkgpathtoport
 {
     my $fullpkgpath = shift;
     my $port = $fullpkgpath;
@@ -756,6 +758,13 @@ sub FullpkgpathToPort
     $port =~ s/,.*//g;
 
     return $port;
+}
+
+sub primarycategory
+{
+    my $categories = shift;
+    my @category = split(/ /, $categories);
+    return @category[0];
 }
 
 #------------------------------------------------------------------------------
