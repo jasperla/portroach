@@ -1,5 +1,6 @@
 #------------------------------------------------------------------------------
 # Copyright (C) 2010, Shaun Amott <shaun@inerd.com>
+# Copyright (C) 2015, Jasper Lievisse Adriaanse <j@jasper.la>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -70,21 +71,6 @@ sub new
 	bless ($self, $class);
 
 	return $self;
-}
-
-
-#------------------------------------------------------------------------------
-# Func: Init()
-# Desc: Initialise.
-#
-# Args: n/a
-#
-# Retn: n/a
-#------------------------------------------------------------------------------
-
-sub Init
-{
-	my $self = shift;
 }
 
 

@@ -72,8 +72,6 @@ sub new
 
 	bless ($self, $src || $class);
 
-	$self->Init();
-
 	return $self;
 }
 
@@ -135,6 +133,5 @@ sub ParseOptions
 
 	return \%res;
 }
-
 
 1;
