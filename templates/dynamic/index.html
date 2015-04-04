@@ -26,8 +26,8 @@
 <div ng-cloak>
   <p class="summary">
     Summary:<br />
-    Total ports: {{ overview.summary.total_ports }}<br />
-    Outdated ports: {{ overview.summary.total_outdated }} ({{ overview.summary.outdated_percentage }}%)
+    Total distfiles: {{ overview.summary.total_ports }}<br />
+    Outdated distfiles: {{ overview.summary.total_outdated }} ({{ overview.summary.outdated_percentage }}%)
   </p>
 </div>
 
@@ -42,8 +42,8 @@
 	<tbody id="results">
 		<tr class="resultshead">
 			<td><a class="sortable" title="Sort by maintainer" href="" ng-click="predicate = 'maintainer'; reverse=false">Maintainer</a></td>
-			<td><a class="sortable" title="Sort by total ports" href="" ng-click="predicate = 'total'; reverse=!reverse">Total Ports</a></td>
-			<td><a class="sortable" title="Sort by distfiles (absolute)" href="" ng-click="predicate = 'withnewdistfile'; reverse=!reverse">Ports with New Distfile(s)</a></td>
+			<td><a class="sortable" title="Sort by total distfiles" href="" ng-click="predicate = 'total'; reverse=!reverse">Total distfiles</a></td>
+			<td><a class="sortable" title="Sort by distfiles (absolute)" href="" ng-click="predicate = 'withnewdistfile'; reverse=!reverse">New Distfile(s)</a></td>
 			<td><a class="sortable" title="Sort by distfiles (relative)" href="" ng-click="predicate = 'percentage'; reverse=!reverse">% Out of Date</a></td>
 		</tr>
 		<tr ng-show="loading"><td colspan="4">Loading...</td></tr>
