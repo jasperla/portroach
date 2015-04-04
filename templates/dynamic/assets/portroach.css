@@ -22,6 +22,10 @@ td, p, ul, span {
 .summary {
 }
 
+.sortable {
+    cursor:pointer;
+}
+
 .results {
     background-color: #444444;
 }

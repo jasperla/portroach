@@ -25,8 +25,6 @@
   </p>
 </div>
 
-<p>Table headings are clickable for different sorting.</p>
-
 <p><a href="restricted-ports.html">Restricted ports</a> <font color="#CC0000"><b>&lt;-- Please check this!</b></font></p>
 
 <span class="box">
@@ -39,10 +37,10 @@
 <table class="results" cellspacing="1" cellpadding="2" >
 	<tbody id="results">
 		<tr class="resultshead">
-			<td><a href="" ng-click="predicate = 'maintainer'; reverse=false">Maintainer</a></td>
-			<td><a href="" ng-click="predicate = 'total'; reverse=!reverse">Total Ports</a></td>
-			<td><a href="" ng-click="predicate = 'withnewdistfile'; reverse=!reverse">Ports with New Distfile(s)</a></td>
-			<td><a href="" ng-click="predicate = 'percentage'; reverse=!reverse">% Out of Date</a></td>
+			<td><a class="sortable" title="Sort by maintainer" href="" ng-click="predicate = 'maintainer'; reverse=false">Maintainer</a></td>
+			<td><a class="sortable" title="Sort by total ports" href="" ng-click="predicate = 'total'; reverse=!reverse">Total Ports</a></td>
+			<td><a class="sortable" title="Sort by distfiles (absolute)" href="" ng-click="predicate = 'withnewdistfile'; reverse=!reverse">Ports with New Distfile(s)</a></td>
+			<td><a class="sortable" title="Sort by distfiles (relative)" href="" ng-click="predicate = 'percentage'; reverse=!reverse">% Out of Date</a></td>
 		</tr>
 		<tr ng-show="loading"><td colspan="4">Loading...</td></tr>
         <tr ng-cloak class="resultsrow" ng-show="overview.showOutdated(maintainer, overview.onlyOutdated)" ng-repeat="maintainer in overview.maintainers | filter:search | orderBy:predicate:reverse">
