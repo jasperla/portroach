@@ -746,6 +746,17 @@ sub wantport
 	return ($matched == $needed);
 }
 
+sub FullpkgpathToPort
+{
+    my $fullpkgpath = shift;
+    my $port = $fullpkgpath;
+
+    # Remove any categories, flavors and subpackages.
+    $port =~ s/.*\///g;
+    $port =~ s/,.*//g;
+
+    return $port;
+}
 
 #------------------------------------------------------------------------------
 # Func: uri_filename()
