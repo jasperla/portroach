@@ -5,27 +5,18 @@
 	<script type="text/javascript" src="assets/angular.min.js"></script>
     	<title>portroach - new distfile scanner</title>
 	<link rel="icon" type="image/ico" href="assets/favicon.ico"/>
-    	<style>
-    	<!--
-    		body, table        { font-family: "Verdana", "Helvetica", Sans-Serif; }
-    		h2                 { font-family: "Verdana", "Helvetica", Sans-Serif; }
-    		tr                 { background-color: #FFFFFF; font-family: "Verdana", "Helvetica", Sans-Serif; }
-    		td, p, ul, span    { font-family: "Verdana", "Helvetica", Sans-Serif; font-size: 85%; }
-    		td a               { color: #000000; text-decoration: none; }
-    		.results           { width: 100%; background-color: #444444; }
-    		.resultshead       { color: #FFFFFF; font-weight: bold; background-color: #999999; }
-
-    		.resultsrow        { background-color: #FFFFFF; }
-    		.resultsrowupdated { background-color: #AAAADD; }
-
-    		.box               { border: 1px solid #000000; padding: 6px; }
-    	//-->
-    	</style>
+	<link href="assets/portroach.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body ng-controller="MaintainerController as maint" ng-init="maintainer='%%(maintainer)';predicate='cat'">
-    <h2 ng-cloak>{{ maintainer }}'s ports</h2>
-    <a href="index.html">Index</a>
+<div class="header">
+  portroach - {{ maintainer }}'s ports
+  <div class="menu">
+    <a href="index.html">Home</a>
+    <a href="restricted-ports.html">Restriced</a>
+  </div>
+</div>
+
     <hr>
     <p>
     	Notes:

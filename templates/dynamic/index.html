@@ -10,11 +10,17 @@
 
 <body ng-controller="OverviewController as overview" ng-init="predicate='maintainer'">
 
-<h1>portroach - OpenBSD Ports Distfile Scanner</h1>
+<div class="header">
+  portroach - OpenBSD Ports Distfile Scanner
+  <div class="menu">
+    <a href="index.html">Home</a>
+    <a href="restricted-ports.html">Restriced</a>
+  </div>
+</div>
 
 <hr>
 
-<p class="header">
+<p class="intro">
   Generated on %%(date) at %%(time), by <a href="http://jasperla.github.io/portroach/">portroach</a> v%%(appver)
 </p>
 <div ng-cloak>
@@ -24,8 +30,6 @@
     Outdated ports: {{ overview.summary.total_outdated }} ({{ overview.summary.outdated_percentage }}%)
   </p>
 </div>
-
-<p><a href="restricted-ports.html">Restricted ports</a> <font color="#CC0000"><b>&lt;-- Please check this!</b></font></p>
 
 <span class="box">
     Filter Maintainer: <input tabindex="1" ng-model="search.maintainer">

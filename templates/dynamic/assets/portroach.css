@@ -17,6 +17,21 @@ td, p, ul, span {
 }
 
 .header {
+    font-size:30px;
+    font-weight:bold;
+}
+
+.intro {
+    font-size:10px;
+    color:#5c5c5c;
+}
+
+.menu {
+    font-size:40%;
+}
+
+.menu a {
+    text-decoration:none;
 }
 
 .summary {
