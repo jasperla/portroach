@@ -106,11 +106,11 @@ sub AddPort
 	# Check for required fields
 
 	foreach my $key (qw(
-		name category version maintainer distfiles sites
+		name category version maintainer distfiles sites fullpkgpath
 	)) {
 		if (!exists $port->{$key} || !$port->{$key}) {
-			print STDERR "Insufficient data for port "
-				. "$port->{category}/$port->{name}: missing $key\n";
+			print STDERR "Insufficient data for "
+				. "$port->{fullpkgpath}: missing $key\n";
 			return 0;
 		}
 	}
@@ -132,7 +132,6 @@ sub AddPort
 	$port->{comment}     ||= '';
 	$port->{masterport}  ||= '';
 	$port->{options}     ||= {};
-	$port->{fullpkgpath} ||= '';
 
 	# Sanity checks
 
