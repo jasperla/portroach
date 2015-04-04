@@ -61,15 +61,6 @@ restrict maintainer =        				# Limit to these maintainers
 restrict category   = 					# "     "  "     categories
 restrict port       =	  				# "     "  "     ports
 
-# Note that if you set restrict_maintainer, the entire ports
-# tree needs to be processed to ascertain which ports meet
-# the restriction criterion. This can be avoided if portroach
-# has access to an INDEX file. If you don't have an INDEX file,
-# and aren't impatient, you can switch off the following.
-# With no maintainer restriction in place, it has no effect.
-
-indexfile enable    = true   				# Use INDEX if needed
-
 #-- Mailing Settings ----------------------------------------------------------
 
 # These are only required if you plan to send out reminder mails

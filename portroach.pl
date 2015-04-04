@@ -161,7 +161,6 @@ sub main
 		or die 'Failed to load queries for DBI engine "' . $dbengine . '"';
 
 	# Check DB schema version
-
 	if (getdbver() != DB_VERSION) {
 		print STDERR "Database schema mismatch; did you forget to upgrade?\n";
 		exit 1;
@@ -179,7 +178,14 @@ sub main
 		$settings{datasrc_opts}
 	);
 
-	exit (ExecArgs($ARGV[0]) ? 0 : 1);
+	# Handle for the Sqlports database so we can close it at the right time.
+	my $sdbh = Portroach::SQL::connect_sqlports($settings{sqlports});
+
+	my $rc = (ExecArgs($ARGV[0], $sdbh) ? 0 : 1);
+
+	$sdbh->disconnect();
+
+	exit $rc;
 }
 
 
@@ -194,14 +200,14 @@ sub main
 
 sub ExecArgs
 {
-	my ($cmd) = @_;
+	my ($cmd, $sdbh) = @_;
 
 	my $res;
 
 	if ($cmd eq 'build')
 	{
 		print "-- [ Building ports database ] -----------------------------------------\n\n";
-		$res = $datasrc->Build();
+		$res = $datasrc->Build($sdbh);
 	}
 	elsif ($cmd eq 'check')
 	{
@@ -209,7 +215,7 @@ sub ExecArgs
 
 		Proc::Queue::size($settings{num_children})
 			unless($settings{num_children} == 0);
-		$res = Check();
+		$res = Check($sdbh);
 	}
 	elsif ($cmd eq 'generate')
 	{
@@ -220,7 +226,7 @@ sub ExecArgs
 	}
 	elsif ($cmd eq 'rebuild')
 	{
-		$res = $datasrc->Rebuild();
+		$res = $datasrc->Rebuild($sdbh);
 	}
 	elsif ($cmd eq 'mail')
 	{
@@ -285,6 +291,7 @@ sub ExecArgs
 
 sub Check
 {
+    my $sdbh = shift;
 	my (%sths, @workblock, $dbh, $nofork, $num_rows, $i);
 
 	$nofork = ($settings{num_children} == 0);

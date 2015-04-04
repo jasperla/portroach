@@ -61,6 +61,7 @@ my (@paths, %settings_types, $bool_opts);
 	templates_dir   	=> 'templates',
 	html_data_dir   	=> '_html',
 	sup_data_dir    	=> '_supdata',
+	sqlports                => '/usr/local/share/sqlports',
 
 	datasrc         	=> 'Portroach::DataSrc::Ports',
 	datasrc_opts    	=> '',
@@ -81,8 +82,6 @@ my (@paths, %settings_types, $bool_opts);
 	restrict_maintainer => '',
 	restrict_category   => '',
 	restrict_port       => '',
-
-	indexfile_enable    => 1,
 
 	robots_enable   	=> 1,
 	robots_checking 	=> 'strict',

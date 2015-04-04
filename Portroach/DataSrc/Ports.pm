@@ -108,9 +108,10 @@ sub Init
 
 sub Build
 {
-	my $self = shift;
+    my $self = shift;
+    my $sdbh = shift;
 
-	return $self->BuildDB();
+    return $self->BuildDB($sdbh);
 }
 
 
@@ -126,8 +127,9 @@ sub Build
 sub Rebuild
 {
 	my $self = shift;
+        my $sdbh = shift;
 
-	return $self->BuildDB(1);
+	return $self->BuildDB($sdbh, 1);
 }
 
 
@@ -224,10 +226,10 @@ sub BuildDB
 {
 	my $self = shift;
 
-	my ($incremental) = @_;
+	my ($sdbh, $incremental) = @_;
 
 	my (%sths, $dbh, @cats, %portsmaintok, $mfi, $move_ports,
-		$num_ports, $got_ports, $buildtime);
+		$num_ports, $got_ports, $buildtime, $ssth, %psths);
 
 	my @ports;
 
@@ -235,8 +237,7 @@ sub BuildDB
 
 	my $lastbuild = getstat('buildtime', TYPE_INT);
 
-	print "Looking for updated ports...\n\n"
-		if ($incremental);
+	print "Looking for updated ports...\n\n" if ($incremental);
 
 	$got_ports = 0;
 	$num_ports = 0;
@@ -251,38 +252,19 @@ sub BuildDB
 
 	@cats = split /\s+/, Portroach::Make->Make(0, $settings{ports_dir}, 'SUBDIR');
 
-	# If the user has specified a maintainer restriction
-	# list, try to get to get the list of desired ports
-	# from the INDEX file.
+	if ($settings{restrict_maintainer}) {
+		print "Querying for maintainer associations...\n";
 
-	if ($settings{restrict_maintainer} && $settings{indexfile_enable}) {
-		print "Querying INDEX for maintainer associations...\n";
-
-		my %maintainers = map +($_, 1),
-			split /,/, lc $settings{restrict_maintainer};
-
-		my $index_file = $settings{ports_dir}.'/INDEX';
-
-		open my $if, "<$index_file"
-			or die 'Unable to open INDEX file';
-
-		while (<$if>) {
-			my (@fields, $maintainer, $port);
-
-			@fields = split /\|/;
-			$maintainer = lc($fields[5]);
-			$port = $fields[1];
-			$port =~ s/^(?:.*\/)?([^\/]+)\/([^\/]+)$/$1\/$2/;
-
-			$portsmaintok{$port} = $maintainer
-				if ($maintainers{$maintainer});
+		$ssth = $sdbh->prepare("SELECT fullpkgpath FROM Ports WHERE MAINTAINER like ?;");
+		$ssth->execute("%".$settings{restrict_maintainer}."%") or die DBI->errstr;
+	        my @ports_by_maintainer;
+		while(@ports_by_maintainer = $ssth->fetchrow_array()) {
+		    my $port = $ports_by_maintainer[0];
+		    $portsmaintok{$port} = $settings{restrict_maintainer};
 		}
-
-		close $if;
 	}
 
 	# Iterate over ports directories
-
 	while (my $cat = shift @cats) {
 		next if (! -d $settings{ports_dir}."/$cat");
 
@@ -321,8 +303,7 @@ sub BuildDB
 			# Check maintainer if we were able to ascertain
 			# it from the INDEX file (otherwise, we've got to
 			# wait until make(1) has been queried.
-			if ($settings{restrict_maintainer}
-					&& $settings{indexfile_enable}) {
+			if ($settings{restrict_maintainer}) {
 				next if (!$portsmaintok{"$cat/$name"});
 			}
 

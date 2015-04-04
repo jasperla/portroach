@@ -29,6 +29,8 @@ package Portroach::SQL;
 
 require Exporter;
 
+use DBI;
+
 use strict;
 
 require 5.006;
@@ -443,5 +445,12 @@ sub Load
 	return 1;
 }
 
+sub connect_sqlports
+{
+    my $sqlports_path = shift;
+    my $dbh = DBI->connect("dbi:SQLite:dbname=${sqlports_path}", '', '', {AutoCommit => 0})
+	or die "Could not open SQLports database at ${sqlports_path}: $DBI::errstr";
+    return $dbh;
+}
 
 1;
