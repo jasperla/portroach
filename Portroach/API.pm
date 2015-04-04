@@ -75,17 +75,18 @@ sub new
 # Desc: Add an item of software (port) to the database.
 #
 # Args: \%port   - Hash containing data:
-#                    name       - Port name                         (required)
-#                    category   - Category                          (required)
-#                    version    - Current port version              (required)
-#                    maintainer - Port maintainer e-mail            (required)
-#                    distfiles  - Array of filenames.               (required)
-#                    sites      - Array of sites to find files      (required)
-#                    distname   - "distname" (as in ports)
-#                    suffix     - Distfile suffix (e.g. ".tar.gz")
-#                    comment    - Description of port
-#                    masterport - "cat/name" of this port's master
-#                    options    - Hash of port options, from "PORTROACH" var.
+#                    name        - Port name                         (required)
+#                    category    - Category                          (required)
+#                    version     - Current port version              (required)
+#                    maintainer  - Port maintainer e-mail            (required)
+#                    distfiles   - Array of filenames.               (required)
+#                    sites       - Array of sites to find files      (required)
+#                    distname    - "distname" (as in ports)
+#                    suffix      - Distfile suffix (e.g. ".tar.gz")
+#                    comment     - Description of port
+#                    masterport  - "cat/name" of this port's master
+#                    options     - Hash of port options, from "PORTROACH" var.
+#                    fullpkgpath - FULLPKGPATH
 #
 # Retn: $success - true/false
 #------------------------------------------------------------------------------
@@ -126,11 +127,12 @@ sub AddPort
 
 	# Optional fields
 
-	$port->{distname}   ||= '';
-	$port->{suffix}     ||= '';
-	$port->{comment}    ||= '';
-	$port->{masterport} ||= '';
-	$port->{options}    ||= {};
+	$port->{distname}    ||= '';
+	$port->{suffix}      ||= '';
+	$port->{comment}     ||= '';
+	$port->{masterport}  ||= '';
+	$port->{options}     ||= {};
+	$port->{fullpkgpath} ||= '';
 
 	# Sanity checks
 
@@ -172,7 +174,8 @@ sub AddPort
 				$port->{maintainer},
 				$port->{masterport},
 				$port->{name},
-				$port->{category}
+			        $port->{category},
+ 	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";
 		}
 	}
@@ -189,7 +192,8 @@ sub AddPort
 				$port->{suffix},
 				$_sites,
 				$port->{maintainer},
-				$port->{masterport}
+ 			        $port->{masterport},
+     	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";
 		}
 	}

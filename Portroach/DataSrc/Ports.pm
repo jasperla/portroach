@@ -301,16 +301,17 @@ sub BuildPort
 	info($name, "($n_port out of $total_ports)");
 
 	$ps->AddPort({
-	    'name'       => $name,
-	    'category'   => $category,
-	    'version'    => $ver,
-	    'maintainer' => $maintainer,
-	    'comment'    => $comment,
-	    'distname'   => $distname,
-	    'suffix'     => $sufx,
-	    'distfiles'  => \@distfiles,
-	    'sites'      => \@sites,
-	    'options'    => \%pcfg
+	    'name'        => $name,
+	    'category'    => $category,
+	    'version'     => $ver,
+	    'maintainer'  => $maintainer,
+	    'comment'     => $comment,
+	    'distname'    => $distname,
+	    'suffix'      => $sufx,
+	    'distfiles'   => \@distfiles,
+	    'sites'       => \@sites,
+	    'options'     => \%pcfg,
+	    'fullpkgpath' => $fullpkgpath,
 	});
     }
 

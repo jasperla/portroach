@@ -78,7 +78,7 @@ $sql{portdata_update} =
 	q(UPDATE portdata
 	     SET ver = ?,  comment = ?, cat = ?, distfiles = ?, distname = ?,
 	         sufx = ?, mastersites = ?, maintainer = ?,  masterport = ?,
-	         updated = CURRENT_TIMESTAMP
+	         updated = CURRENT_TIMESTAMP, fullpkgpath = ?
 	   WHERE name = ?
 	     AND cat = ?);
 
@@ -86,8 +86,8 @@ $sql{portdata_insert} =
 	q(INSERT
 	    INTO portdata (name, cat, distname, ver, comment,
 	         distfiles, sufx, mastersites, maintainer,
-	         method, masterport)
-	  VALUES (?,?,?,?,?,?,?,?,?,0,?));
+	         method, masterport, fullpkgpath)
+	  VALUES (?,?,?,?,?,?,?,?,?,0,?,?));
 
 $sql{portdata_masterport_str2id} =
 	q(UPDATE portdata
