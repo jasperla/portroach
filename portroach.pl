@@ -267,8 +267,7 @@ sub ExecArgs
 	}
 	elsif ($cmd eq 'prune')
 	{
-		die "prune command disabled until scanner's parsing is improved.";
-		$res = Prune();
+		$res = Prune($sdbh);
 	}
 	else
 	{
@@ -1826,32 +1825,33 @@ sub AllocatePorts
 
 sub Prune
 {
-	my (%sths, $dbh);
+    my $sdbh = shift;
+    my (%sths, $dbh);
 
-	$dbh = connect_db();
+    $dbh = connect_db();
 
-	prepare_sql($dbh, \%sths, qw( portdata_dirs delete_removed ));
-	$sths{portdata_dirs}->execute() or die $DBI::errstr;
+    prepare_sql($dbh, \%sths, qw( portdata_dirs delete_removed ));
+    $sths{portdata_dirs}->execute() or die $DBI::errstr;
 
-	my @removed;
+    my @removed;
 
-	while (my $port = $sths{portdata_dirs}->fetchrow_hashref) {
-		my $dir = $port->{cat} . "/" . $port->{name};
-		unless ($datasrc->Exists($dir)) {
-			print "Removed: ${dir} (id: " . $port->{id} . ")\n" if $settings{debug};
-			push(@removed, $port->{id});
-		}
+    while (my $port = $sths{portdata_dirs}->fetchrow_hashref) {
+	my $dir = $port->{cat} . "/" . $port->{name};
+	unless ($datasrc->Exists($dir)) {
+		print "Removed: ${dir} (id: " . $port->{id} . ")\n" if $settings{debug};
+		push(@removed, $port->{id});
 	}
+    }
 
-	unless ($settings{precious_data}) {
-		foreach my $id (@removed) {
-			$sths{delete_removed}->execute($id);
-		}
+    unless ($settings{precious_data}) {
+	foreach my $id (@removed) {
+		$sths{delete_removed}->execute($id);
 	}
+    }
 
-	$dbh->disconnect;
+    $dbh->disconnect;
 
-	return 1;
+    return 1;
 }
 
 #------------------------------------------------------------------------------
