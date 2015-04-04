@@ -31,8 +31,12 @@ td, p, ul, span {
     font-size:40%;
 }
 
-.menu a {
+a {
     text-decoration:none;
+}
+
+.maintainer-results a {
+    color: #000;
 }
 
 .summary {
