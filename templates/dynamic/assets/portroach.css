@@ -1,0 +1,10 @@
+body, table        { font-family: "Verdana", "Helvetica", Sans-Serif; }
+h2                 { font-family: "Verdana", "Helvetica", Sans-Serif; }
+tr                 { background-color: #FFFFFF; font-family: "Verdana", "Helvetica", Sans-Serif; }
+td, p, ul, span    { font-family: "Verdana", "Helvetica", Sans-Serif; font-size: 85%; }
+.results           { background-color: #444444; }
+.resultshead       { color: #FFFFFF; font-weight: bold; background-color: #999999; }
+.resultsrow        { background-color: #FFFFFF; }
+.resultsrowupdated { background-color: #AAAADD; }
+.resultshead a     { color: #FFFFFF; text-decoration: none; }
+.box               { border: 1px solid #000000; padding: 6px; }
