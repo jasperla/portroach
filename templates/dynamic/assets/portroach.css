@@ -27,6 +27,7 @@ td, p, ul, span {
 }
 
 .menu {
+    margin:4px;
     font-size:40%;
 }
 
