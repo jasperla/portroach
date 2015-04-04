@@ -109,39 +109,6 @@ sub Rebuild
 	return $self->BuildDB($sdbh, 1);
 }
 
-
-#------------------------------------------------------------------------------
-# Func: Count()
-# Desc: Quick 'n' dirty ports count.
-#
-# Args: n/a
-#
-# Retn: $num_ports - Number of ports in tree.
-#------------------------------------------------------------------------------
-
-sub Count
-{
-	my $self = shift;
-
-	my $num_ports = 0;
-
-	opendir my $pd, $settings{ports_dir}
-		or return -1;
-
-	while (my $cat = readdir $pd) {
-		next if ($cat =~ /^[A-Z.]/ or $cat eq 'distfiles');
-
-		open my $mf, "$settings{ports_dir}/$cat/Makefile"
-			or next;
-
-		while (<$mf>) {
-			$num_ports++ if /^\s*SUBDIR\s*\+=\s*/;
-		}
-	}
-
-	return $num_ports;
-}
-
 #------------------------------------------------------------------------------
 # Func: BuildDB()
 # Desc: Build database.
