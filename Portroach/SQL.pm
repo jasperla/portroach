@@ -49,13 +49,6 @@ our %sql;
 # SQL that is common to all supported database engines.
 #------------------------------------------------------------------------------
 
-$sql{portdata_exists} =
-	q(SELECT 1
-	    FROM portdata
-	   WHERE name = ?
-	     AND cat = ?
-	   LIMIT 1);
-
 $sql{portdata_getver} =
 	q(SELECT ver
 	    FROM portdata
