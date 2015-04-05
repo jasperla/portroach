@@ -94,6 +94,9 @@ $sql{sqlports_fullpkgpaths_by_maintainer} =
 	FROM Ports
 	WHERE MAINTAINER LIKE ?);
 
+$sql{sqlports_count_ports} =
+    q(SELECT COUNT(FULLPKGPATH) FROM Ports);
+
 $sql{portdata_masterport_str2id} =
 	q(UPDATE portdata
 	     SET masterport_id = (SELECT id

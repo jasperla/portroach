@@ -120,12 +120,13 @@ sub BuildDB
 	prepare_sql($dbh, \%sths,
 		qw(portdata_masterport_str2id portdata_masterport_enslave
 		   portdata_findslaves)
-	);
+	    );
+
+	prepare_sql($sdbh, \%ssths, qw(sqlports_count_ports sqlports_fullpkgpaths_by_maintainer));
 
 	if ($settings{restrict_maintainer}) {
 		print "Querying for maintainer associations...\n";
 
-		prepare_sql($sdbh, \%ssths, qw(sqlports_fullpkgpaths_by_maintainer));
 		$ssths{sqlports_fullpkgpaths_by_maintainer}->execute("%".$settings{restrict_maintainer}."%")
 		    or die DBI->errstr;
 	        my @ports_by_maintainer;
@@ -138,7 +139,8 @@ sub BuildDB
 	# Query SQLports for all the information we need. We don't care about
 	# restrictions for now as this step basically copies sqlports. Check()
 	# will handle any restrictions instead.
-	$num_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
+	$ssths{sqlports_count_ports}->execute or die DBI->errstr;
+	$num_ports = $ssths{sqlports_count_ports}->fetchrow_array();
 
 	print "\n" unless ($num_ports < 1 or $settings{quiet});
 
