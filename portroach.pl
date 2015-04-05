@@ -1826,7 +1826,7 @@ sub AllocatePorts
 sub Prune
 {
     my $sdbh = shift;
-    my (%sths, $dbh, %ssths, $ssth, $sth, @removed);
+    my (%sths, $dbh, %ssths, $ssth, $sth);
 
     $dbh = connect_db();
 
@@ -1841,13 +1841,7 @@ sub Prune
 	my $pkgpath = $port[1];
 	$ssths{sqlports_check_fullpkgpath}->execute($pkgpath);
         unless (my $match = $ssths{sqlports_check_fullpkgpath}->fetchrow_array) {
-	    push(@removed, $id);
-	}
-    }
-
-    unless ($settings{precious_data}) {
-	foreach my $id (@removed) {
-		$sths{delete_removed}->execute($id);
+	    $sths{delete_removed}->execute($id) unless $settings{previous_data};
 	}
     }
 
