@@ -43,7 +43,7 @@ Copyright
 ---
 
 - 2005-2011 Shaun Amott <shaun@inerd.com>
-- 2014 Jasper Lievisse Adriaanse <jasper@humppa.nl>
+- 2015 Jasper Lievisse Adriaanse <j@jasper.la>
 
 Contributing
 ---

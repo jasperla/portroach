@@ -36,6 +36,7 @@ use Portroach::SiteHandler::Hackage;
 use Portroach::SiteHandler::NPM;
 use Portroach::SiteHandler::Pear;
 use Portroach::SiteHandler::Pecl;
+use Portroach::SiteHandler::PyPI;
 use Portroach::SiteHandler::RubyGems;
 use Portroach::SiteHandler::SourceForge;
 
