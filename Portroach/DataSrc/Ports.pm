@@ -191,7 +191,7 @@ sub BuildPort
     my $n_port = 0;
     my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
-    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH, EXTRACT_SUFX FROM Ports");
+    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH FROM Ports");
     $ssth->execute() or die DBI->errstr;
 
     while(@ports = $ssth->fetchrow_array()) {
@@ -219,7 +219,7 @@ sub BuildPort
 			$pcfg{lc $1} = $2;
 		}
 	}
-	$sufx = $ports[8];
+	$sufx = extractsuffix($distfiles[0]);
 	foreach my $site (split /\s+/, $ports[4]) {
 		my $ignored = 0;
 
