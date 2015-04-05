@@ -126,8 +126,7 @@ $sql{portconfig_update} =
 	     SET indexsite = ?, limitver = ?,     limiteven = ?,
 	         skipbeta = ?,  skipversions = ?, limitwhich = ?,
 	         ignore = ?
-	   WHERE name = ?
-	     AND cat = ?);
+	   WHERE fullpkgpath = ?);
 
 $sql{portconfig_isstatic} =
 	q(SELECT pcfg_static

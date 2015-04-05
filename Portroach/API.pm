@@ -296,7 +296,7 @@ sub AddPort
 		$sths->{portconfig_update}->execute(
 			$pcfg{indexsite}, $pcfg{limitver}, $pcfg{limiteven},
 			$pcfg{skipbeta}, $pcfg{skipversions}, $pcfg{limitwhich},
-			$pcfg{ignore}, $port->{name}, $port->{category}
+		        $pcfg{ignore}, $port->{fullpkgpath}
 		) if (!$settings{precious_data});
 
 		# Ensure indexsite is added to sitedata
