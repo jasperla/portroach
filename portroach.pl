@@ -1840,14 +1840,11 @@ sub Prune
     $sths{portdata_fullpkgpaths}->execute() or die $DBI::errstr;
 
     # Go through all our pkgpaths, and remove anything which cannot be found in SQLports
-    my @port;
-    while (@port = $sths{portdata_fullpkgpaths}->fetchrow_array) {
-	my $id      = $port[0];
-	my $pkgpath = $port[1];
-	$ssths{sqlports_check_fullpkgpath}->execute($pkgpath);
+    while (my $port = $sths{portdata_fullpkgpaths}->fetchrow_hashref) {
+	$ssths{sqlports_check_fullpkgpath}->execute($port->{fullpkgpath});
         unless (my $match = $ssths{sqlports_check_fullpkgpath}->fetchrow_array) {
-	    $sths{delete_removed}->execute($id) unless $settings{precious_data};
-	    info($pkgpath, 'Removed');
+	    $sths{delete_removed}->execute($port->{id}) unless $settings{precious_data};
+	    info($port->{fullpkgpath}, 'Removed');
 	}
     }
 
