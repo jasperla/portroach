@@ -89,6 +89,11 @@ $sql{portdata_insert} =
 	         method, masterport, fullpkgpath)
 	  VALUES (?,?,?,?,?,?,?,?,?,0,?,?));
 
+$sql{sqlports_fullpkgpaths_by_maintainer} =
+    q(SELECT fullpkgpath
+	FROM Ports
+	WHERE MAINTAINER LIKE ?);
+
 $sql{portdata_masterport_str2id} =
 	q(UPDATE portdata
 	     SET masterport_id = (SELECT id

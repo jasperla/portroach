@@ -105,7 +105,7 @@ sub BuildDB
 	my ($sdbh) = @_;
 
 	my (%sths, $dbh,  %portsmaintok, $mfi, @ports,
-		$num_ports, $got_ports, $buildtime, $ssth, %psths);
+		$num_ports, $got_ports, $buildtime, $ssth, %ssths);
 
 	my $ps = Portroach::API->new;
 
@@ -125,10 +125,11 @@ sub BuildDB
 	if ($settings{restrict_maintainer}) {
 		print "Querying for maintainer associations...\n";
 
-		$ssth = $sdbh->prepare("SELECT fullpkgpath FROM Ports WHERE MAINTAINER like ?;");
-		$ssth->execute("%".$settings{restrict_maintainer}."%") or die DBI->errstr;
+		prepare_sql($sdbh, \%ssths, qw(sqlports_fullpkgpaths_by_maintainer));
+		$ssths{sqlports_fullpkgpaths_by_maintainer}->execute("%".$settings{restrict_maintainer}."%")
+		    or die DBI->errstr;
 	        my @ports_by_maintainer;
-		while(@ports_by_maintainer = $ssth->fetchrow_array()) {
+		while(@ports_by_maintainer = $ssths{sqlports_fullpkgpaths_by_maintainer}->fetchrow_array()) {
 		    my $port = $ports_by_maintainer[0];
 		    $portsmaintok{$port} = $settings{restrict_maintainer};
 		}
