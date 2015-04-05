@@ -1,7 +1,14 @@
-v1.2.3 (not yet released)
+v2.0.0
 ======
 
-- ...
+- Switch to using sqlports as the primary datasource. This greatly
+  improves performance as we don't have to walk the entire ports tree
+  ourselves anymore, executing make(1) 10000s of times.
+  It also greatly improves the accuracy and prevents any stale data
+  (such as bogus maintainers) from entering the database.
+- Add a 'prune' subcommand which will remove any records from the
+  database for ports that have been removed from the ports tree.
+- Use a simpler layout for generated pages removing some unneeded text.
 
 v1.2.2
 ======
