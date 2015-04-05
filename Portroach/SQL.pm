@@ -257,7 +257,7 @@ $sql{portdata_exists} =
 	q(SELECT 1
 	    FROM portdata
 	   WHERE name = ?
-	     AND cat = ?
+	     AND fullpkgpath = ?
 	   LIMIT 1);
 
 # MailMaintainers

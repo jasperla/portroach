@@ -142,7 +142,7 @@ sub AddPort
 
 	# Add port to database
 
-	$sths->{portdata_exists}->execute($port->{name}, $port->{category});
+	$sths->{portdata_exists}->execute($port->{name}, $port->{fullpkgpath});
 	($exists) = $sths->{portdata_exists}->fetchrow_array;
 
 	$_sites = join(' ', @{$port->{sites}});
