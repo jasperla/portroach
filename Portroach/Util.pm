@@ -990,8 +990,7 @@ sub prepare_sql
 			$$sths{$_} = $dbh->prepare($Portroach::SQL::sql{$_})
 				or die DBI->errstr . "; statement \"$_\"";
 		} else {
-			print STDERR "Attempted to prepare non-existent SQL query ($_).\n";
-			return 0;
+			die "Attempted to prepare non-existent SQL query ($_).\n";
 		}
 	}
 
