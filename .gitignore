@@ -2,3 +2,5 @@ tags
 .DS_Store
 *~
 portroach.conf
+Makefile
+*.gz
