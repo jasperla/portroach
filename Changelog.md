@@ -9,6 +9,7 @@ v2.0.0
 - Add a 'prune' subcommand which will remove any records from the
   database for ports that have been removed from the ports tree.
 - Use a simpler layout for generated pages removing some unneeded text.
+- Support for MySQL has been removed.
 
 v1.2.2
 ======
