@@ -91,29 +91,9 @@ sub Build
     return $self->BuildDB($sdbh);
 }
 
-
-#------------------------------------------------------------------------------
-# Func: Rebuild()
-# Desc: Perform a partial (incremental) database build.
-#
-# Args: n/a
-#
-# Retn: $success - true/false
-#------------------------------------------------------------------------------
-
-sub Rebuild
-{
-	my $self = shift;
-        my $sdbh = shift;
-
-	return $self->BuildDB($sdbh, 1);
-}
-
 #------------------------------------------------------------------------------
 # Func: BuildDB()
 # Desc: Build database.
-#
-# Args: $incremental - true if we're just doing a partial update.
 #
 # Retn: $success     - true/false
 #------------------------------------------------------------------------------
@@ -122,7 +102,7 @@ sub BuildDB
 {
 	my $self = shift;
 
-	my ($sdbh, $incremental) = @_;
+	my ($sdbh) = @_;
 
 	my (%sths, $dbh,  %portsmaintok, $mfi, @ports,
 		$num_ports, $got_ports, $buildtime, $ssth, %psths);
@@ -130,8 +110,6 @@ sub BuildDB
 	my $ps = Portroach::API->new;
 
 	my $lastbuild = getstat('buildtime', TYPE_INT);
-
-	print "Looking for updated ports...\n\n" if ($incremental);
 
 	$got_ports = 0;
 	$num_ports = 0;
@@ -159,7 +137,6 @@ sub BuildDB
 	# Query SQLports for all the information we need. We don't care about
 	# restrictions for now as this step basically copies sqlports. Check()
 	# will handle any restrictions instead.
-	# XXX: Re-add support for $incremental
 	$num_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
 	print "\n" unless ($num_ports < 1 or $settings{quiet});

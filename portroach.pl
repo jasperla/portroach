@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # Copyright (C) 2005-2011, Shaun Amott. All rights reserved.
-# Copyright (C) 2014, Jasper Lievisse Adriaanse. All rights reserved.
+# Copyright (C) 2014-2015, Jasper Lievisse Adriaanse. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -226,7 +226,10 @@ sub ExecArgs
 	}
 	elsif ($cmd eq 'rebuild')
 	{
-		$res = $datasrc->Rebuild($sdbh);
+	    $res = $datasrc->Build($sdbh);
+	    if ($res) {
+		$res = Prune($sdbh);
+	    }
 	}
 	elsif ($cmd eq 'mail')
 	{
@@ -1830,6 +1833,8 @@ sub Prune
 
     $dbh = connect_db();
 
+    print "-- [ Pruning removed ports ] -------------------------------------------\n\n";
+
     prepare_sql($dbh,  \%sths,  qw( portdata_fullpkgpaths delete_removed ));
     prepare_sql($sdbh, \%ssths, qw( sqlports_check_fullpkgpath ));
     $sths{portdata_fullpkgpaths}->execute() or die $DBI::errstr;
@@ -1841,7 +1846,8 @@ sub Prune
 	my $pkgpath = $port[1];
 	$ssths{sqlports_check_fullpkgpath}->execute($pkgpath);
         unless (my $match = $ssths{sqlports_check_fullpkgpath}->fetchrow_array) {
-	    $sths{delete_removed}->execute($id) unless $settings{previous_data};
+	    $sths{delete_removed}->execute($id) unless $settings{precious_data};
+	    info($pkgpath, 'Removed');
 	}
     }
 

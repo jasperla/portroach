@@ -11,6 +11,7 @@ v2.0.0
 - Use a simpler layout for generated pages removing some unneeded text.
 - Support for MySQL has been removed.
 - Add sitehandler for PyPI.
+- 'rebuild' is now an alias for 'build' and 'prune'.
 
 v1.2.2
 ======

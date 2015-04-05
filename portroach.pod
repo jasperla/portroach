@@ -121,7 +121,7 @@ Ensure your ports tree is up to date.
 
 =head2 Incremental Database Update
 
-If your ports tree / data source was updated since your last build/rebuild,
+If sqlports was updated since your last build/rebuild,
 ensure Portroach knows about the changes:
 
     $ portroach rebuild
@@ -280,7 +280,7 @@ Thanks for Antoine Jacoutot for suggesting the new project name, Portroach.
 Copyright (C) 2005-2011, Shaun Amott E<lt>shaun@inerd.comE<gt>.
 
 =item
-Copyright (C) 2014, Jasper Lievisse Adriaanse E<lt>jasper@humppa.nlE<gt>.
+Copyright (C) 2014-2015 Jasper Lievisse Adriaanse E<lt>j@jasper.laE<gt>.
 
 =back
 
