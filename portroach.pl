@@ -1301,7 +1301,7 @@ sub GenerateHTML
 			$template->applyglobal(\%outdata);
 
 			print "Generating static index sorted by $sortby...\n";
-			$sth = $dbh->prepare("SELECT * FROM results ORDER BY $sortby $orderby")	
+			$sth = $dbh->prepare("SELECT * FROM results ORDER BY $sortby $orderby")
 				or die DBI->errstr;
 			$sth->execute;
 
