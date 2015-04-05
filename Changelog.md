@@ -1,7 +1,8 @@
-v2.0.1 (not released yet)
+v2.0.1
 ======
 
-- ...
+- Make the inserter and several other SQL interfaces FULLPKGPATH aware.
+  Fixes issues where the PORTROACH annotation would not be recorded.
 
 v2.0.0
 ======
