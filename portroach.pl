@@ -1826,20 +1826,22 @@ sub AllocatePorts
 sub Prune
 {
     my $sdbh = shift;
-    my (%sths, $dbh);
+    my (%sths, $dbh, %ssths, $ssth, $sth, @removed);
 
     $dbh = connect_db();
 
-    prepare_sql($dbh, \%sths, qw( portdata_dirs delete_removed ));
-    $sths{portdata_dirs}->execute() or die $DBI::errstr;
+    prepare_sql($dbh,  \%sths,  qw( portdata_fullpkgpaths delete_removed ));
+    prepare_sql($sdbh, \%ssths, qw( sqlports_check_fullpkgpath ));
+    $sths{portdata_fullpkgpaths}->execute() or die $DBI::errstr;
 
-    my @removed;
-
-    while (my $port = $sths{portdata_dirs}->fetchrow_hashref) {
-	my $dir = $port->{cat} . "/" . $port->{name};
-	unless ($datasrc->Exists($dir)) {
-		print "Removed: ${dir} (id: " . $port->{id} . ")\n" if $settings{debug};
-		push(@removed, $port->{id});
+    # Go through all our pkgpaths, and remove anything which cannot be found in SQLports
+    my @port;
+    while (@port = $sths{portdata_fullpkgpaths}->fetchrow_array) {
+	my $id      = $port[0];
+	my $pkgpath = $port[1];
+	$ssths{sqlports_check_fullpkgpath}->execute($pkgpath);
+        unless (my $match = $ssths{sqlports_check_fullpkgpath}->fetchrow_array) {
+	    push(@removed, $id);
 	}
     }
 

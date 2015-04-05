@@ -318,15 +318,17 @@ $sql{allocators_select} =
 	ORDER BY seq ASC, allocator);
 
 # Prune
-$sql{portdata_dirs} =
-	q(SELECT id,name,cat
-	    FROM portdata
-	ORDER BY cat ASC);
-
 $sql{delete_removed} =
-	q(DELETE
-	    FROM portdata
-	   WHERE id = ?);
+    q(DELETE
+    	FROM portdata
+	WHERE id = ?);
+
+$sql{portdata_fullpkgpaths} =
+    q(SELECT id, fullpkgpath
+	FROM portdata);
+
+$sql{sqlports_check_fullpkgpath} =
+    q(SELECT FULLPKGPATH FROM Ports WHERE FULLPKGPATH = ?);
 
 # Misc.
 

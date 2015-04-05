@@ -318,27 +318,4 @@ sub BuildPort
     return 1;
 }
 
-#------------------------------------------------------------------------------
-# Func: Exists()
-# Desc: Verify if a given directory still contains what appears to be a valid port
-#
-# Args: $dir - Directory to check.
-#
-# Retn: $rc - true/false
-#------------------------------------------------------------------------------
-
-sub Exists
-{
-	my $self = shift;
-	my ($dir) = @_;
-	my $rc = 1;
-
-	# Simple heuristics to determine if a given directory still contains a valid port.
-	$rc = 0 unless (-d $settings{ports_dir} . "/" . ${dir});
-	$rc = 0 unless (-f $settings{ports_dir} . "/" . ${dir} . "/Makefile");
-
-	return ($rc)
-}
-
-
 1;
