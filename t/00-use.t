@@ -2,7 +2,7 @@
 
 use Test;
 
-BEGIN { plan tests => 17; }
+BEGIN { plan tests => 16; }
 
 use strict;
 use warnings;
@@ -22,7 +22,6 @@ eval 'use Portroach::SQL ();';                      ok(!$@);
 eval 'use Portroach::SQL::SQLite ();';              ok(!$@);
 eval 'use Portroach::SQL::Pg ();';                  ok(!$@);
 
-eval 'use Portroach::Make ();';                     ok(!$@);
 eval 'use Portroach::Template ();';                 ok(!$@);
 
 eval 'use Portroach::DataSrc ();';                  ok(!$@);
