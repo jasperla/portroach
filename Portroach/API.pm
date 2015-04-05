@@ -153,7 +153,7 @@ sub AddPort
 		my $oldver;
 
 		# Clear newver if current version changed.
-		$sths->{portdata_getver}->execute($port->{name}, $port->{category});
+		$sths->{portdata_getver}->execute($port->{fullpkgpath});
 		($oldver) = $sths->{portdata_getver}->fetchrow_array;
 		if ($oldver ne $port->{version}) {
 			$sths->{portdata_clearnewver}->execute($port->{name}, $port->{category})

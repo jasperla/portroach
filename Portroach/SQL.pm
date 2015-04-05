@@ -52,8 +52,7 @@ our %sql;
 $sql{portdata_getver} =
 	q(SELECT ver
 	    FROM portdata
-	   WHERE name = ?
-	     AND cat = ?);
+	   WHERE fullpkgpath = ?);
 
 $sql{portdata_getnewver} =
 	q(SELECT newver
