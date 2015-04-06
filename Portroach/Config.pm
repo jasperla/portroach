@@ -101,8 +101,6 @@ my (@paths, %settings_types, $bool_opts);
 	mail_method     	=> 'sendmail',
 	mail_host       	=> 'localhost',
 
-	system_affinity 	=> 0,
-
 	user            	=> '',
 	group           	=> '',
 
@@ -121,7 +119,7 @@ my (@paths, %settings_types, $bool_opts);
 
 # Roughly work out variable types
 
-$bool_opts = 'ftp_passive|system_affinity|hide_unchanged|debug|quiet';
+$bool_opts = 'ftp_passive|hide_unchanged|debug|quiet';
 
 foreach (keys %settings) {
 	if (/^(?:.+_enable|.+_data|$bool_opts)$/) {

@@ -1731,8 +1731,7 @@ sub AllocatePorts
 		   allocators_select)
 	);
 
-	$sths{portdata_deallocate}->execute
-		unless ($settings{precious_data} or $settings{system_affinity});
+	$sths{portdata_deallocate}->execute unless $settings{precious_data};
 
 	$sths{allocators_count}->execute;
 	($remaining) = $sths{allocators_count}->fetchrow_array;
