@@ -17,7 +17,7 @@
 
 package Portroach::SiteHandler::GitHub;
 
-use XML::Feed;
+use JSON qw(decode_json);
 use LWP::UserAgent;
 
 use Portroach::Const;
@@ -73,7 +73,7 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /https:\/\/github\.com\/.*\/archive\//);
+	return ($url =~ /https:\/\/github\.com\//);
 }
 
 
@@ -95,37 +95,55 @@ sub GetFiles
 	my $self = shift;
 
 	my ($url, $port, $files) = @_;
+	my $projname;
 
 	if ($url =~ /https:\/\/github\.com\/(.*?)\/archive\//) {
-		my ($atomfeed, $projname, $ua, $response, $xpath, $items);
+	    $projname = $1;
+	} elsif ($url =~ /https:\/\/github.com\/downloads\/(.*)\//) {
+	    $projname = $1;
+	}
 
-		$projname = $1;
+	if ($projname) {
+		my ($query, $ua, $response, $items, $json);
 
-		# Find the Atom feed for this repository
-		$atomfeed = 'https://github.com/' . $projname . '/releases.atom';
+		# First check if there's a latest releases endpoint
+		$query = 'https://api.github.com/repos/' . $projname . '/releases/latest';
 
-		_debug("GET $atomfeed");
+		_debug("GET $query");
 		$ua = LWP::UserAgent->new;
 		$ua->agent(USER_AGENT);
 		$ua->timeout($settings{http_timeout});
 
-		$response = $ua->get($atomfeed);
+		$response = $ua->request(HTTP::Request->new(GET => $query));
 
 		if (!$response->is_success || $response->status_line !~ /^2/) {
 			_debug('GET failed: ' . $response->status_line);
-			return 0;
+			# Project didn't do any releases, so let's try tags instead.
+			$query = 'https://api.github.com/repos/' . $projname . '/tags';
+			_debug("GET $query");
+			$ua = LWP::UserAgent->new;
+			$ua->agent(USER_AGENT);
+			$ua->timeout($settings{http_timeout});
+
+			$response = $ua->request(HTTP::Request->new(GET => $query));
+
+			if (!$response->is_success || $response->status_line !~ /^2/) {
+			    _debug('GET failed: ' . $response->status_line);
+			    return 0;
+			}
+
+			$json = decode_json($response->decoded_content);
+			foreach my $tag (@$json) {
+			    my $tag_url = $tag->{tarball_url};
+			    push(@$files, $tag_url);
+			}
+
+			_debug('Found ' . scalar @$files . ' files');
+			return 1;
 		}
 
-		my $feed = XML::Feed->parse(\$response->content);
-
-		foreach my $item ($feed->entries) {
-		    my ($release, $url);
-
-		    $release = $item->title;
-		    $url = $item->link;
-
-		    push @$files, $url;
-		}
+		$json = decode_json($response->decoded_content);
+		push(@$files, $json->{tarball_url});
 
 		_debug('Found ' . scalar @$files . ' files');
 	} else {
