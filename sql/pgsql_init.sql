@@ -30,7 +30,6 @@ CREATE TABLE portdata (
 	limitver text,
 	masterport text,
 	masterport_id integer DEFAULT 0,
-	enslaved boolean DEFAULT FALSE,
 	skipbeta boolean DEFAULT TRUE,
 	limiteven boolean,
 	limitwhich smallint,
@@ -82,7 +81,7 @@ CREATE TABLE stats (
 
 INSERT
   INTO portroach (dbver)
-VALUES (2015040601);
+VALUES (2015040602);
 
 INSERT
   INTO stats (key)

@@ -838,7 +838,6 @@ sub VersionCheck
 				$file->{version},
 				$method,
 				$file->{url},
-				$port->{id},
 				$port->{id}
 			) unless ($settings{precious_data});
 
@@ -849,7 +848,7 @@ sub VersionCheck
 	}
 
 	# Update checked timestamp
-	$sths->{portdata_setchecked}->execute($port->{id}, $port->{id})
+	$sths->{portdata_setchecked}->execute($port->{id})
 		unless ($settings{precious_data});
 
 	info($k, 'Done');

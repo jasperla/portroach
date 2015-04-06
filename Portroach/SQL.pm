@@ -88,30 +88,6 @@ $sql{sqlports_fullpkgpaths_by_maintainer} =
 $sql{sqlports_count_ports} =
     q(SELECT COUNT(FULLPKGPATH) FROM Ports);
 
-$sql{portdata_masterport_str2id} =
-	q(UPDATE portdata
-	     SET masterport_id = (SELECT id
-	                            FROM portdata
-	                              AS master
-	                           WHERE master.cat  = split_part(portdata.masterport, '/', 1)
-	                             AND master.name = split_part(portdata.masterport, '/', 2)
-	                           LIMIT 1)
-	   WHERE masterport is not NULL
-	     AND masterport != '');
-
-# Note: enslaved only meaningful when masterport_id != 0
-$sql{portdata_masterport_enslave} =
-	q(UPDATE portdata
-	     SET enslaved = (1 IN (SELECT 1
-	                             FROM portdata
-	                               AS master
-	                            WHERE master.id = portdata.masterport_id
-	                              AND master.ver = portdata.ver
-	                              AND master.distfiles = portdata.distfiles
-	                              AND master.mastersites = portdata.mastersites))
-	   WHERE masterport_id != 0
-	     AND masterport_id is not NULL);
-
 $sql{portconfig_update} =
 	q(UPDATE portdata
 	     SET indexsite = ?, limitver = ?,     limiteven = ?,
@@ -125,24 +101,12 @@ $sql{portconfig_isstatic} =
 	   WHERE name = ?
 	     AND cat = ?);
 
-# BuildPortsDBFast
-
-$sql{portdata_findslaves} =
-	q(SELECT name, cat
-	    FROM portdata
-	   WHERE masterport_id = (SELECT id
-	                            FROM portdata
-	                           WHERE name = ?
-	                             AND cat = ?
-	                           LIMIT 1));
-
 # CheckPortsDB
 
 $sql{portdata_select} =
 	q(SELECT *
 	    FROM portdata
-	   WHERE ( (masterport_id = 0 OR masterport_id is NULL) OR (enslaved != true) )
-	     AND ( systemid = (SELECT id
+	   WHERE ( systemid = (SELECT id
 	                         FROM systemdata
 	                        WHERE host = ?
 	                        LIMIT 1)
@@ -157,15 +121,13 @@ $sql{portdata_count} =~ s/ORDER BY.*$/LIMIT 1/i;
 $sql{portdata_setchecked} =
 	q(UPDATE portdata
 	     SET checked = CURRENT_TIMESTAMP
-	   WHERE id = ?
-	      OR (masterport_id = ? AND enslaved = true));
+	   WHERE id = ?);
 
 $sql{portdata_setnewver} =
 	q(UPDATE portdata
 	     SET newver = ?, method = ?, newurl = ?,
 	         discovered = CURRENT_TIMESTAMP
-	   WHERE id = ?
-	      OR (masterport_id = ? AND enslaved = true));
+	   WHERE id = ?);
 
 $sql{sitedata_exists} =
 	q(SELECT COUNT(*)

@@ -1,7 +1,8 @@
 v2.0.3 (not yet released)
 ======
 
-- Remove unused and unneeded configuration options.
+- Remove unused and unneeded configuration options and database columns.
+  When updating run: `psql -U portroach portroach < sql/migrations/pgsql_2.0.3.sql`
 
 v2.0.2
 ======
