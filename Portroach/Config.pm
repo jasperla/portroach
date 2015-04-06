@@ -59,7 +59,6 @@ my (@paths, %settings_types, $bool_opts);
 %settings = (
 	templates_dir   	=> 'templates',
 	html_data_dir   	=> '_html',
-	sup_data_dir    	=> '_supdata',
 	sqlports                => '/usr/local/share/sqlports',
 
 	datasrc         	=> 'Portroach::DataSrc::Ports',
