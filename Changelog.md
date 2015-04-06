@@ -1,3 +1,8 @@
+v2.0.3 (not yet released)
+======
+
+- Remove unused and unneeded configuration options.
+
 v2.0.2
 ======
 

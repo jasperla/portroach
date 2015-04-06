@@ -64,7 +64,6 @@ my (@paths, %settings_types, $bool_opts);
 	datasrc         	=> 'Portroach::DataSrc::Ports',
 	datasrc_opts    	=> '',
 
-	cache_sup_data  	=> 1, 		# Keep old supdata (could be useful)
 	precious_data   	=> 0, 		# Don't write anything to database
 	num_children    	=> 15,		# Number of child processes to spawn
 	workqueue_size  	=> 20,		# Size of work queue per child
