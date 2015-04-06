@@ -114,8 +114,8 @@ sub GetFiles
 	    my @releases = @{decode_json($resp->decoded_content)};
 
 	    foreach my $release (@releases) {
-		my $gem_url = $url . $gem . '-' . $release->{number} . '.gem';
-	        push @$files, $gem_url;
+		my $gem_path = $gem . '-' . $release->{number} . '.gem';
+	        push @$files, $gem_path;
 	    }
 	} else {
 	    _debug("GET failed: " . $resp->code);
