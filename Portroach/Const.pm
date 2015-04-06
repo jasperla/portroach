@@ -43,7 +43,7 @@ our $VERSION = '2.0.2';
 
 use constant {
 	APPNAME     		=> 'portroach',
-	APPVER      		=> $VERSION,
+	APPVER      		=> '2.0.2',
 	AUTHOR      		=> 'Shaun Amott and Jasper Lievisse Adriaanse',
 
 	USER_AGENT  		=> "portroach/${VERSION}",
