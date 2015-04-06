@@ -47,7 +47,7 @@
     </p>
 
     <span class="box">
-        Filter Distfile (by name): <input tabindex="1" ng-model="search.name">
+        Filter Distfile (by pkgpath): <input tabindex="1" ng-model="search.basepkgpath">
         Only show outdated? <input tabindex="2" type=checkbox ng-model="maint.onlyOutdated">
     </span>
 
@@ -56,8 +56,7 @@
     <table class="maintainer-results results" cellspacing="1" cellpadding="2">
     	<tbody id="results">
     		<tr class="resultshead">
-    			<td><a href="" ng-click="predicate = 'port'; reverse=false">Port</a></td>
-    			<td><a href="" ng-click="predicate = 'cat'; reverse=false">Category</a></td>
+			<td><a href="" ng-click="predicate = 'basepkgpath'; reverse=false">Pkgpath</a></td>
     			<td><a href="" ng-click="predicate = 'ver'; reverse=false">Current</a></td>
     			<td><a href="" ng-click="predicate = 'newver'; reverse=false">New</a></td>
     			<td><a href="" ng-click="predicate = 'updated'; reverse=!reverse">Last Updated</a></td>
@@ -67,8 +66,7 @@
 	        <tr id="loading" ng-show="loading"><td colspan="7">Loading...</td></tr>
             <tr ng-cloak ng-class="maint.rowClass(port.newver)" ng-show="maint.showOutdated(port, maint.onlyOutdated)" ng-repeat="port in maint.ports | filter:search | orderBy:predicate:reverse">
 
-                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.cat }}/{{ port.name }}">{{ port.name }}</a></td>
-                <td>{{ port.cat }}</td>
+                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.basepkgpath }}">{{ port.basepkgpath }}</a></td>
                 <td>{{ port.ver }}</td>
                 <td><a href="{{ port.newurl }}">{{ port.newver }}</a></td>
                 <td>{{ port.updated }}</td>
