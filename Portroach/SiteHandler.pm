@@ -27,9 +27,6 @@
 
 package Portroach::SiteHandler;
 
-use XML::XPath;
-use XML::XPath::XMLParser;
-
 use Portroach::SiteHandler::CPAN;
 use Portroach::SiteHandler::GitHub;
 use Portroach::SiteHandler::Hackage;
