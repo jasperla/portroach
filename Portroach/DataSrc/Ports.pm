@@ -114,11 +114,6 @@ sub BuildDB
 
 	$dbh = connect_db();
 
-	prepare_sql($dbh, \%sths,
-		qw(portdata_masterport_str2id portdata_masterport_enslave
-		   portdata_findslaves)
-	    );
-
 	prepare_sql($sdbh, \%ssths, qw(sqlports_count_ports sqlports_fullpkgpaths_by_maintainer));
 
 	if ($settings{restrict_maintainer}) {
