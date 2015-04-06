@@ -56,6 +56,7 @@ our @EXPORT = qw(
 	&extractfilenames
 	&extractdirectories
 	&extractsuffix
+	&tobasepkgpath
 	&fullpkgpathtoport
 	&info
 	&randstr
@@ -758,6 +759,16 @@ sub wantport
 	}
 
 	return ($matched == $needed);
+}
+
+sub tobasepkgpath
+{
+    my $fullpkgpath = shift;
+    my $basepkgpath = $fullpkgpath;
+    # Remove any flavors and/or subpackages.
+    $basepkgpath =~ s/,.*//g;
+
+    return $basepkgpath;
 }
 
 sub fullpkgpathtoport

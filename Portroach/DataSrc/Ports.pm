@@ -131,7 +131,7 @@ sub BuildDB
 		    or die DBI->errstr;
 	        my @ports_by_maintainer;
 		while(@ports_by_maintainer = $ssths{sqlports_fullpkgpaths_by_maintainer}->fetchrow_array()) {
-		    my $port = $ports_by_maintainer[0];
+		    my $port = tobasepkgpath($ports_by_maintainer[0]);
 		    $portsmaintok{$port} = $settings{restrict_maintainer};
 		}
 	}
@@ -176,10 +176,11 @@ sub BuildPort
 
     while(@ports = $ssth->fetchrow_array()) {
 	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
-	    $comment, $version, $sufx, %pcfg, @sites, $ver);
+	    $comment, $version, $sufx, %pcfg, @sites, $ver, $basepkgpath);
 	$n_port++;
 
 	$fullpkgpath = $ports[0];
+	$basepkgpath = tobasepkgpath($fullpkgpath);
 	$category    = primarycategory($ports[1]);
 
 	# Bail out early if the port has no distfiles to begin with
@@ -207,7 +208,7 @@ sub BuildPort
 		$site =~ s/\/+$/\//;
 		$site =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g; # site group spec.
 		if (length($site) == 0) {
-			print "Empty or no master sites for $fullpkgpath \n" unless ($settings{quiet});
+			print "Empty or no master sites for $basepkgpath \n" unless ($settings{quiet});
 			next;
 		}
 		try {
@@ -291,6 +292,7 @@ sub BuildPort
 	    'distfiles'   => \@distfiles,
 	    'sites'       => \@sites,
 	    'options'     => \%pcfg,
+	    'basepkgpath' => $basepkgpath,
 	    'fullpkgpath' => $fullpkgpath,
 	});
     }

@@ -19,6 +19,7 @@ CREATE TABLE portdata (
 	`mastersites` text,
 	`updated` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`fullpkgpath` text,
+	`basepkgpath` text,
 	`discovered` timestamp,
 	`checked` timestamp,
 	`maintainer` text COLLATE NOCASE,
@@ -88,7 +89,7 @@ CREATE TABLE results (
 
 INSERT
   INTO portroach (dbver)
-VALUES (2015040402);
+VALUES (2015040601);
 
 INSERT
   INTO stats (key)

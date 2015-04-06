@@ -86,7 +86,8 @@ sub new
 #                    comment     - Description of port
 #                    masterport  - "cat/name" of this port's master
 #                    options     - Hash of port options, from "PORTROACH" var.
-#                    fullpkgpath - FULLPKGPATH
+#                    basepkgpath - BASE_PKGPATH (calculated with tobasepkgpath) (required)
+#                    fullpkgpath - FULLPKGPATH (required)
 #
 # Retn: $success - true/false
 #------------------------------------------------------------------------------
@@ -106,11 +107,11 @@ sub AddPort
 	# Check for required fields
 
 	foreach my $key (qw(
-		name category version maintainer distfiles sites fullpkgpath
+		name category version maintainer distfiles sites basepkgpath fullpkgpath
 	)) {
 		if (!exists $port->{$key} || !$port->{$key}) {
 			print STDERR "Insufficient data for "
-				. "$port->{fullpkgpath}: missing $key\n";
+				. "$port->{basepkgpath}: missing $key\n";
 			return 0;
 		}
 	}
@@ -142,7 +143,7 @@ sub AddPort
 
 	# Add port to database
 
-	$sths->{portdata_exists}->execute($port->{name}, $port->{fullpkgpath});
+	$sths->{portdata_exists}->execute($port->{name}, $port->{basepkgpath});
 	($exists) = $sths->{portdata_exists}->fetchrow_array;
 
 	$_sites = join(' ', @{$port->{sites}});
@@ -153,7 +154,7 @@ sub AddPort
 		my $oldver;
 
 		# Clear newver if current version changed.
-		$sths->{portdata_getver}->execute($port->{fullpkgpath});
+		$sths->{portdata_getver}->execute($port->{basepkgpath});
 		($oldver) = $sths->{portdata_getver}->fetchrow_array;
 		if ($oldver ne $port->{version}) {
 			$sths->{portdata_clearnewver}->execute($port->{name}, $port->{category})
@@ -174,6 +175,7 @@ sub AddPort
 				$port->{masterport},
 				$port->{name},
 			        $port->{category},
+ 	  	  	        $port->{basepkgpath},
  	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";
 		}
@@ -192,7 +194,8 @@ sub AddPort
 				$_sites,
 				$port->{maintainer},
  			        $port->{masterport},
-     	  	  	        $port->{fullpkgpath}
+     	  	  	        $port->{basepkgpath},
+ 	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";
 		}
 	}
@@ -296,7 +299,7 @@ sub AddPort
 		$sths->{portconfig_update}->execute(
 			$pcfg{indexsite}, $pcfg{limitver}, $pcfg{limiteven},
 			$pcfg{skipbeta}, $pcfg{skipversions}, $pcfg{limitwhich},
-		        $pcfg{ignore}, $port->{fullpkgpath}
+		        $pcfg{ignore}, $port->{basepkgpath}
 		) if (!$settings{precious_data});
 
 		# Ensure indexsite is added to sitedata

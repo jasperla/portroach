@@ -20,6 +20,7 @@ CREATE TABLE portdata (
 	checked timestamp,
 	updated timestamp DEFAULT CURRENT_TIMESTAMP,
 	fullpkgpath text,
+	basepkgpath text,
 	discovered timestamp,
 	maintainer text,
 	status text,
@@ -81,7 +82,7 @@ CREATE TABLE stats (
 
 INSERT
   INTO portroach (dbver)
-VALUES (2015040402);
+VALUES (2015040601);
 
 INSERT
   INTO stats (key)

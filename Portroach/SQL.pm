@@ -52,7 +52,7 @@ our %sql;
 $sql{portdata_getver} =
 	q(SELECT ver
 	    FROM portdata
-	   WHERE fullpkgpath = ?);
+	   WHERE basepkgpath = ?);
 
 $sql{portdata_getnewver} =
 	q(SELECT newver
@@ -70,7 +70,7 @@ $sql{portdata_update} =
 	q(UPDATE portdata
 	     SET ver = ?,  comment = ?, cat = ?, distfiles = ?, distname = ?,
 	         sufx = ?, mastersites = ?, maintainer = ?,  masterport = ?,
-	         updated = CURRENT_TIMESTAMP, fullpkgpath = ?
+	         updated = CURRENT_TIMESTAMP, basepkgpath = ?, fullpkgpath = ?
 	   WHERE name = ?
 	     AND cat = ?);
 
@@ -78,8 +78,8 @@ $sql{portdata_insert} =
 	q(INSERT
 	    INTO portdata (name, cat, distname, ver, comment,
 	         distfiles, sufx, mastersites, maintainer,
-	         method, masterport, fullpkgpath)
-	  VALUES (?,?,?,?,?,?,?,?,?,0,?,?));
+	         method, masterport, basepkgpath, fullpkgpath)
+	  VALUES (?,?,?,?,?,?,?,?,?,0,?,?,?));
 
 $sql{sqlports_fullpkgpaths_by_maintainer} =
     q(SELECT fullpkgpath
@@ -118,7 +118,7 @@ $sql{portconfig_update} =
 	     SET indexsite = ?, limitver = ?,     limiteven = ?,
 	         skipbeta = ?,  skipversions = ?, limitwhich = ?,
 	         ignore = ?
-	   WHERE fullpkgpath = ?);
+	   WHERE basepkgpath = ?);
 
 $sql{portconfig_isstatic} =
 	q(SELECT pcfg_static
@@ -249,7 +249,7 @@ $sql{portdata_exists} =
 	q(SELECT 1
 	    FROM portdata
 	   WHERE name = ?
-	     AND fullpkgpath = ?
+	     AND basepkgpath = ?
 	   LIMIT 1);
 
 # MailMaintainers
@@ -327,7 +327,7 @@ $sql{portdata_fullpkgpaths} =
 	FROM portdata);
 
 $sql{sqlports_check_fullpkgpath} =
-    q(SELECT FULLPKGPATH FROM Ports WHERE FULLPKGPATH = ?);
+    q(SELECT FULLPKGPATH FROM Ports WHERE FULLPKGPATH like ?);
 
 # Misc.
 
