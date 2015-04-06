@@ -61,13 +61,6 @@ CREATE TABLE systemdata (
 	`host` text
 );
 
-CREATE TABLE allocators (
-	`id` integer PRIMARY KEY,
-	`seq` integer NOT NULL,
-	`systemid` integer REFERENCES systemdata (id),
-	`allocator` text
-);
-
 CREATE TABLE portroach (
 	`dbver` integer
 );

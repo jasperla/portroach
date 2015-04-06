@@ -264,10 +264,6 @@ sub ExecArgs
 	{
 		$res = Uncheck();
 	}
-	elsif ($cmd eq 'allocate')
-	{
-		$res = AllocatePorts();
-	}
 	elsif ($cmd eq 'prune')
 	{
 		$res = Prune($sdbh);
@@ -1701,112 +1697,6 @@ sub ShowMailAddrs
 	}
 
 	$sths{maildata_select}->finish;
-	$dbh->disconnect;
-
-	return 1;
-}
-
-
-#------------------------------------------------------------------------------
-# Func: AllocatePorts()
-# Desc: Divide up the ports database and allocate to machines in the portroach
-#       cluster -- if there are any.
-#
-# Args: n/a
-#
-# Retn: $success - true/false
-#------------------------------------------------------------------------------
-
-sub AllocatePorts
-{
-	my (%sths, $dbh, $remaining);
-
-	print "Checking for registered allocators...\n";
-
-	$dbh = connect_db();
-
-	prepare_sql($dbh, \%sths,
-		qw(portdata_countleft portdata_deallocate allocators_count
-		   allocators_select)
-	);
-
-	$sths{portdata_deallocate}->execute unless $settings{precious_data};
-
-	$sths{allocators_count}->execute;
-	($remaining) = $sths{allocators_count}->fetchrow_array;
-
-	if ($remaining <= 0) {
-		print "Found none (portroach will run on just this machine)\n";
-		return 1;
-	} else {
-		print "Allocating work using $remaining allocator rule(s)...\n";
-	}
-
-	for my $pass (0 .. 2)
-	{
-		print STDERR "Allocator pass $pass/2\n"
-			if ($settings{debug});
-
-		$sths{allocators_select}->execute;
-
-		while (my $allocator = $sths{allocators_select}->fetchrow_hashref)
-		{
-			my ($query, $unallocated, $i);
-
-			$query = q(UPDATE portdata
-			              SET systemid = ?
-			            WHERE systemid is NULL);
-
-			$sths{portdata_countleft}->execute;
-			($unallocated) = $sths{portdata_countleft}->fetchrow_array;
-
-			$i = ceil($unallocated / $remaining);
-
-			print STDERR "--> Allocator loop ($unallocated, $remaining)\n"
-				if ($settings{debug});
-
-			if ($allocator->{allocator} eq 'random') {
-				next unless ($pass == 2);
-
-				$query .= " AND id IN (SELECT id FROM portdata LIMIT $i)"
-					unless ($remaining == 1);
-
-				$dbh->do($query, undef, $allocator->{systemid})
-					unless ($settings{precious_data});
-			} elsif ($allocator->{allocator} eq 'presplit') {
-				next unless ($pass == 1);
-
-				# XXX: Unimplemented
-				print STDERR "Unsupported allocator (presplit) found.\n";
-			} else {
-				# Fixed constraints - allocate first
-				next unless ($pass == 0);
-
-				my (%constraints, $sth);
-
-				foreach (split /,/, $allocator->{allocator}) {
-					if (/^(maintainer|cat)=(.*)$/i) {
-						$constraints{lc $1} = lc $2;
-					} else {
-						print STDERR "Unexpected constraint or wrong format ($_).\n";
-						next;
-					}
-				}
-
-				$query .= ' AND (1=0';
-				$query .= " OR $_ = ?"
-					foreach (keys %constraints);
-				$query .= ')';
-
-				$dbh->do($query, undef, $allocator->{systemid}, values %constraints)
-					unless ($settings{precious_data});
-			}
-
-			$remaining--;
-		}
-	}
-
-	finish_sql($dbh, \%sths);
 	$dbh->disconnect;
 
 	return 1;

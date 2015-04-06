@@ -256,27 +256,6 @@ $sql{maildata_delete} =
 	    FROM maildata
 	   WHERE lower(address) = lower(?));
 
-# AllocatePorts
-
-$sql{portdata_countleft} =
-	q(SELECT COUNT(*)
-	    FROM portdata
-	   WHERE systemid is NULL);
-
-$sql{portdata_deallocate} =
-	q(UPDATE portdata
-	     SET systemid = NULL);
-
-$sql{allocators_count} =
-	q(SELECT COUNT(*)
-	    FROM allocators
-	   LIMIT 1);
-
-$sql{allocators_select} =
-	q(SELECT *
-	    FROM allocators
-	ORDER BY seq ASC, allocator);
-
 # Prune
 $sql{delete_removed} =
     q(DELETE
