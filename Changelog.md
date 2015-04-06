@@ -1,10 +1,11 @@
-v2.0.2 (not yet released)
+v2.0.2
 ======
 
 - Keep track of BASE_PKGPATH so identify ports.
 - Fix some nits in the HTML output.
 - Sync the RubyGems sitehandler with the new master site protocol.
 - Rewrite GitHub sitehandler to use the JSON api.
+- Adjust maintainer pages to be more clear and fix cvsweb links.
 
 v2.0.1
 ======
