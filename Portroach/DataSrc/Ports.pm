@@ -164,41 +164,42 @@ sub BuildDB
 sub BuildPort
 {
     my ($ps, $sdbh) = @_;
-    my (@ports, $ssth);
+    my ($ssth, %ssths);
     my $n_port = 0;
     my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
-    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH FROM Ports");
-    $ssth->execute() or die DBI->errstr;
+    prepare_sql($sdbh, \%ssths, qw( sqlports_getall ));
+    $ssths{sqlports_getall}->execute() or die DBI->errstr;
 
-    while(@ports = $ssth->fetchrow_array()) {
+    while(my $ports = $ssths{sqlports_getall}->fetchrow_hashref) {
 	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
 	    $comment, $sufx, %pcfg, @sites, $ver, $basepkgpath);
 	$n_port++;
 
-	$fullpkgpath = $ports[0];
+	$fullpkgpath = $ports->{FULLPKGPATH};
+
 	$basepkgpath = tobasepkgpath($fullpkgpath);
-	$category    = primarycategory($ports[1]);
+	$category    = primarycategory($ports->{CATEGORIES});
 
 	# Bail out early if the port has no distfiles to begin with
-	next if (split(/ /, $ports[3]) < 1);
+	next if (split(/ /, $ports->{DISTFILES}) < 1);
 
 	$name     = fullpkgpathtoport($fullpkgpath);
 
-	$distname = $ports[2];
-	foreach my $file (split /\s+/, $ports[3]) {
+	$distname = $ports->{DISTNAME};
+	foreach my $file (split /\s+/, $ports->{DISTFILES}) {
 	    $file =~ s/:[A-Za-z0-9][A-Za-z0-9\,]*$//g;
 	    push @distfiles, $file;
 	}
-	$maintainer = $ports[5];
-	$comment    = $ports[6];
-	foreach (split /\s+/, $ports[7]) {
+	$maintainer = $ports->{MAINTAINER};
+	$comment    = $ports->{COMMENT};
+	foreach (split /\s+/, $ports->{PORTROACH}) {
 		if (/^([A-Za-z]+):(.*)$/i) {
 			$pcfg{lc $1} = $2;
 		}
 	}
 	$sufx = extractsuffix($distfiles[0]);
-	foreach my $site (split /\s+/, $ports[4]) {
+	foreach my $site (split /\s+/, $ports->{MASTER_SITES}) {
 		my $ignored = 0;
 
 		$site =~ s/^\s+//;
