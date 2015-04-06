@@ -19,14 +19,6 @@ prefix           = /var/
 tmpdir           = /tmp
 wwwdir           = %(prefix)/www/
 
-#-- Data Provider -------------------------------------------------------------
-
-# The DataSrc module is what portroach uses to compile information
-# into its internal database. In other words, it's the layer between
-# the repository of software and portroach itself.
-
-datasrc          = Portroach::DataSrc::Ports
-
 #-- User Privileges -----------------------------------------------------------
 
 # If these are not empty, portroach will switch to this
