@@ -101,6 +101,7 @@ my (@paths, %settings_types, $bool_opts);
 	mail_method     	=> 'sendmail',
 	mail_host       	=> 'localhost',
 
+	cluster_enable  	=> 0,
 	system_affinity 	=> 0,
 
 	user            	=> '',

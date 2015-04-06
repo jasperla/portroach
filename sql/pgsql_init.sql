@@ -30,6 +30,7 @@ CREATE TABLE portdata (
 	limitver text,
 	masterport text,
 	masterport_id integer DEFAULT 0,
+	enslaved boolean DEFAULT FALSE,
 	skipbeta boolean DEFAULT TRUE,
 	limiteven boolean,
 	limitwhich smallint,
