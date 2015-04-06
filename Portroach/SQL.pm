@@ -88,18 +88,6 @@ $sql{sqlports_fullpkgpaths_by_maintainer} =
 $sql{sqlports_count_ports} =
     q(SELECT COUNT(FULLPKGPATH) FROM Ports);
 
-$sql{sqlports_getall} =
-    q(SELECT
-	fullpkgpath,
-	categories,
-	distname,
-	distfiles,
-	master_sites,
-	maintainer,
-	comment,
-	portroach
-      FROM Ports);
-
 $sql{portdata_masterport_str2id} =
 	q(UPDATE portdata
 	     SET masterport_id = (SELECT id
