@@ -30,8 +30,6 @@ wwwdir           = %(prefix)/www/
 
 #-- Directories ---------------------------------------------------------------
 
-ports dir        = /usr/ports          		# Ports root directory
-
 html data dir    = %(wwwdir)/portroach 		# Where to put generated HTML
 
 templates dir    = /usr/local/share/portroach/templates # Where HTML templates are kept

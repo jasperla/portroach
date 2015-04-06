@@ -57,7 +57,6 @@ my (@paths, %settings_types, $bool_opts);
 # Useful settings
 
 %settings = (
-	ports_dir       	=> '/usr/ports',
 	templates_dir   	=> 'templates',
 	html_data_dir   	=> '_html',
 	sup_data_dir    	=> '_supdata',
