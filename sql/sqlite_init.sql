@@ -38,7 +38,9 @@ CREATE TABLE portdata (
 	`skipversions` text,
 	`pcfg_static` smallint DEFAULT 0,
 	`mailed` text DEFAULT '',
-	`systemid` integer
+	`systemid` integer,
+	`gh_account` text,
+	`gh_project` text
 );
 
 CREATE TABLE sitedata (
@@ -89,7 +91,7 @@ CREATE TABLE results (
 
 INSERT
   INTO portroach (dbver)
-VALUES (2015040601);
+VALUES (2015040602);
 
 INSERT
   INTO stats (key)

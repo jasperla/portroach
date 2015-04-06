@@ -88,6 +88,8 @@ sub new
 #                    options     - Hash of port options, from "PORTROACH" var.
 #                    basepkgpath - BASE_PKGPATH (calculated with tobasepkgpath) (required)
 #                    fullpkgpath - FULLPKGPATH (required)
+#		     gh_account  - GH_ACCOUNT (used by GitHub sitehandler)
+#		     gh_project  - GH_PROJECT (used by GitHub sitehandler)
 #
 # Retn: $success - true/false
 #------------------------------------------------------------------------------
@@ -176,7 +178,9 @@ sub AddPort
 				$port->{name},
 			        $port->{category},
  	  	  	        $port->{basepkgpath},
- 	  	  	        $port->{fullpkgpath}
+ 	  	  	        $port->{fullpkgpath},
+			        $port->{gh_account},
+	  		        $port->{gh_project}
 			) or die "Failed to execute: $DBI::errstr";
 		}
 	}
@@ -195,7 +199,9 @@ sub AddPort
 				$port->{maintainer},
  			        $port->{masterport},
      	  	  	        $port->{basepkgpath},
- 	  	  	        $port->{fullpkgpath}
+			    	$port->{fullpkgpath},
+			        $port->{gh_account},
+	  		        $port->{gh_project}
 			) or die "Failed to execute: $DBI::errstr";
 		}
 	}

@@ -48,7 +48,7 @@ use constant {
 
 	USER_AGENT  		=> "portroach/${VERSION}",
 
-	DB_VERSION  		=> 2015040601,
+	DB_VERSION  		=> 2015040602,
 
 	MAX_PATH    		=> 1024,
 
