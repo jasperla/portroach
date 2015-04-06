@@ -1724,11 +1724,6 @@ sub AllocatePorts
 
 	print "Checking for registered allocators...\n";
 
-	if (!$settings{cluster_enable}) {
-		print "Clustering disabled; taking no action.\n";
-		return 1;
-	}
-
 	$dbh = connect_db();
 
 	prepare_sql($dbh, \%sths,
