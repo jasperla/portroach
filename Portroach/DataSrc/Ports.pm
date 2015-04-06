@@ -104,12 +104,9 @@ sub BuildDB
 
 	my ($sdbh) = @_;
 
-	my (%sths, $dbh,  %portsmaintok, $mfi, @ports,
-		$num_ports, $got_ports, $buildtime, $ssth, %ssths);
+	my (%sths, $dbh, %portsmaintok, $num_ports, $got_ports, $buildtime, %ssths);
 
 	my $ps = Portroach::API->new;
-
-	my $lastbuild = getstat('buildtime', TYPE_INT);
 
 	$got_ports = 0;
 	$num_ports = 0;
@@ -176,7 +173,7 @@ sub BuildPort
 
     while(@ports = $ssth->fetchrow_array()) {
 	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
-	    $comment, $version, $sufx, %pcfg, @sites, $ver, $basepkgpath);
+	    $comment, $sufx, %pcfg, @sites, $ver, $basepkgpath);
 	$n_port++;
 
 	$fullpkgpath = $ports[0];

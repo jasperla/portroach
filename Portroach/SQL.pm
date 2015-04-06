@@ -30,7 +30,6 @@ package Portroach::SQL;
 require Exporter;
 
 use DBI;
-
 use strict;
 
 require 5.006;
