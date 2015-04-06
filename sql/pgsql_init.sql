@@ -28,8 +28,6 @@ CREATE TABLE portdata (
 	newurl text,
 	ignore boolean DEFAULT FALSE,
 	limitver text,
-	masterport text,
-	masterport_id integer DEFAULT 0,
 	skipbeta boolean DEFAULT TRUE,
 	limiteven boolean,
 	limitwhich smallint,

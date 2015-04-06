@@ -68,7 +68,7 @@ $sql{portdata_clearnewver} =
 $sql{portdata_update} =
 	q(UPDATE portdata
 	     SET ver = ?,  comment = ?, cat = ?, distfiles = ?, distname = ?,
-	         sufx = ?, mastersites = ?, maintainer = ?,  masterport = ?,
+	         sufx = ?, mastersites = ?, maintainer = ?,
 	         updated = CURRENT_TIMESTAMP, basepkgpath = ?, fullpkgpath = ?
 	   WHERE name = ?
 	     AND cat = ?);
@@ -77,8 +77,8 @@ $sql{portdata_insert} =
 	q(INSERT
 	    INTO portdata (name, cat, distname, ver, comment,
 	         distfiles, sufx, mastersites, maintainer,
-	         method, masterport, basepkgpath, fullpkgpath)
-	  VALUES (?,?,?,?,?,?,?,?,?,0,?,?,?));
+	         method, basepkgpath, fullpkgpath)
+	  VALUES (?,?,?,?,?,?,?,?,?,0,?,?));
 
 $sql{sqlports_fullpkgpaths_by_maintainer} =
     q(SELECT fullpkgpath

@@ -84,7 +84,6 @@ sub new
 #                    distname    - "distname" (as in ports)
 #                    suffix      - Distfile suffix (e.g. ".tar.gz")
 #                    comment     - Description of port
-#                    masterport  - "cat/name" of this port's master
 #                    options     - Hash of port options, from "PORTROACH" var.
 #                    basepkgpath - BASE_PKGPATH (calculated with tobasepkgpath) (required)
 #                    fullpkgpath - FULLPKGPATH (required)
@@ -131,7 +130,6 @@ sub AddPort
 	$port->{distname}    ||= '';
 	$port->{suffix}      ||= '';
 	$port->{comment}     ||= '';
-	$port->{masterport}  ||= '';
 	$port->{options}     ||= {};
 
 	# Sanity checks
@@ -172,7 +170,6 @@ sub AddPort
 				$port->{suffix},
 				$_sites,
 				$port->{maintainer},
-				$port->{masterport},
 				$port->{name},
 			        $port->{category},
  	  	  	        $port->{basepkgpath},
@@ -193,7 +190,6 @@ sub AddPort
 				$port->{suffix},
 				$_sites,
 				$port->{maintainer},
- 			        $port->{masterport},
      	  	  	        $port->{basepkgpath},
  	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";
