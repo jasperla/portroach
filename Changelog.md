@@ -1,7 +1,8 @@
 v2.0.2 (not yet released)
 ======
 
-- ...
+- Keep track of BASE_PKGPATH so identify ports.
+- Fix some nits in the HTML output.
 
 v2.0.1
 ======
