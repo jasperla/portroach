@@ -6,7 +6,7 @@
 		var overview = this;
 		overview.maintainers = [];
 		overview.summary = [];
-	        
+
 	        $scope.loading = true;
 
 		$http.get('./json/totals.json').success(function(data) {
