@@ -61,9 +61,13 @@
 			}
 		};
 
-		this.rowClass = function(newver) {
+		this.rowClass = function(newver, ignore) {
 			var row;
-			(newver === null) ? row = "resultsrow" : row = "resultsrowupdated";
+			if (newver === null || ignore == 1) {
+				row = "resultsrow";
+			} else {
+				row = "resultsrowupdated";
+			}
 			return row;
 		};
 	}]);
