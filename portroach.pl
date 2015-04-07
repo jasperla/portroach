@@ -38,7 +38,7 @@ use LWP::UserAgent;
 use MIME::Lite;
 use Net::FTP;
 use URI;
-use JSON;
+use JSON qw(decode_json);
 
 use DBI;
 
