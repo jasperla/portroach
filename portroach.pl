@@ -1502,7 +1502,6 @@ sub MailMaintainers
 		$template->applyglobal({maintainer => lc $addr});
 
 		while (my $port = $sths{portdata_findnewnew}->fetchrow_hashref) {
-			$port->{cat_portname} = "$port->{cat}/$port->{name}";
 			$template->pushrow($port);
 			$ports++;
 		}

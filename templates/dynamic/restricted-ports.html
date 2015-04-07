@@ -7,7 +7,7 @@
 	<link href="assets/portroach.css" rel="stylesheet" type="text/css"/>
     </head>
 
-    <body ng-controller="RestrictedController as restricted">
+    <body ng-controller="RestrictedController as restricted" ng-init="predicate='basepkgpath'">
 
 <div class="header">
     portroach - restricted ports
@@ -39,16 +39,14 @@
 
         <table class="results" cellspacing="1" cellpadding="2">
             <tr class="resultshead">
-                <td>Port</td>
-                <td>Category</td>
+                <td><a href="" ng-click="predicate = 'basepkgpath'; reverse=false">Pkgpath</a></td>
                 <td>Limit Regex</td>
                 <td>Limit Even/Odd</td>
                 <td>Skip Versions</td>
             </tr>
 
-            <tr class="resultshow" ng-repeat="port in restricted.ports">
-                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.cat }}/{{ port.name }}">{{ port.name }}</a></td>
-                <td>{{ port.cat }}</td>
+            <tr class="resultshow" ng-repeat="port in restricted.ports | orderBy:predicate:reverse">
+                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.basepkgpath }}">{{ port.basepkgpath }}</a></td>
                 <td>{{ port.limitver }}</td>
                 <td>{{ port.limitevenwhich }}</td>
                 <td>{{ port.skipversions }}</td>

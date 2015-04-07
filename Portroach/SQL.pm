@@ -188,7 +188,7 @@ $sql{portdata_selectall} =
 	ORDER BY cat,name);
 
 $sql{portdata_selectall_limited} =
-	q(SELECT name, cat, limitver, limiteven, limitwhich, indexsite, skipversions,
+	q(SELECT name, basepkgpath, limitver, limiteven, limitwhich, indexsite, skipversions,
 	         skipbeta
 	    FROM portdata
 	   WHERE ( limitver     is not NULL )
