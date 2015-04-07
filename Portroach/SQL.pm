@@ -201,10 +201,10 @@ $sql{portdata_selectall_limited} =
 
 $sql{portdata_selectupdated} =
 	q(SELECT lower(maintainer) AS maintainer,
-	         cat, name, ver, newver
+	         basepkgpath, name, ver, newver
 	    FROM portdata
 	   WHERE ver != newver
-	ORDER BY lower(maintainer));
+	ORDER BY lower(maintainer), basepkgpath);
 
 $sql{portdata_exists} =
 	q(SELECT 1

@@ -1574,7 +1574,7 @@ sub ShowUpdates
 			$maintainer = $port->{maintainer};
 			print "${maintainer}'s ports:\n";
 		}
-		print "  $port->{cat}/$port->{name} $port->{ver} -> $port->{newver}\n";
+		print "  $port->{basepkgpath} $port->{ver} -> $port->{newver}\n";
 	}
 
 	finish_sql($dbh, \%sths);
