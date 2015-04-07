@@ -1118,7 +1118,7 @@ sub robotsallowed
 		$ua->agent(USER_AGENT);
 		$ua->timeout($settings{http_timeout});
 
-		$response = $ua->get('http://' . $site->{host} . '/robots.txt');
+		$response = $ua->get($site->{type} . '://' . $site->{host} . '/robots.txt');
 
 		if ($response->is_success) {
 			if ($response->status_line =~ /^4/) {

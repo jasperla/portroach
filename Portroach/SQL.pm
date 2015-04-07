@@ -135,7 +135,7 @@ $sql{sitedata_exists} =
 	   WHERE host = ?);
 
 $sql{sitedata_select} =
-	q(SELECT host, robots, robots_paths, liecount,
+	q(SELECT host, robots, robots_paths, liecount, type,
 	         (CURRENT_TIMESTAMP >= robots_nextcheck) AS robots_outofdate,
 	         abs(successes + (5*failures)) AS _w
 	    FROM sitedata
