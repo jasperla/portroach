@@ -38,7 +38,7 @@
 	}]);
 
 	app.controller('MaintainerController', ['$http', '$scope', function($http, $scope) {
-		this.onlyOutdated = false;
+		this.onlyOutdated = true;
 		var maint = this;
 		maint.ports = [];
 
