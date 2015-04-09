@@ -73,3 +73,20 @@ a {
     border: 1px solid #000000;
     padding: 6px;
 }
+
+fieldset {
+    display: block;
+    border: 1px solid #000;
+    padding-top:0.48em;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    width:500px;
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+
+.filter-box {
+    font-family: "Verdana", "Helvetica", Sans-Serif;
+    font-size: 85%;
+}
