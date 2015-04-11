@@ -3,12 +3,12 @@ v2.0.3 (not yet released)
 
 - Remove unused and unneeded flags/configuration options and database columns.
   When updating run: `psql -U portroach portroach < sql/migrations/pgsql_2.0.3.sql`
-- Various display tweaks on generated HTML layout.
+- Various display tweaks on generated HTML layout/reminder email.
 
 v2.0.2
 ======
 
-- Keep track of BASE_PKGPATH so identify ports.
+- Keep track of BASE_PKGPATH to identify ports.
 - Fix some nits in the HTML output.
 - Sync the RubyGems sitehandler with the new master site protocol.
 - Rewrite GitHub sitehandler to use the JSON api.
