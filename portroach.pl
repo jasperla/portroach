@@ -1287,31 +1287,7 @@ sub GenerateHTML
 	# Produce indices, sorted by each header
 
 	if ($settings{output_type} eq 'static') {
-		foreach my $sortby ('withnewdistfile', 'maintainer', 'total', 'percentage')
-		{
-			my ($sth, $orderby);
-
-			$orderby = ($sortby eq 'maintainer') ? 'ASC' : 'DESC';
-
-			$template->applyglobal(\%outdata);
-
-			print "Generating static index sorted by $sortby...\n";
-			$sth = $dbh->prepare("SELECT * FROM results ORDER BY $sortby $orderby")
-				or die DBI->errstr;
-			$sth->execute;
-
-			while (my $row = $sth->fetchrow_hashref) {
-				$row->{percentage} = sprintf('%.2f%', $row->{percentage})
-					if ($row->{percentage});
-				$template->pushrow($row);
-			}
-
-			$sth->finish;
-
-			$template->output("index-$sortby.html");
-
-			$template->reset;
-		}
+		die "Static output is no longer supported\n";
 	} else {
 		print "Generating dynamic index.html\n";
 		$template->applyglobal(\%outdata);
