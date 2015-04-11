@@ -56,22 +56,19 @@ $sql{portdata_getver} =
 $sql{portdata_getnewver} =
 	q(SELECT newver
 	    FROM portdata
-	   WHERE name = ?
-	     AND cat = ?);
+	   WHERE basepkgpath = ?);
 
 $sql{portdata_clearnewver} =
 	q(UPDATE portdata
 	     SET newver = NULL, method = NULL
-	   WHERE name = ?
-	     AND cat = ?);
+	   WHERE basepkgpath = ?);
 
 $sql{portdata_update} =
 	q(UPDATE portdata
 	     SET ver = ?,  comment = ?, cat = ?, distfiles = ?, distname = ?,
 	         sufx = ?, mastersites = ?, maintainer = ?,
 	         updated = CURRENT_TIMESTAMP, basepkgpath = ?, fullpkgpath = ?
-	   WHERE name = ?
-	     AND cat = ?);
+	   WHERE basepkgpath = ?);
 
 $sql{portdata_insert} =
 	q(INSERT

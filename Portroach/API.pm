@@ -155,7 +155,7 @@ sub AddPort
 		$sths->{portdata_getver}->execute($port->{basepkgpath});
 		($oldver) = $sths->{portdata_getver}->fetchrow_array;
 		if ($oldver ne $port->{version}) {
-			$sths->{portdata_clearnewver}->execute($port->{name}, $port->{category})
+			$sths->{portdata_clearnewver}->execute($port->{basepkgpath})
 				unless ($settings{precious_data});
 			$nvcleared = 1;
 		}
@@ -170,10 +170,9 @@ sub AddPort
 				$port->{suffix},
 				$_sites,
 				$port->{maintainer},
-				$port->{name},
-			        $port->{category},
  	  	  	        $port->{basepkgpath},
- 	  	  	        $port->{fullpkgpath}
+ 	  	  	        $port->{fullpkgpath},
+ 	  	  	        $port->{basepkgpath}
 			) or die "Failed to execute: $DBI::errstr";
 		}
 	}
@@ -303,7 +302,7 @@ sub AddPort
 
 		my $newver;
 
-		$sths->{portdata_getnewver}->execute($port->{name}, $port->{category});
+		$sths->{portdata_getnewver}->execute($port->{basepkgpath});
 		($newver) = $sths->{portdata_getnewver}->fetchrow_array;
 
 		# Determine if the portconfig constraints
@@ -339,8 +338,7 @@ sub AddPort
 			}
 
 			if ($invalid and !$settings{precious_data}) {
-				$sths->{portdata_clearnewver}->execute($port->{name},
-					$port->{category});
+				$sths->{portdata_clearnewver}->execute($port->{basepkgpath});
 			}
 		}
 	}
