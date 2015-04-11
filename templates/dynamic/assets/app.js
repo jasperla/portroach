@@ -48,6 +48,9 @@
 			$http.get('./json/' + $scope.maintainer + '.json').success(function(data) {
 				maint.ports = data;
 			        $scope.loading = false;
+			}).error(function(e) {
+			    document.write("Could not retrieve JSON for " + $scope.maintainer);
+			    $scope.loading = false;
 			});
 		});
 
