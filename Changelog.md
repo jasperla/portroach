@@ -4,6 +4,8 @@ v2.0.3 (not yet released)
 - Remove unused and unneeded flags/configuration options and database columns.
   When updating run: `psql -U portroach portroach < sql/migrations/pgsql_2.0.3.sql`
 - Various display tweaks on generated HTML layout/reminder email.
+- Remove static HTML output. If you want to generate static HTML, there's the
+  'json' output type which can be used as a basis.
 
 v2.0.2
 ======
