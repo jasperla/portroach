@@ -1,4 +1,4 @@
-v2.0.3 (not yet released)
+v2.0.3
 ======
 
 - Remove unused and unneeded flags/configuration options and database columns.
@@ -6,6 +6,8 @@ v2.0.3 (not yet released)
 - Various display tweaks on generated HTML layout/reminder email.
 - Remove static HTML output. If you want to generate static HTML, there's the
   'json' output type which can be used as a basis.
+- Use basepkgpath in reminder email.
+- Unbreak with DBD::SQLite > 1.38.
 
 v2.0.2
 ======
