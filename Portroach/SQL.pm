@@ -217,7 +217,7 @@ $sql{maildata_select} =
 	    FROM maildata);
 
 $sql{portdata_findnewnew} =
-	q(SELECT name,cat,ver,newver
+	q(SELECT name,cat,ver,newver,basepkgpath
 	    FROM portdata
 	   WHERE lower(maintainer) LIKE ?
 	     AND newver != ver
@@ -230,8 +230,7 @@ $sql{portdata_findnewnew} =
 $sql{portdata_setmailed} =
 	q(UPDATE portdata
 	     SET mailed = ?
-	   WHERE name = ?
-	     AND cat = ?);
+	   WHERE basepkgpath = ?);
 
 # AddMailAddrs
 
