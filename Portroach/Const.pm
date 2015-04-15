@@ -35,7 +35,7 @@ require 5.006;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '2.0.2';
+our $VERSION = '2.0.4';
 
 #------------------------------------------------------------------------------
 # Constants
@@ -43,7 +43,7 @@ our $VERSION = '2.0.2';
 
 use constant {
 	APPNAME     		=> 'portroach',
-	APPVER      		=> '2.0.2',
+	APPVER      		=> '2.0.4',
 	AUTHOR      		=> 'Shaun Amott and Jasper Lievisse Adriaanse',
 
 	USER_AGENT  		=> "portroach/${VERSION}",
