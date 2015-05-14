@@ -43,6 +43,7 @@
                 <td>Limit Regex</td>
                 <td>Limit Even/Odd</td>
                 <td>Skip Versions</td>
+		<td>Comment</td>
             </tr>
 
             <tr class="resultshow" ng-repeat="port in restricted.ports | orderBy:predicate:reverse">
@@ -50,6 +51,7 @@
                 <td>{{ port.limitver }}</td>
                 <td>{{ port.limitevenwhich }}</td>
                 <td>{{ port.skipversions }}</td>
+		<td>{{ port.pcfg_comment }}</td>
             </tr>
         </table>
 

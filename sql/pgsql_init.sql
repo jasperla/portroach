@@ -31,6 +31,7 @@ CREATE TABLE portdata (
 	skipbeta boolean DEFAULT TRUE,
 	limiteven boolean,
 	limitwhich smallint,
+	pcfg_comment text,
 	indexsite text,
 	skipversions text,
 	pcfg_static boolean DEFAULT FALSE,
@@ -72,7 +73,7 @@ CREATE TABLE stats (
 
 INSERT
   INTO portroach (dbver)
-VALUES (2015040602);
+VALUES (2015051401);
 
 INSERT
   INTO stats (key)

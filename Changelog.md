@@ -1,6 +1,8 @@
 v2.0.4 (not yet released)
 ======
 
+- Support new variable: PORTROACH_COMMENT to expand on the PORTROACH value.
+  When updating run: `psql -U portroach portroach < sql/migrations/pgsql_2.0.4.sql`
 - ...
 
 v2.0.3

@@ -85,6 +85,7 @@ sub new
 #                    suffix      - Distfile suffix (e.g. ".tar.gz")
 #                    comment     - Description of port
 #                    options     - Hash of port options, from "PORTROACH" var.
+#                    pcfg_comment  - Explanation for PORTROACH(PORTROACH_COMMENT)
 #                    basepkgpath - BASE_PKGPATH (calculated with tobasepkgpath) (required)
 #                    fullpkgpath - FULLPKGPATH (required)
 #
@@ -127,10 +128,11 @@ sub AddPort
 
 	# Optional fields
 
-	$port->{distname}    ||= '';
-	$port->{suffix}      ||= '';
-	$port->{comment}     ||= '';
-	$port->{options}     ||= {};
+	$port->{distname}     ||= '';
+	$port->{suffix}       ||= '';
+	$port->{comment}      ||= '';
+	$port->{options}      ||= {};
+	$port->{pcfg_comment} ||= '';
 
 	# Sanity checks
 
@@ -170,6 +172,7 @@ sub AddPort
 				$port->{suffix},
 				$_sites,
 				$port->{maintainer},
+			    	$port->{pcfg_comment},
  	  	  	        $port->{basepkgpath},
  	  	  	        $port->{fullpkgpath},
  	  	  	        $port->{basepkgpath}
@@ -188,7 +191,8 @@ sub AddPort
 				$_distfiles,
 				$port->{suffix},
 				$_sites,
-				$port->{maintainer},
+			    	$port->{maintainer},
+			    	$port->{pcfg_comment},
      	  	  	        $port->{basepkgpath},
  	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";
