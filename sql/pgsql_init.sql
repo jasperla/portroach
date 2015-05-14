@@ -91,10 +91,6 @@ CREATE
     ON portdata (lower(maintainer));
 
 CREATE
- INDEX portdata_index_masterport_id
-    ON portdata (masterport_id);
-
-CREATE
  INDEX portdata_index_discovered
     ON portdata (discovered);
 
