@@ -800,7 +800,7 @@ sub VersionCheck
 
 							$sths->{portdata_setnewver}->execute(
 								$guess_v, METHOD_GUESS, $url.$distfile,
-								$port->{id}, $port->{id}
+								$port->{id}
 							) unless ($settings{precious_data});
 
 							$new_found = 1;
