@@ -57,7 +57,7 @@
 		this.showOutdated = function(port, onlyOutdated) {
 			if (!onlyOutdated) {
 				return true;
-			} else if (port.newver !== null) {
+			} else if (port.newver !== null && port.ignore != 1) {
 				return true;
 			} else {
 				return false;

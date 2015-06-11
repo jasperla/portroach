@@ -1,6 +1,7 @@
 v2.0.4 (not yet released)
 ======
 
+- Do not list ignored ports in the "Only show outdated" maintainer view
 - ...
 
 v2.0.4
