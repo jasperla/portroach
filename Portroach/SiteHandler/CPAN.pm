@@ -142,9 +142,7 @@ sub _debug
 
 	$msg = '' if (!$msg);
 
-	print STDERR "(SiteHandler::CPAN) $msg\n"
-		if ($settings{debug});
+	print STDERR "(" . __PACKAGE__ . ") $msg\n" if ($settings{debug});
 }
-
 
 1;
