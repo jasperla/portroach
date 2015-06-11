@@ -27,6 +27,7 @@
 
 package Portroach::SiteHandler;
 
+use Portroach::SiteHandler::Bitbucket;
 use Portroach::SiteHandler::CPAN;
 use Portroach::SiteHandler::GitHub;
 use Portroach::SiteHandler::Hackage;

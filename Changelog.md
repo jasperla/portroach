@@ -2,6 +2,9 @@ v2.0.4 (not yet released)
 ======
 
 - Do not list ignored ports in the "Only show outdated" maintainer view
+- Add sitehandler for Bitbucket; the upstream API doesn't allow to
+  query for files or releases, only tags. So the sitehandler can only
+  report updates for projects that use tags.
 - ...
 
 v2.0.4
