@@ -1,7 +1,7 @@
 (function() {
 	var app = angular.module('portroach', []);
 
-	app.controller('OverviewController',['$http', '$scope', function($http, $scope) {
+        app.controller('OverviewController',['$http', '$scope', function($http, $scope) {
 		this.onlyOutdated = false;
 		var overview = this;
 		overview.maintainers = [];
@@ -37,7 +37,7 @@
 		};
 	}]);
 
-	app.controller('MaintainerController', ['$http', '$scope', function($http, $scope) {
+	app.controller('MaintainerController', ['$http', '$scope', '$sce', function($http, $scope, $sce) {
 		this.onlyOutdated = true;
 		var maint = this;
 		maint.ports = [];
@@ -72,6 +72,15 @@
 				row = "resultsrowupdated";
 			}
 			return row;
+		};
+
+		this.parseHomepage = function(homepage, basepkgpath) {
+			if (homepage) {
+				v = '<a href="%1%">%2%</a>'.replace('%1%', homepage).replace('%2%', basepkgpath);
+				return $sce.trustAsHtml(v);
+			} else {
+				return $sce.trustAsHtml(basepkgpath);
+			}
 		};
 	}]);
 

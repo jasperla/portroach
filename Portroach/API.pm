@@ -86,6 +86,7 @@ sub new
 #                    comment     - Description of port
 #                    options     - Hash of port options, from "PORTROACH" var.
 #                    pcfg_comment  - Explanation for PORTROACH(PORTROACH_COMMENT)
+#                    homepage    - Homepage
 #                    basepkgpath - BASE_PKGPATH (calculated with tobasepkgpath) (required)
 #                    fullpkgpath - FULLPKGPATH (required)
 #
@@ -133,6 +134,7 @@ sub AddPort
 	$port->{comment}      ||= '';
 	$port->{options}      ||= {};
 	$port->{pcfg_comment} ||= '';
+	$port->{homepage}     ||= '';
 
 	# Sanity checks
 
@@ -172,7 +174,8 @@ sub AddPort
 				$port->{suffix},
 				$_sites,
 				$port->{maintainer},
-			    	$port->{pcfg_comment},
+			        $port->{pcfg_comment},
+			        $port->{homepage},
  	  	  	        $port->{basepkgpath},
  	  	  	        $port->{fullpkgpath},
  	  	  	        $port->{basepkgpath}
@@ -193,6 +196,7 @@ sub AddPort
 				$_sites,
 			    	$port->{maintainer},
 			    	$port->{pcfg_comment},
+			    	$port->{homepage},
      	  	  	        $port->{basepkgpath},
  	  	  	        $port->{fullpkgpath}
 			) or die "Failed to execute: $DBI::errstr";

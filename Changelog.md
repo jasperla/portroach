@@ -1,7 +1,8 @@
-v2.0.6 (not yet released)
+v2.0.6
 ======
 
-- ...
+- Add a link to a port's homepage in the first column and move the
+  link to CVSweb in the webpages to the second column.
 
 v2.0.5
 ======

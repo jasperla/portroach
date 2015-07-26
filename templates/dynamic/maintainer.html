@@ -66,8 +66,8 @@
 	        <tr id="loading" ng-show="loading"><td colspan="7">Loading...</td></tr>
             <tr ng-cloak ng-class="maint.rowClass(port.newver, port.ignore)" ng-show="maint.showOutdated(port, maint.onlyOutdated)" ng-repeat="port in maint.ports | filter:search | orderBy:predicate:reverse">
 
-                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.basepkgpath }}">{{ port.basepkgpath }}</a></td>
-                <td>{{ port.ver }}</td>
+                <td><div ng-bind-html="maint.parseHomepage(port.homepage, port.basepkgpath)"></div></td>
+                <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.basepkgpath }}">{{ port.ver }}</a></td>
                 <td><a href="{{ port.newurl }}">{{ port.newver }}</a></td>
                 <td>{{ port.updated }}</td>
                 <td>{{ port.checked }}</td>

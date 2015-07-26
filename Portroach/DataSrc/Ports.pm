@@ -163,12 +163,13 @@ sub BuildPort
     my $n_port = 0;
     my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
-    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH, PORTROACH_COMMENT FROM Ports");
+    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH, PORTROACH_COMMENT, HOMEPAGE FROM Ports");
     $ssth->execute() or die DBI->errstr;
 
     while(@ports = $ssth->fetchrow_array()) {
 	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
-	    $comment, $sufx, %pcfg, @sites, $ver, $basepkgpath, $pcfg_comment);
+	    $comment, $sufx, %pcfg, @sites, $ver, $basepkgpath, $pcfg_comment,
+	    $homepage);
 	$n_port++;
 
 	$fullpkgpath = $ports[0];
@@ -193,6 +194,7 @@ sub BuildPort
 		}
 	}
 	$pcfg_comment = $ports[8];
+	$homepage = $ports[9];
 	$sufx = extractsuffix($distfiles[0]);
 	foreach my $site (split /\s+/, $ports[4]) {
 		my $ignored = 0;
@@ -286,6 +288,7 @@ sub BuildPort
 	    'sites'       => \@sites,
 	    'options'     => \%pcfg,
 	    'pcfg_comment'  => $pcfg_comment,
+	    'homepage'    => $homepage,
 	    'basepkgpath' => $basepkgpath,
 	    'fullpkgpath' => $fullpkgpath,
 	});

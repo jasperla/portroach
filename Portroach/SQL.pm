@@ -67,15 +67,16 @@ $sql{portdata_update} =
 	q(UPDATE portdata
 	     SET ver = ?,  comment = ?, cat = ?, distfiles = ?, distname = ?,
 	         sufx = ?, mastersites = ?, maintainer = ?, pcfg_comment = ?,
-	         updated = CURRENT_TIMESTAMP, basepkgpath = ?, fullpkgpath = ?
+	         homepage = ?, updated = CURRENT_TIMESTAMP, basepkgpath = ?,
+	         fullpkgpath = ?
 	   WHERE basepkgpath = ?);
 
 $sql{portdata_insert} =
 	q(INSERT
 	    INTO portdata (name, cat, distname, ver, comment,
 	         distfiles, sufx, mastersites, maintainer,
-                 pcfg_comment, method, basepkgpath, fullpkgpath)
-	  VALUES (?,?,?,?,?,?,?,?,?,?,0,?,?));
+                 pcfg_comment, homepage, method, basepkgpath, fullpkgpath)
+	  VALUES (?,?,?,?,?,?,?,?,?,?,?,0,?,?));
 
 $sql{sqlports_fullpkgpaths_by_maintainer} =
     q(SELECT fullpkgpath
@@ -186,7 +187,7 @@ $sql{portdata_selectall} =
 
 $sql{portdata_selectall_limited} =
 	q(SELECT name, basepkgpath, limitver, limiteven, limitwhich, indexsite, skipversions,
-	         skipbeta, pcfg_comment
+	         skipbeta, pcfg_comment, homepage
 	    FROM portdata
 	   WHERE ( limitver     is not NULL )
 	      OR ( limitwhich   is not NULL )
