@@ -38,6 +38,8 @@ Here's a shortlist of outstanding tasks or ideas:
 - for the dynamic pages:
   - use a single `maintainer.html`
   - generate indexes by category
+- when building/scanning, this should include the 'ruby-rspec/3/' part:
+  [devel          ] [support                       ]
 
 Copyright
 ---

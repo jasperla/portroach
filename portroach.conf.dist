@@ -81,6 +81,8 @@ hide unchanged   = false     				# Show ports with no updates.
 
 #-- Other Settings ------------------------------------------------------------
 
+# debug = true                              # Enable debug mode
+
 mastersite limit = 4         				# Give up after this many sites
 
 # Master sites to ignore checking (might be fallback mirrors not carrying new versions)
