@@ -1,13 +1,16 @@
-v2.0.7 (not yet released)
+v2.0.7
 ======
 
-- ...
+- Add site handler for Mozilla.org
+- Use `File::Path` to create directory structures
+- Unbreak the SQLite model
 
 v2.0.6
 ======
 
 - Add a link to a port's homepage in the first column and move the
   link to CVSweb in the webpages to the second column.
+  When updating run: `psql -U portroach portroach < sql/migrations/pgsql_2.0.6.sql`
 
 v2.0.5
 ======
