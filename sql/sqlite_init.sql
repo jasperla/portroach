@@ -31,6 +31,7 @@ CREATE TABLE portdata (
 	`skipbeta` smallint DEFAULT 1,
 	`limiteven` smallint,
 	`limitwhich` smallint,
+	`pcfg_comment` text,
 	`homepage` text,
 	`indexsite` text,
 	`skipversions` text,
@@ -90,19 +91,13 @@ CREATE
  INDEX portdata_index_name
     ON portdata (name);
 
-/*
 CREATE
  INDEX portdata_index_maintainer
     ON portdata (maintainer);
-*/
 
 CREATE
  INDEX portdata_index_lower_maintainer
     ON portdata (maintainer COLLATE NOCASE);
-
-CREATE
- INDEX portdata_index_masterport_id
-    ON portdata (masterport_id);
 
 CREATE
  INDEX portdata_index_discovered
@@ -111,7 +106,3 @@ CREATE
 CREATE
  INDEX sitedata_index_host
     ON sitedata (host);
-
-CREATE
- INDEX results_index_maintainer
-    ON results (maintainer);

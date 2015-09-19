@@ -29,6 +29,7 @@ package Portroach::Util;
 
 use Portroach::Const;
 use Portroach::Config;
+use File::Path qw(make_path);
 
 require Exporter;
 
@@ -169,7 +170,7 @@ sub emptydir
 		unlink "$dir/$_" foreach readdir($dh);
 		closedir $dh;
 	} else {
-		mkdir $dir;
+		make_path($dir);
 	}
 
 	return 1;
