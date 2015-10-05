@@ -208,7 +208,7 @@ sub AddPort
 	$sths->{portconfig_isstatic}->execute($port->{name}, $port->{category});
 	($iss) = $sths->{portconfig_isstatic}->fetchrow_array;
 
-	if ($settings{portconfig_enable} && !$iss) {
+	if (!$iss) {
 		my (%pcfg);
 
 		foreach my $var (keys %{$port->{options}}) {

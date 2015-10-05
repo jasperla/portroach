@@ -95,12 +95,6 @@ precious data    = false     				# Don't write anything to database
 num children     = 15        				# How many worker children to spawn
 workqueue size   = 20        				# How many ports per child at a time
 
-# It is possible for individual ports to give us information
-# such as the "limit version" regex. The following variable
-# enables this.
-
-portconfig enable = true     				# Respect port config hints
-
 # If you're using portroach with a something other than the
 # FreeBSD ports tree, switch this off to disable rejection of
 # non-FreeBSD distfiles (such as 1.3.2-win32.zip).

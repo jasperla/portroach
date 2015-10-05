@@ -85,7 +85,6 @@ my (@paths, %settings_types, $bool_opts);
 
 	local_timezone  	=> 'GMT',
 
-	portconfig_enable  	=> 1,
 	freebsdhacks_enable	=> 1,
 	sillystrings_enable	=> 0,
 
