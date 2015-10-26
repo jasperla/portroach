@@ -31,6 +31,7 @@ use Portroach::SiteHandler::Bitbucket;
 use Portroach::SiteHandler::CPAN;
 use Portroach::SiteHandler::GitHub;
 use Portroach::SiteHandler::Hackage;
+use Portroach::SiteHandler::Launchpad;
 use Portroach::SiteHandler::Mozilla;
 use Portroach::SiteHandler::NPM;
 use Portroach::SiteHandler::Pear;
