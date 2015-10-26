@@ -1,4 +1,4 @@
-v2.0.8 (not yet released)
+v2.0.8
 ======
 
 - Add site handler for Launchpad.net
