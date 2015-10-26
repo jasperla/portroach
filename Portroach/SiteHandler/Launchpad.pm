@@ -114,12 +114,9 @@ sub GetFiles
 	if ($resp->is_success) {
 	    my %entries = %{decode_json($resp->decoded_content)};
 
-	    use Data::Dumper;
-
 	    # 'entries' is a singleton array, where the first element
 	    # contains hashes with the actual entries
 	    foreach my $e (keys($entries{entries})) {
-		my $version = $entries{entries}[$e]->{version};
 		my $files_collection_link = $entries{entries}[$e]->{files_collection_link};
 
 		# Now that we have the files_collection_link, retrieve that so
@@ -135,6 +132,9 @@ sub GetFiles
 			my $self_link = $entries_fcl{entries}[$ef]->{self_link};
 			push @$files, $self_link;
 		    }
+		} else {
+		    _debug("GET failed: " . $fcl_resp);
+		    return 0;
 		}
 	    }
 	} else {

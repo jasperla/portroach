@@ -1,7 +1,8 @@
 v2.0.8 (not yet released)
 ======
 
-- ...
+- Add site handler for Launchpad.net
+- Update bundled AngularJS
 
 v2.0.7
 ======
