@@ -2,6 +2,7 @@
 <html ng-app="portroach">
 
     <head>
+	<script type="text/javascript" src="assets/angular.min.js"></script>
         <title>portroach - new distfile scanner</title>
 	<link rel="icon" type="image/ico" href="assets/favicon.ico"/>
 	<link href="assets/portroach.css" rel="stylesheet" type="text/css"/>
@@ -35,9 +36,14 @@
 	        </ul>
         </p>
 
-        <br>
+    <form class="filter-box">
+      <fieldset class="filter-box">
+        Filter Distfile (by pkgpath): <input tabindex="1" ng-model="search.basepkgpath">
+      </fieldset>
+    </form>
 
-        <table class="results" cellspacing="1" cellpadding="2">
+    <table class="results" cellspacing="1" cellpadding="2">
+      <tbody id="results">
             <tr class="resultshead">
                 <td><a href="" ng-click="predicate = 'basepkgpath'; reverse=false">Pkgpath</a></td>
                 <td>Limit Regex</td>
@@ -46,16 +52,16 @@
 		<td>Comment</td>
             </tr>
 
-            <tr class="resultshow" ng-repeat="port in restricted.ports | orderBy:predicate:reverse">
+            <tr class="resultshow" ng-repeat="port in restricted.ports | filter:search | orderBy:predicate:reverse">
                 <td><a href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/{{ port.basepkgpath }}">{{ port.basepkgpath }}</a></td>
                 <td>{{ port.limitver }}</td>
                 <td>{{ port.limitevenwhich }}</td>
                 <td>{{ port.skipversions }}</td>
 		<td>{{ port.pcfg_comment }}</td>
             </tr>
+	  </tbody>
         </table>
 
-	<script type="text/javascript" src="assets/angular.min.js"></script>
     <script type="text/javascript" src="assets/app.js"></script>
 </body>
 </html>

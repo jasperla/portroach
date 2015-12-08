@@ -1,7 +1,7 @@
 v2.0.9 (not yet released)
 ======
 
-- ...
+- Add searchbox to "restricted ports" page
 
 v2.0.8
 ======
