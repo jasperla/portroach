@@ -159,16 +159,29 @@ sub BuildDB
 sub BuildPort
 {
     my ($ps, $sdbh) = @_;
-    my (@ports, $ssth);
+    my (@ports, $ssth, $q);
     my $n_port = 0;
     my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
     my $sths = {};
-    prepare_sql($sdbh, $sths, qw(ports_select ports_restrict_maintainer ports_restrict_category));
+    prepare_sql($sdbh, $sths, qw(ports_select ports_restrict_maintainer
+                                 ports_restrict_category ports_restrict_port));
 
-    $sths->{ports_select}->execute() or die DBI->errstr;
+    if ($settings{restrict_maintainer}) {
+	$sths->{ports_restrict_maintainer}->execute("$settings{restrict_maintainer}%") or die DBI->errstr;
+	$q = $sths->{ports_restrict_maintainer};
+    } elsif ($settings{restrict_category}) {
+	$sths->{ports_restrict_category}->execute("$settings{restrict_category}") or die DBI->errstr;
+	$q = $sths->{ports_restrict_category};
+    } elsif ($settings{restrict_port}) {
+	$sths->{ports_restrict_port}->execute("%$settings{restrict_port}%") or die DBI->errstr;
+	$q = $sths->{ports_restrict_port};
+    } else {
+	$sths->{ports_select}->execute() or die DBI->errstr;
+	$q = $sths->{ports_select};
+    }
 
-    while(@ports = $sths->{ports_select}->fetchrow_array()) {
+    while(@ports = $q->fetchrow_array()) {
 	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
 	    $comment, $sufx, %pcfg, @sites, $ver, $basepkgpath, $pcfg_comment,
 	    $homepage);

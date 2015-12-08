@@ -44,6 +44,9 @@ templates dir    = /usr/local/share/portroach/templates # Where HTML templates a
 # The following three variables are comma-separated lists of
 # items that portroach should process. If left empty, portroach
 # will not limit itself, and will process the whole ports tree.
+#
+# For building the database these restrictions are mutually exclusive and
+# processed from top to bottom. Wildcards and commas are also ignored.
 
 # Items in the list may contain * and ? wildcard characters.
 

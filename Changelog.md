@@ -3,6 +3,8 @@ v2.0.9 (not yet released)
 
 - Add searchbox to "restricted ports" page
 - Various display glitches were fixed
+- The 'restrict' fields in portroach.conf are now partially honored
+  during database build/update. See config file for more details.
 
 v2.0.8
 ======
