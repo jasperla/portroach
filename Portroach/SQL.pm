@@ -90,6 +90,13 @@ $sql{ports_restrict_category} =
              master_sites, maintainer, comment, portroach,
              portroach_comment, homepage
         FROM ports
+       WHERE categories like ?);
+
+$sql{ports_restrict_port} =
+    q(SELECT fullpkgpath, categories, distname, distfiles,
+             master_sites, maintainer, comment, portroach,
+             portroach_comment, homepage
+        FROM ports
        WHERE fullpkgpath like ?);
 
 $sql{portdata_insert} =
