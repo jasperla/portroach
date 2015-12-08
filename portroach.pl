@@ -448,7 +448,7 @@ sub VersionCheck
 
 	return if (!$port->{distfiles} || !$port->{mastersites});
 
-	info($k, 'VersionCheck()');
+	info(0, $k, 'VersionCheck()');
 
 	# Loop through master sites
 	$sths->{sitedata_select}->execute($port->{mastersites});
@@ -470,7 +470,7 @@ sub VersionCheck
 
 		$i++;
 
-		info($k, 'Checking site: ' . strchop($site, 60));
+		info(0, $k, 'Checking site: ' . strchop($site, 60));
 
 		# Look to see if the URL contains the distfile version.
 		# This will affect our checks and guesses later on.
@@ -502,10 +502,10 @@ sub VersionCheck
 		# Check for special handler for this site first
 		if (my $sh = Portroach::SiteHandler->FindHandler($site))
 		{
-			info($k, $site, 'Using dedicated site handler for site.');
+			info(0, $k, $site, 'Using dedicated site handler for site.');
 
 			if (!$sh->GetFiles($site, $port, \@files)) {
-				info($k, $site, 'SiteHandler::GetFiles() failed for ' . $site);
+				info(0, $k, $site, 'SiteHandler::GetFiles() failed for ' . $site);
 				next;
 			} else {
 				$method = METHOD_HANDLER;
@@ -524,7 +524,7 @@ sub VersionCheck
 			);
 
 			if (!$ftp) {
-				info($k, $site, 'FTP connect problem: ' . $@);
+				info(0, $k, $site, 'FTP connect problem: ' . $@);
 				$sths->{sitedata_failure}->execute($site->host)
 					unless ($settings{precious_data});
 				next;
@@ -533,7 +533,7 @@ sub VersionCheck
 			my $ftp_failures = 0;
 			while ($ftp_failures <= $settings{ftp_retries}) {
 				if (!$ftp->login('anonymous')) {
-					info($k, $site, 'FTP login error: ' . $ftp->message);
+					info(0, $k, $site, 'FTP login error: ' . $ftp->message);
 
 					if ($ftp_failures == 0) {
 						$sths->{sitedata_failure}->execute($site->host)
@@ -544,7 +544,7 @@ sub VersionCheck
 
 					if ($ftp->message =~ /\b(?:IP|connections|too many|connected)\b/i) {
 						my $rest = 2+(int rand 15);
-						info($k, $site,
+						info(0, $k, $site,
 							"Retrying FTP site in $rest seconds "
 							. "(attempt $ftp_failures of "
 							. "$settings{ftp_retries})"
@@ -567,7 +567,7 @@ sub VersionCheck
 			# there.
 			if (!$ftp->cwd($site->path || '/')) {
 				$ftp->quit;
-				info($k, $site, 'FTP cwd error: ' . $ftp->message);
+				info(0, $k, $site, 'FTP cwd error: ' . $ftp->message);
 				$sths->{sitedata_failure}->execute($site->host)
 					unless ($settings{precious_data});
 				next;
@@ -576,7 +576,7 @@ sub VersionCheck
 			@files = $ftp->ls;
 
 			if (!@files) {
-				info($k, $site, 'FTP ls error (or no files found): ' . $ftp->message);
+				info(0, $k, $site, 'FTP ls error (or no files found): ' . $ftp->message);
 				$ftp->quit;
 				next;
 			}
@@ -610,7 +610,7 @@ sub VersionCheck
 			$ftp->quit;
 
 			if (!@files) {
-				info($k, $site, 'No files found.');
+				info(0, $k, $site, 'No files found.');
 				next;
 			}
 		}
@@ -619,7 +619,7 @@ sub VersionCheck
 			my ($ua, $response);
 
 			unless (robotsallowed($dbh, $site, $sitedata)) {
-				info($k, $site, 'Ignoring site as per rules in robots.txt.');
+				info(0, $k, $site, 'Ignoring site as per rules in robots.txt.');
 
 				# Don't count 'robots' bans as a failure.
 				# (We fetch them from the database so that
@@ -709,7 +709,7 @@ sub VersionCheck
 				# re-check every so often.
 
 				if ($sitedata->{liecount} > 0) {
-					info($k, $site, 'Not doing any guessing; site has previously lied.');
+					info(0, $k, $site, 'Not doing any guessing; site has previously lied.');
 					$sths->{sitedata_decliecount}->execute($sitedata->{host})
 						unless($settings{precious_data});
 					next;
@@ -722,7 +722,7 @@ sub VersionCheck
 
 				# Got a response which wasn't HTTP 4xx -> bail out
 				if ($response->is_success && $response->status_line !~ /^4/) {
-					info($k, $site, 'Not doing any guessing; site is lieing to us.');
+					info(0, $k, $site, 'Not doing any guessing; site is lieing to us.');
 					$sths->{sitedata_initliecount}->execute($sitedata->{host})
 						unless($settings{precious_data});
 					next;
@@ -768,7 +768,7 @@ sub VersionCheck
 							and next;
 					}
 
-					info($k, $site, "Guessing version $port->{ver} -> $guess_v");
+					info(0, $k, $site, "Guessing version $port->{ver} -> $guess_v");
 
 					foreach my $distfile (split ' ', $port->{distfiles})
 					{
@@ -796,7 +796,7 @@ sub VersionCheck
 
 						if ($response->is_success && $response->status_line =~ /^2/ &&
 								$headers{'content-type'} !~ /($bad_mimetypes)/i) {
-							info($k, $site, "UPDATE $port->{ver} -> $guess_v");
+							info(0, $k, $site, "UPDATE $port->{ver} -> $guess_v");
 
 							$sths->{portdata_setnewver}->execute(
 								$guess_v, METHOD_GUESS, $url.$distfile,
@@ -806,7 +806,7 @@ sub VersionCheck
 							$new_found = 1;
 							last;
 						} else {
-							info($k, $site, "Guess failed $port->{ver} -> $guess_v");
+							info(0, $k, $site, "Guess failed $port->{ver} -> $guess_v");
 						}
 
 						last if ($new_found);
@@ -829,7 +829,7 @@ sub VersionCheck
 		$old_found = 1 if $file->{oldfound};
 
 		if ($file && $file->{newfound}) {
-			info($k, $site, "UPDATE $port->{ver} -> $file->{version}");
+			info(0, $k, $site, "UPDATE $port->{ver} -> $file->{version}");
 			$sths->{portdata_setnewver}->execute(
 				$file->{version},
 				$method,
@@ -847,7 +847,7 @@ sub VersionCheck
 	$sths->{portdata_setchecked}->execute($port->{id})
 		unless ($settings{precious_data});
 
-	info($k, 'Done');
+	info(0, $k, 'Done');
 }
 
 
@@ -1491,7 +1491,7 @@ sub MailMaintainers
 			next;
 		}
 
-		info($addr, "$ports new port(s) out of date");
+		info(0, $addr, "$ports new port(s) out of date");
 
 		$msg = MIME::Lite->new(
 			From     => $settings{mail_from} =~ /@/
@@ -1706,7 +1706,7 @@ sub Prune
 	$ssths{sqlports_check_fullpkgpath}->execute($port->{fullpkgpath});
         unless (my $match = $ssths{sqlports_check_fullpkgpath}->fetchrow_array) {
 	    $sths{delete_removed}->execute($port->{id}) unless $settings{precious_data};
-	    info($port->{fullpkgpath}, 'Removed');
+	    info(0, $port->{fullpkgpath}, 'Removed');
 	}
     }
 

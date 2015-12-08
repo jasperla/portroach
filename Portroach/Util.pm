@@ -639,7 +639,8 @@ sub extractsuffix
 # Func: info()
 # Desc: Format arguments into message and print.
 #
-# Args: @str - Array of message parts to chop and format.
+# Args: $full - 0/1 to indicate wether to use the full width (60).
+#       @str - Array of message parts to chop and format.
 #       $msg - Message to print unformatted after other parts.
 #
 # Retn: n/a
@@ -647,8 +648,13 @@ sub extractsuffix
 
 sub info
 {
+	my $full = shift;
 	my @items = (@_);
 	my ($str, $msg);
+
+	# 60 is chosen as 80 - length of "(xxxx out of xxxx)" (16)" - separators.
+	my $width = 30;
+	$width *= 2 if $full;
 
 	return if ($settings{quiet});
 
@@ -656,7 +662,7 @@ sub info
 
 	foreach (@items) {
 		$str .= ' ' if ($str);
-		$str .= '[' . strchop($_, 30) . ']';
+		$str .= '[' . strchop($_, $width) . ']';
 	}
 
 	print "$str $msg\n";

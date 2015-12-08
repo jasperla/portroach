@@ -272,9 +272,7 @@ sub BuildPort
 		$ver = '' if ($ver eq $name);
 	}
 
-
-	print '[' . strchop($category, 15) . '] ' unless ($settings{quiet});
-	info($name, "($n_port out of $total_ports)");
+	info(1, $fullpkgpath, "($n_port out of $total_ports)");
 
 	$ps->AddPort({
 	    'name'        => $name,
