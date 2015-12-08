@@ -1315,6 +1315,10 @@ sub GenerateHTML
 
 		$sth->finish;
 
+		if ($total == 0) {
+		    die("No results found; database might not have been built previously?");
+		}
+
 		my %totals;
 
 		$totals{'results'} = \@results;
