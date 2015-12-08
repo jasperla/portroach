@@ -71,6 +71,27 @@ $sql{portdata_update} =
 	         fullpkgpath = ?
 	   WHERE basepkgpath = ?);
 
+# Port.pm:BuildPort()
+$sql{ports_select} =
+    q(SELECT fullpkgpath, categories, distname, distfiles,
+             master_sites, maintainer, comment, portroach,
+	     portroach_comment, homepage
+        FROM ports);
+
+$sql{ports_restrict_maintainer} =
+    q(SELECT fullpkgpath, categories, distname, distfiles,
+             master_sites, maintainer, comment, portroach,
+             portroach_comment, homepage
+        FROM ports
+       WHERE maintainer like ?);
+
+$sql{ports_restrict_category} =
+    q(SELECT fullpkgpath, categories, distname, distfiles,
+             master_sites, maintainer, comment, portroach,
+             portroach_comment, homepage
+        FROM ports
+       WHERE fullpkgpath like ?);
+
 $sql{portdata_insert} =
 	q(INSERT
 	    INTO portdata (name, cat, distname, ver, comment,

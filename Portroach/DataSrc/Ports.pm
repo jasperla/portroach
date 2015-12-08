@@ -163,10 +163,12 @@ sub BuildPort
     my $n_port = 0;
     my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
-    $ssth = $sdbh->prepare("SELECT FULLPKGPATH, CATEGORIES, DISTNAME, DISTFILES, MASTER_SITES, MAINTAINER, COMMENT, PORTROACH, PORTROACH_COMMENT, HOMEPAGE FROM Ports");
-    $ssth->execute() or die DBI->errstr;
+    my $sths = {};
+    prepare_sql($sdbh, $sths, qw(ports_select ports_restrict_maintainer ports_restrict_category));
 
-    while(@ports = $ssth->fetchrow_array()) {
+    $sths->{ports_select}->execute() or die DBI->errstr;
+
+    while(@ports = $sths->{ports_select}->fetchrow_array()) {
 	my ($fullpkgpath, $name, $category, $distname, @distfiles, $maintainer,
 	    $comment, $sufx, %pcfg, @sites, $ver, $basepkgpath, $pcfg_comment,
 	    $homepage);
