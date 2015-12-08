@@ -32,9 +32,11 @@
 			}
 		};
 
-		this.stripEmail = function(maintainer) {
-			return maintainer.replace(/\<.*?\>/g, '');
-		};
+	    this.stripEmail = function(maintainer) {
+		// For ports with multiple maintainers, fixup the display of the separator.
+		var m = maintainer.replace(/\<.*?\>/g, '');
+		return m.replace(/ ,  /, ', ');
+	    };
 	}]);
 
 	app.controller('MaintainerController', ['$http', '$scope', '$sce', function($http, $scope, $sce) {
