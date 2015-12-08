@@ -159,25 +159,45 @@ sub BuildDB
 sub BuildPort
 {
     my ($ps, $sdbh) = @_;
-    my (@ports, $ssth, $q);
+    my (@ports, $q, $total_ports, $limit);
     my $n_port = 0;
-    my $total_ports = $sdbh->selectrow_array("SELECT COUNT(FULLPKGPATH) FROM Ports;");
 
     my $sths = {};
-    prepare_sql($sdbh, $sths, qw(ports_select ports_restrict_maintainer
-                                 ports_restrict_category ports_restrict_port));
+    prepare_sql($sdbh, $sths, qw(ports_select ports_select_count
+                                 ports_restrict_maintainer ports_restrict_maintainer_count
+                                 ports_restrict_category ports_restrict_category_count
+				 ports_restrict_port  ports_restrict_port_count));
 
+    # Apply any needed restrictions.
     if ($settings{restrict_maintainer}) {
-	$sths->{ports_restrict_maintainer}->execute("$settings{restrict_maintainer}%") or die DBI->errstr;
+	$limit = "$settings{restrict_maintainer}%";
+
+	$sths->{ports_restrict_maintainer}->execute($limit) or die DBI->errstr;
+	$sths->{ports_restrict_maintainer_count}->execute($limit) or die DBI->errstr;
+
+	$total_ports = $sths->{ports_restrict_maintainer_count}->fetchrow_array();
 	$q = $sths->{ports_restrict_maintainer};
     } elsif ($settings{restrict_category}) {
-	$sths->{ports_restrict_category}->execute("$settings{restrict_category}") or die DBI->errstr;
+	$limit = "$settings{restrict_category}";
+
+	$sths->{ports_restrict_category}->execute($limit) or die DBI->errstr;
+	$sths->{ports_restrict_category_count}->execute($limit) or die DBI->errstr;
+
+	$total_ports = $sths->{ports_restrict_category_count}->fetchrow_array();
 	$q = $sths->{ports_restrict_category};
     } elsif ($settings{restrict_port}) {
-	$sths->{ports_restrict_port}->execute("%$settings{restrict_port}%") or die DBI->errstr;
+	$limit = "%$settings{restrict_port}%";
+
+	$sths->{ports_restrict_port}->execute($limit) or die DBI->errstr;
+	$sths->{ports_restrict_port_count}->execute($limit) or die DBI->errstr;
+
+	$total_ports = $sths->{ports_restrict_port_count}->fetchrow_array();
 	$q = $sths->{ports_restrict_port};
     } else {
 	$sths->{ports_select}->execute() or die DBI->errstr;
+	$sths->{ports_select_count}->execute() or die DBI->errstr;
+
+	$total_ports = $sths->{ports_select_count}->fetchrow_array();
 	$q = $sths->{ports_select};
     }
 

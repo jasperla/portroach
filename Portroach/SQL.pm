@@ -78,10 +78,19 @@ $sql{ports_select} =
 	     portroach_comment, homepage
         FROM ports);
 
+$sql{ports_select_count} =
+    q(SELECT COUNT(fullpkgpath)
+        FROM ports);
+
 $sql{ports_restrict_maintainer} =
     q(SELECT fullpkgpath, categories, distname, distfiles,
              master_sites, maintainer, comment, portroach,
              portroach_comment, homepage
+        FROM ports
+       WHERE maintainer like ?);
+
+$sql{ports_restrict_maintainer_count} =
+    q(SELECT COUNT(fullpkgpath)
         FROM ports
        WHERE maintainer like ?);
 
@@ -92,10 +101,20 @@ $sql{ports_restrict_category} =
         FROM ports
        WHERE categories like ?);
 
+$sql{ports_restrict_category_count} =
+    q(SELECT COUNT(fullpkgpath)
+        FROM ports
+       WHERE categories like ?);
+
 $sql{ports_restrict_port} =
     q(SELECT fullpkgpath, categories, distname, distfiles,
              master_sites, maintainer, comment, portroach,
              portroach_comment, homepage
+        FROM ports
+       WHERE fullpkgpath like ?);
+
+$sql{ports_restrict_port_count} =
+    q(SELECT COUNT(fullpkgpath)
         FROM ports
        WHERE fullpkgpath like ?);
 
