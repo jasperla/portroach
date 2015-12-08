@@ -84,12 +84,20 @@
 		};
 	}]);
 
-	app.controller('RestrictedController', ['$http', function($http) {
+    	app.controller('RestrictedController', ['$http', '$scope', function($http, $scope) {
 		var restricted = this;
 		restricted.ports = [];
 
-		$http.get('./json/restricted.json').success(function(data) {
-			restricted.ports = data;
+		$scope.loading = true;
+
+		$scope.$watch("restricted", function(){
+			$http.get('./json/restricted.json').success(function(data) {
+				restricted.ports = data;
+			        $scope.loading = false;
+			}).error(function(e) {
+			    document.write("Could not retrieve JSON for restricted.json");
+			    $scope.loading = false;
+			});
 		});
 	}]);
 })();
