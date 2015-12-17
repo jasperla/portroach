@@ -1,4 +1,4 @@
-v2.0.9 (not yet released)
+v2.0.9
 ======
 
 - Add searchbox to "restricted ports" page
