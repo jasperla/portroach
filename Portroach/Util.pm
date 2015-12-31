@@ -192,7 +192,7 @@ sub isbeta
 	my ($version) = @_;
 
 	return (
-		$version =~ /^(.*)[-_.](?:$beta_regex).*$/gi
+		$version =~ /^(.*)[-_~.](?:$beta_regex).*$/gi
 			or $version =~ /^(.*)(?<=\d)(?:$beta_regex).*$/gi
 	);
 }
