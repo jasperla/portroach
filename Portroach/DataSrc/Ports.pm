@@ -303,8 +303,6 @@ sub BuildPort
 				$ver = $2;
 			}
 		}
-
-		$ver = '' if ($ver eq $name);
 	}
 
 	info(1, $fullpkgpath, "($n_port out of $total_ports)");
