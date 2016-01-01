@@ -33,6 +33,10 @@ use Portroach::Config;
 
 require Exporter;
 
+if ($settings{debug}) {
+    use Data::Dumper;
+}
+
 use strict;
 
 require 5.006;
@@ -112,7 +116,8 @@ sub AddPort
 	)) {
 		if (!exists $port->{$key} || !$port->{$key}) {
 			print STDERR "Insufficient data for "
-				. "$port->{basepkgpath}: missing $key\n";
+			    . "$port->{basepkgpath}: missing $key\n";
+			print Dumper($port) if $settings{debug};
 			return 0;
 		}
 	}
