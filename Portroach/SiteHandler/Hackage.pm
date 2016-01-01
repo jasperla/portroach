@@ -73,7 +73,7 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /http:\/\/hackage\.haskell\.org\/package\//);
+	return ($url =~ /http(s?):\/\/hackage\.haskell\.org\/package\//);
 }
 
 

@@ -4,6 +4,8 @@ v2.0.10
 - Don't treat ports where the version equals the "name" as
   invalid. This was preventing devel/autoconf/$version from being
   recognized as a valid port.
+- Haskell ports use HTTPS by default now; adjust the Hackage site
+  handler accordingly.
 
 v2.0.9
 ======
