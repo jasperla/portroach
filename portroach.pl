@@ -946,7 +946,7 @@ sub FindNewestFile
 			# XXX Force number at start - is this reasonable?
 			# XXX: multiple occurences of $v in distfile?
 
-			next unless ($distfile =~ s/^(.*?)\Q$v\E(.*)$/\Q$1\E(\\d.*?)\Q$2\E/);
+			next unless ($distfile =~ s/^(.*?)\Q$v\E(.*)$/\Q$1\E(\\d.*?)\\.\\D.*/);
 
 			# Possible candidate - extract version
 
