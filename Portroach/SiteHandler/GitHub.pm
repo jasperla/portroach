@@ -19,6 +19,7 @@ package Portroach::SiteHandler::GitHub;
 
 use JSON qw(decode_json);
 use LWP::UserAgent;
+use URI;
 
 use Portroach::Const;
 use Portroach::Config;
@@ -119,7 +120,7 @@ sub GetFiles
 		$response = $ua->request(HTTP::Request->new(GET => $query));
 
 		if (!$response->is_success || $response->status_line !~ /^2/) {
-			_debug('GET failed: ' . $response->status_line);
+			_debug('GET failed for /latest: ' . $response->status_line);
 			# Project didn't do any releases, so let's try tags instead.
 			$query = 'https://api.github.com/repos/' . $projname . '/tags';
 			_debug("GET $query");
@@ -137,15 +138,29 @@ sub GetFiles
 			$json = decode_json($response->decoded_content);
 			foreach my $tag (@$json) {
 			    my $tag_url = $tag->{tarball_url};
+			    _debug("  -> $tag_url");
 			    push(@$files, $tag_url);
 			}
 
 			_debug('Found ' . scalar @$files . ' files');
 			return 1;
 		}
-
 		$json = decode_json($response->decoded_content);
-		push(@$files, $json->{tarball_url});
+
+		# TODO: To generate proper URLs in the frontend:
+		# If the project has done actual releases, (check the
+		# url), then look for the item with label "Source
+		# code" and use it's name field
+		#
+		# For now we take the filename part of the URI, add
+		# a recognized extension and treat it as a file.
+		{
+		    my $filename = (URI->new($json->{tarball_url})->path_segments)[-1];
+		    _debug("  -> " . $filename);
+		    $filename =~ s/^v//;
+		    $projname =~ m/.*?\/(.*)/;
+		    push(@$files, $1 . "-" . $filename . ".tar.gz");
+		}
 
 		_debug('Found ' . scalar @$files . ' files');
 	} else {
