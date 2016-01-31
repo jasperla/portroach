@@ -101,6 +101,8 @@ sub GetFiles
 	    $projname = $1;
 	} elsif ($url =~ /https:\/\/github.com\/downloads\/(.*)\//) {
 	    $projname = $1;
+	} elsif ($url =~ /https:\/\/github.com\/(.*?)\/releases\//) {
+	    $projname = $1;
 	}
 
 	if ($projname) {
