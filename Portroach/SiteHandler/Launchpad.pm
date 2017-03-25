@@ -116,7 +116,7 @@ sub GetFiles
 
 	    # 'entries' is a singleton array, where the first element
 	    # contains hashes with the actual entries
-	    foreach my $e (keys($entries{entries})) {
+	    foreach my $e (keys(%{$entries{entries}})) {
 		my $files_collection_link = $entries{entries}[$e]->{files_collection_link};
 
 		# Now that we have the files_collection_link, retrieve that so
@@ -128,7 +128,7 @@ sub GetFiles
 		if ($fcl_resp->is_success) {
 		    my %entries_fcl = %{decode_json($fcl_resp->decoded_content)};
 
-		    foreach my $ef (keys($entries_fcl{entries})) {
+		    foreach my $ef (keys(%{$entries_fcl{entries}})) {
 			my $self_link = $entries_fcl{entries}[$ef]->{self_link};
 			push @$files, $self_link;
 		    }
