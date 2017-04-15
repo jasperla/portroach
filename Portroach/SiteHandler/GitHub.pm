@@ -120,21 +120,14 @@ sub GetFiles
 		$response = $ua->request(HTTP::Request->new(GET => $query));
 
 		if ($response->is_success) {
-		    # TODO: To generate proper URLs in the frontend:
-		    # If the project has done actual releases, (check the
-		    # url), then look for the item with label "Source
-		    # code" and use it's name field
-		    #
-		    # For now we take the filename part of the URI, add
-		    # a recognized extension and treat it as a file.
-
 		    $json = decode_json($response->decoded_content);
 
 		    my $filename = (URI->new($json->{tarball_url})->path_segments)[-1];
 		    _debug("  -> " . $filename);
 		    $filename =~ s/^v//;
 		    $projname =~ m/.*?\/(.*)/;
-		    push(@$files, $1 . "-" . $filename . ".tar.gz");
+		    # Use '%%' as a placeholder for easier splitting in FindNewestFile().
+		    push(@$files, $1 . "%%" . $filename . ".tar.gz");
 		} else {
 			_debug('GET failed for /latest: ' . $response->status_line);
 			# Project didn't do any releases, so let's try tags instead.

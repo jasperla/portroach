@@ -891,8 +891,14 @@ sub FindNewestFile
 		{
 			my $v = $port->{ver};
 			my $s = $port->{sufx};
+			my $old_v;
+			$github = 1 if ($site->clone =~ /https:\/\/github.com\//);
 
-			my $old_v = $v;
+			if ($github) {
+			    $old_v = $distfile;
+			} else {
+			    $old_v = $v;
+			}
 
 			my $skip = 0;
 
@@ -919,8 +925,6 @@ sub FindNewestFile
 					next;
 				}
 			}
-
-			$github = 1 if ($site->clone =~ /https:\/\/github.com\//);
 
 			# Skip beta versions if requested
 
@@ -976,12 +980,22 @@ sub FindNewestFile
 					# (formatted -> "just a number")
 					next if ($new_v !~ /\./ && $old_v =~ /\./);
 				} else {
-				    # Github is "special" since the actual URI we get back from the
-				    # handler isn't the same as what is actually being retrieved.
-				    # So fall back on comparing tags instead.
+				    # GitHub is "special" as the API gives us a non-${EXTRACT_SUFX}
+				    # as filename (e.g. tarball/v0.25.1). The sitehandler uses the
+				    # last part to stub a distname thru 'project%%$V.tar.gz'.
+				    # The '%%' placeholder is used to make it easier here to extract
+				    # the actual version.
+				    # NB: The link in the webinterface is will still point to the
+				    #     previous tag as the recorded master site contains a
+				    #     hardcoded version. Little we can do at this point.
+				    $version = $1 if $file =~ m/%%(.*)\.tar.gz/;
+
+				    # Turn this into the real filename and set $new_v to the filename.
+				    $file =~ s/%%/-/;
 				    $new_v = $file;
-				    $version = lc $new_v;
 				}
+
+				print STDERR "version:${version} new_v:${new_v} old_v:${old_v} file:${file}\n" if ($settings{debug});
 
 				# Skip any specific versions if requested
 				if ($port->{skipversions}) {
