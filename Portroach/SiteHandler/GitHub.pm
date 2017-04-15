@@ -117,7 +117,17 @@ sub GetFiles
 		$ua->agent(USER_AGENT);
 		$ua->timeout($settings{http_timeout});
 
-		$response = $ua->request(HTTP::Request->new(GET => $query));
+		my $request;
+
+		if ($settings{github_token}) {
+		    #$req->authorization_basic('token', $settings{github_token});
+		    my $auth_header = HTTP::Headers->new ('Authorization' => "Token $settings{github_token}");
+		    $request = HTTP::Request->new(GET => $query, $auth_header);
+		} else {
+		    $request = HTTP::Request->new(GET => $query);
+		}
+
+		$response = $ua->request($request);
 
 		if ($response->is_success) {
 		    $json = decode_json($response->decoded_content);
@@ -129,6 +139,9 @@ sub GetFiles
 		    # Use '%%' as a placeholder for easier splitting in FindNewestFile().
 		    push(@$files, $1 . "%%" . $filename . ".tar.gz");
 		} else {
+		    if ($response->header('x-ratelimit-remaining') == 0) {
+			print STDERR ("Error: API rate limit exceeded, please set 'github token' in portroach.conf\n");
+		    }
 			_debug('GET failed for /latest: ' . $response->status_line);
 			# Project didn't do any releases, so let's try tags instead.
 			$query = 'https://api.github.com/repos/' . $projname . '/tags';

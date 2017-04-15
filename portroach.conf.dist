@@ -128,6 +128,10 @@ ftp retries      = 3         				# Give up after this many failures
 robots enable    = true      				# Check for robots.txt files
 robots checking  = strict    				# Strict robots.txt checking
 
+# GitHub personal access token, only needs 'public_repo' scope.
+# Obtained at: https://github.com/settings/tokens
+#github token =	xxx
+
 # Database connection details
 
 db user          = portroach 				# Database username
