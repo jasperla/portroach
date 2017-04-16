@@ -136,8 +136,16 @@ sub GetFiles
 		    _debug("  -> " . $filename);
 		    $filename =~ s/^v//;
 		    $projname =~ m/.*?\/(.*)/;
+
+		    # In some cases the project name (read: repository) is part of the tagname.
+		    # For example: 'heimdal-7.3.0' is the full tagname. Therefore remove the
+		    # repository name from the filename just in case.
+		    my ($account, $repo) = split('/', $projname);
+		    $filename =~ s/^${repo}-//;
+
 		    # Use '%%' as a placeholder for easier splitting in FindNewestFile().
-		    push(@$files, $1 . "%%" . $filename . ".tar.gz");
+		    _debug("pushing: " . $repo . "%%" . $filename . ".tar.gz with projname:${projname} account:${account} repo:${repo} filename:${filename}");
+		    push(@$files, $repo . "%%" . $filename . ".tar.gz");
 		} else {
 		    if ($response->header('x-ratelimit-remaining') == 0) {
 			print STDERR ("Error: API rate limit exceeded, please set 'github token' in portroach.conf\n");
