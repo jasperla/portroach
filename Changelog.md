@@ -1,7 +1,11 @@
 v2.0.11
 ======
 
-- ...
+- Fixes for GitHub:
+  - use an API token to fix rate limiting issues
+  - rework the GitHub tag retrieval and version comparison
+- Unbreak with Perl 5.24 
+- Adjust for PyPi layout changes
 
 v2.0.10
 ======
