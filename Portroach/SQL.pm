@@ -311,7 +311,7 @@ $sql{portdata_fullpkgpaths} =
 	FROM portdata);
 
 $sql{sqlports_check_fullpkgpath} =
-    q(SELECT FULLPKGPATH FROM Ports WHERE FULLPKGPATH like ?);
+    q(SELECT FULLPKGPATH FROM _Paths WHERE FULLPKGPATH like ?);
 
 # Misc.
 
