@@ -99,11 +99,11 @@ sub GetFiles
 	my $projname;
 
 	if ($url =~ /https:\/\/github\.com\/(.*?)\/archive\//) {
-	    $projname = $1;
+		$projname = $1;
 	} elsif ($url =~ /https:\/\/github.com\/downloads\/(.*)\//) {
-	    $projname = $1;
+		$projname = $1;
 	} elsif ($url =~ /https:\/\/github.com\/(.*?)\/releases\//) {
-	    $projname = $1;
+		$projname = $1;
 	}
 
 	if ($projname) {
@@ -120,36 +120,36 @@ sub GetFiles
 		my $request;
 
 		if ($settings{github_token}) {
-		    #$req->authorization_basic('token', $settings{github_token});
-		    my $auth_header = HTTP::Headers->new ('Authorization' => "Token $settings{github_token}");
-		    $request = HTTP::Request->new(GET => $query, $auth_header);
+			#$req->authorization_basic('token', $settings{github_token});
+			my $auth_header = HTTP::Headers->new ('Authorization' => "Token $settings{github_token}");
+			$request = HTTP::Request->new(GET => $query, $auth_header);
 		} else {
-		    $request = HTTP::Request->new(GET => $query);
+			$request = HTTP::Request->new(GET => $query);
 		}
 
 		$response = $ua->request($request);
 
 		if ($response->is_success) {
-		    $json = decode_json($response->decoded_content);
+			$json = decode_json($response->decoded_content);
 
-		    my $filename = (URI->new($json->{tarball_url})->path_segments)[-1];
-		    _debug("  -> " . $filename);
-		    $filename =~ s/^v//;
-		    $projname =~ m/.*?\/(.*)/;
+			my $filename = (URI->new($json->{tarball_url})->path_segments)[-1];
+			_debug("  -> " . $filename);
+			$filename =~ s/^v//;
+			$projname =~ m/.*?\/(.*)/;
 
-		    # In some cases the project name (read: repository) is part of the tagname.
-		    # For example: 'heimdal-7.3.0' is the full tagname. Therefore remove the
-		    # repository name from the filename just in case.
-		    my ($account, $repo) = split('/', $projname);
-		    $filename =~ s/^${repo}-//;
+			# In some cases the project name (read: repository) is part of the tagname.
+			# For example: 'heimdal-7.3.0' is the full tagname. Therefore remove the
+			# repository name from the filename just in case.
+			my ($account, $repo) = split('/', $projname);
+			$filename =~ s/^${repo}-//;
 
-		    # Use '%%' as a placeholder for easier splitting in FindNewestFile().
-		    _debug("pushing: " . $repo . "%%" . $filename . ".tar.gz with projname:${projname} account:${account} repo:${repo} filename:${filename}");
-		    push(@$files, $repo . "%%" . $filename . ".tar.gz");
+			# Use '%%' as a placeholder for easier splitting in FindNewestFile().
+			_debug("pushing: " . $repo . "%%" . $filename . ".tar.gz with projname:${projname} account:${account} repo:${repo} filename:${filename}");
+			push(@$files, $repo . "%%" . $filename . ".tar.gz");
 		} else {
-		    if ($response->header('x-ratelimit-remaining') == 0) {
-			print STDERR ("Error: API rate limit exceeded, please set 'github token' in portroach.conf\n");
-		    }
+			if ($response->header('x-ratelimit-remaining') == 0) {
+				print STDERR ("Error: API rate limit exceeded, please set 'github token' in portroach.conf\n");
+			}
 			_debug('GET failed for /latest: ' . $response->status_line);
 			# Project didn't do any releases, so let's try tags instead.
 			$query = 'https://api.github.com/repos/' . $projname . '/tags';
@@ -161,15 +161,15 @@ sub GetFiles
 			$response = $ua->request(HTTP::Request->new(GET => $query));
 
 			if (!$response->is_success || $response->status_line !~ /^2/) {
-			    _debug('GET failed: ' . $response->status_line);
-			    return 0;
+				_debug('GET failed: ' . $response->status_line);
+				return 0;
 			}
 
 			$json = decode_json($response->decoded_content);
 			foreach my $tag (@$json) {
-			    my $tag_url = $tag->{tarball_url};
-			    _debug("  -> $tag_url");
-			    push(@$files, $tag_url);
+				my $tag_url = $tag->{tarball_url};
+				_debug("  -> $tag_url");
+				push(@$files, $tag_url);
 			}
 		}
 		_debug('Found ' . scalar @$files . ' files');
