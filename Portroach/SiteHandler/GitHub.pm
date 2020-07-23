@@ -145,10 +145,16 @@ sub GetFiles
 					# release anyway.
 					return 1 if ($asset->{name} =~ m/.*$port->{ver}/);
 
+					# There's some weird shit out there, like "release-67-1".
+					# Normalize both the original distname and the new asset
+					# make a proper comparison free of '_' or '-'.
+					my @distname_norm = split(/[-_]+/, $port->{distname});
+					my @asset_norm = split(/[-_]+/, $port->{distname});
+					return 1 if (@distname_norm == @asset_norm);
+
 					if ($asset->{name} =~ m/${cur_suffix}$/) {
 						push(@$files, $asset->{browser_download_url});
 					}
-
 				}
 			}
 
