@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (C) 2014, Jasper Lievisse Adriaanse <jasper@openbsd.org>
+# Copyright (C) 2014, 2020 Jasper Lievisse Adriaanse <jasper@openbsd.org>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -98,6 +98,9 @@ sub GetFiles
 	my ($url, $port, $files) = @_;
 	my $projname;
 
+	# Determine at the extension used for the current distfile.
+	my $cur_suffix = $port->{distfiles};
+
 	if ($url =~ /https:\/\/github\.com\/(.*?)\/archive\//) {
 		$projname = $1;
 	} elsif ($url =~ /https:\/\/github.com\/downloads\/(.*)\//) {
@@ -132,20 +135,40 @@ sub GetFiles
 		if ($response->is_success) {
 			$json = decode_json($response->decoded_content);
 
-			my $filename = (URI->new($json->{tarball_url})->path_segments)[-1];
-			_debug("  -> " . $filename);
-			$filename =~ s/^v//;
-			$projname =~ m/.*?\/(.*)/;
+			# Obtain the assets associated with the latest release, in particular
+			# see if there's one that matches the extension of the current distfile.
+			foreach my $assets ($json->{assets}[0]) {
+				foreach my $asset ($assets) {
+					# Make sure to exclude stuff like "release-1.2.3". When we
+					# encounter an asset like that, just bail out as anything
+					# else will be just the same and we won't find a newer
+					# release anyway.
+					return 1 if ($asset->{name} =~ m/.*$port->{ver}/);
 
-			# In some cases the project name (read: repository) is part of the tagname.
-			# For example: 'heimdal-7.3.0' is the full tagname. Therefore remove the
-			# repository name from the filename just in case.
-			my ($account, $repo) = split('/', $projname);
-			$filename =~ s/^${repo}-//;
+					if ($asset->{name} =~ m/${cur_suffix}$/) {
+						push(@$files, $asset->{browser_download_url});
+					}
 
-			# Use '%%' as a placeholder for easier splitting in FindNewestFile().
-			_debug("pushing: " . $repo . "%%" . $filename . ".tar.gz with projname:${projname} account:${account} repo:${repo} filename:${filename}");
-			push(@$files, $repo . "%%" . $filename . ".tar.gz");
+				}
+			}
+
+			# If no new release was found based on the current extension, try harder.
+			if (!@$files) {
+				my $filename = (URI->new($json->{tarball_url})->path_segments)[-1];
+				_debug("  -> " . $filename);
+				$filename =~ s/^v//;
+				$projname =~ m/.*?\/(.*)/;
+
+				# In some cases the project name (read: repository) is part of the tagname.
+				# For example: 'heimdal-7.3.0' is the full tagname. Therefore remove the
+				# repository name from the filename just in case.
+				my ($account, $repo) = split('/', $projname);
+				$filename =~ s/^${repo}-//;
+
+				# Use '%%' as a placeholder for easier splitting in FindNewestFile().
+				_debug("pushing: " . $repo . "%%" . $filename . ".tar.gz with projname:${projname} account:${account} repo:${repo} filename:${filename}");
+				push(@$files, $repo . "%%" . $filename . ".tar.gz");
+			}
 		} else {
 			if ($response->header('x-ratelimit-remaining') == 0) {
 				print STDERR ("Error: API rate limit exceeded, please set 'github token' in portroach.conf\n");
