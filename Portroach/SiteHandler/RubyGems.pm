@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (C) 2014, Jasper Lievisse Adriaanse <jasper@openbsd.org>
+# Copyright (C) 2014,2020 Jasper Lievisse Adriaanse <jasper@openbsd.org>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -103,7 +103,7 @@ sub GetFiles
 	    $gem = $1;
 	}
 
-	$query = $gems_host . $gem . '.json';
+	$query = $gems_host . $gem . '/latest.json';
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
@@ -111,12 +111,11 @@ sub GetFiles
 	$resp = $ua->request(HTTP::Request->new(GET => $query));
 
 	if ($resp->is_success) {
-	    my @releases = @{decode_json($resp->decoded_content)};
+		my $latest = decode_json($resp->decoded_content);
+		next unless $latest->{version};
 
-	    foreach my $release (@releases) {
-		my $gem_path = $gem . '-' . $release->{number} . '.gem';
-	        push @$files, $gem_path;
-	    }
+		my $gem_file = $gem . '-' . $latest->{version} . '.gem';
+		push @$files, $gem_file;
 	} else {
 	    _debug("GET failed: " . $resp->code);
 	    return 0;
