@@ -149,6 +149,7 @@ sub GetFiles
 		} else {
 			if ($response->header('x-ratelimit-remaining') == 0) {
 				print STDERR ("Error: API rate limit exceeded, please set 'github token' in portroach.conf\n");
+				return 0;
 			}
 			_debug('GET failed for /latest: ' . $response->status_line);
 			# Project didn't do any releases, so let's try tags instead.
