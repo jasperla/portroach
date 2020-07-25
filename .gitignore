@@ -2,5 +2,6 @@ tags
 .DS_Store
 *~
 portroach.conf
-Makefile
 *.gz
+__pycache__
+*.swp

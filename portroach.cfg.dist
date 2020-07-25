@@ -1,0 +1,23 @@
+[portroach]
+# Do not modify the database and don't send out e-mails (--noop)
+readonly = True
+debug = True
+# List of master sites to ignore. Globbing allowed.
+mastersite_ignore = '*openbsd.org/pub/OpenBSD/distfiles/*'
+# Whether to enable robots.txt checking
+robots_txt = True
+
+# Limit the run to the set of ports matching these criteria (logical AND)
+[limit]
+maintainer = 'jasper@openbsd.org'
+category = 'devel'
+port = 'polybar'
+
+[tokens]
+github = 'yalla yalla'
+
+[database]
+backend = 'pgsql'
+dbname = 'portroach'
+user = 'portroach'
+password = 'something'
