@@ -12,7 +12,7 @@ Portroach is available as an OpenBSD package built from `misc/portroach`:
     pkg_add portroach
 
 Alternatively you can `git clone` this repository and run
-`portroach.pl` inplace.
+`portroach.py` inplace.
 
 Usage
 ---
@@ -28,22 +28,10 @@ The results are available at
 [portroach.openbsd.org](http://portroach.openbsd.org), kindly
 hosted by ajacoutot@.
 
-ToDo
----
-
-Here's a shortlist of outstanding tasks or ideas:
-
-- add Makefile.PL
-- improve DISTFILES handling and "lack" of versions
-- for the dynamic pages:
-  - use a single `maintainer.html`
-  - generate indexes by category
-
 Copyright
 ---
 
-- 2005-2011 Shaun Amott <shaun@inerd.com>
-- 2015-2016 Jasper Lievisse Adriaanse <j@jasper.la>
+- 2020 Jasper Lievisse Adriaanse <j@jasper.la>
 
 Contributing
 ---
