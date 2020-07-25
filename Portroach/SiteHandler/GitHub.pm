@@ -149,7 +149,7 @@ sub GetFiles
 					# Normalize both the original distname and the new asset
 					# make a proper comparison free of '_' or '-'.
 					my @distname_norm = split(/[-_]+/, $port->{distname});
-					my @asset_norm = split(/[-_]+/, $port->{distname});
+					my @asset_norm = split(/[-_]+/, $asset->{name});
 					return 1 if (@distname_norm == @asset_norm);
 
 					if ($asset->{name} =~ m/${cur_suffix}$/) {
