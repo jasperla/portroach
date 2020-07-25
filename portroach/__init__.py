@@ -1,4 +1,5 @@
-from metadata import Metadata
+from .metadata import Metadata
+from .roach import Portroach
 
 m = Metadata()
 
