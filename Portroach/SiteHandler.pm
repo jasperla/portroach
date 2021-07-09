@@ -39,6 +39,7 @@ use Portroach::SiteHandler::Pecl;
 use Portroach::SiteHandler::PyPI;
 use Portroach::SiteHandler::RubyGems;
 use Portroach::SiteHandler::SourceForge;
+use Portroach::SiteHandler::Go;
 
 use strict;
 
