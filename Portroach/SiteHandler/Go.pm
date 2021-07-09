@@ -73,7 +73,7 @@ sub CanHandle
 
 	my ($url) = @_;
 
-	return ($url =~ /proxy\.golang\.org//);
+	return ($url =~ /proxy\.golang\.org/);
 }
 
 
@@ -94,16 +94,8 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	carp Dumper $url;
-	carp Dumper $port;
-
-	my ($registry, $package, $resp, $query, $ua);
+	my ($registry, $resp, $query, $ua);
 	$registry = 'https://proxy.golang.org/';
-
-	# Strip all the digits at the end to keep the stem of the module.
-	if ($port->{distname} =~ /(.*?)-(\d+)/) {
-	    $package = $1;
-	}
 
 	$query = $url;
 	$query =~ s/v\//latest/;
@@ -120,7 +112,7 @@ sub GetFiles
 	    $version = $json->{Version};
 	    next unless $version;
 
-	    push(@$files, "$package/-/$package-$version.tgz");
+	    push(@$files, "$port->{name}-${version}.zip");
 	} else {
 	    _debug("GET failed: " . $resp->code);
 	    return 0;
