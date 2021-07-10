@@ -871,11 +871,11 @@ sub FindNewestFile
 {
 	my ($port, $site, $files) = @_;
 
-	my ($poss_match, $poss_url, $old_found, $new_found);
+	my ($poss_match, $poss_url, $old_found, $new_found, $golang);
 
 	foreach my $file (@$files)
 	{
-		my ($poss_path, $github, $golang);
+		my ($poss_path, $github);
 
 		if ($file =~ /^(.*)\/(.*?)$/) {
 			# Files from SiteHandlers can come with paths
@@ -1096,10 +1096,12 @@ sub FindNewestFile
 	}
 
 	# In Go we set newver explicitly, so check it here.
-	if (defined $port->{newver} && defined $port->{ver} && vercompare($port->{newver}, $port->{ver})) {
-		$new_found = $port->{newver};
-		$old_found = $port->{ver};
-		$poss_match = $port->{newver};
+	if ($golang) {
+		if (defined $port->{newver} && defined $port->{ver} && vercompare($port->{newver}, $port->{ver})) {
+			$new_found = $port->{newver};
+			$old_found = $port->{ver};
+			$poss_match = $port->{newver};
+		}
 	}
 
 	return {
