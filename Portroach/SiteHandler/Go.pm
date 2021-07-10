@@ -94,11 +94,15 @@ sub GetFiles
 
 	my ($url, $port, $files) = @_;
 
-	my ($registry, $resp, $query, $ua);
+	my ($registry, $dist, $resp, $query, $ua);
 	$registry = 'https://proxy.golang.org/';
 
+	if ($port->{distname} =~ /^(.*)-(v)?\d+\.\d+.\d+(.*)?$/) {
+	    $dist = $1;
+	}
+
 	$query = $url;
-	$query =~ s/v\//latest/;
+	$query =~ s/\@v\//\@latest/;
 
 	_debug("GET $query");
 	$ua = LWP::UserAgent->new;
@@ -112,7 +116,10 @@ sub GetFiles
 	    $version = $json->{Version};
 	    next unless $version;
 
-	    push(@$files, "$port->{name}-${version}.zip");
+	    $port->{newver} = $version;
+	    $version =~ s/v//;
+
+	    push(@$files, "$dist-${version}.zip");
 	} else {
 	    _debug("GET failed: " . $resp->code);
 	    return 0;

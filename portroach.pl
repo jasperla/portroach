@@ -875,7 +875,7 @@ sub FindNewestFile
 
 	foreach my $file (@$files)
 	{
-		my ($poss_path, $github);
+		my ($poss_path, $github, $golang);
 
 		if ($file =~ /^(.*)\/(.*?)$/) {
 			# Files from SiteHandlers can come with paths
@@ -887,8 +887,12 @@ sub FindNewestFile
 			$poss_path = '';
 		}
 
+		$golang = 1 if ($port->{mastersites} =~ /proxy\.golang\.org/);
+
 		foreach my $distfile (split ' ', $port->{distfiles})
 		{
+			# in Go we explicitly know what the next version is if we have it.
+			next if ($golang);
 			my $v = $port->{ver};
 			my $s = $port->{sufx};
 			my $old_v;
@@ -1089,6 +1093,13 @@ sub FindNewestFile
 		$new_found  = undef;
 		$poss_match = undef;
 		$poss_url   = undef;
+	}
+
+	# In Go we set newver explicitly, so check it here.
+	if (defined $port->{newver} && defined $port->{ver} && vercompare($port->{newver}, $port->{ver})) {
+		$new_found = $port->{newver};
+		$old_found = $port->{ver};
+		$poss_match = $port->{newver};
 	}
 
 	return {
