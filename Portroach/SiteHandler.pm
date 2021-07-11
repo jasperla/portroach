@@ -30,6 +30,7 @@ package Portroach::SiteHandler;
 use Portroach::SiteHandler::Bitbucket;
 use Portroach::SiteHandler::CPAN;
 use Portroach::SiteHandler::GitHub;
+use Portroach::SiteHandler::Go;
 use Portroach::SiteHandler::Hackage;
 use Portroach::SiteHandler::Launchpad;
 use Portroach::SiteHandler::Mozilla;
@@ -39,7 +40,6 @@ use Portroach::SiteHandler::Pecl;
 use Portroach::SiteHandler::PyPI;
 use Portroach::SiteHandler::RubyGems;
 use Portroach::SiteHandler::SourceForge;
-use Portroach::SiteHandler::Go;
 
 use strict;
 
